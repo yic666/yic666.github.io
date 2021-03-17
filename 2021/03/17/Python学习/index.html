@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Modbus主从站通信实现, Yic">
-    <meta name="description" content="Modbus是一种串行通信协议，是Modicon公司（现在的施耐德电气 Schneider Electric）于1979年为使用可编程逻辑控制器（PLC）通信而发表。Modbus已经成为工业领域通信协议的业界标准（De facto），并且现在是工业电子设备之间常用的连接方式。">
+    <meta name="keywords" content="Python学习, Yic">
+    <meta name="description" content="Python学习 | Yic">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Modbus主从站通信实现 | Yic</title>
+    <title>Python学习 | Yic</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -281,12 +281,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Modbus主从站通信实现</h1>
+                    <h1 class="description center-align post-title">Python学习</h1>
                 </div>
             </div>
         </div>
@@ -401,29 +401,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/Modbus/">
-                                <span class="chip bg-color">Modbus</span>
-                            </a>
-                        
-                            <a href="/tags/%E6%8A%A5%E5%91%8A/">
-                                <span class="chip bg-color">报告</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/Modbus/" class="post-category">
-                                Modbus
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -432,7 +415,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-03-01
+                    2021-03-17
                 </div>
                 
 
@@ -441,7 +424,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2k
+                    0
                 </div>
                 
 
@@ -454,225 +437,7 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Modbus主从站通信实现"><a href="#Modbus主从站通信实现" class="headerlink" title="Modbus主从站通信实现"></a>Modbus主从站通信实现</h1><h2 id="一、Modbus-Poll-amp-Modbus-Slave"><a href="#一、Modbus-Poll-amp-Modbus-Slave" class="headerlink" title="一、Modbus Poll &amp; Modbus Slave"></a>一、Modbus Poll &amp; Modbus Slave</h2><h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>Modbus Poll ：Modbus主机仿真器，用于测试和调试Modbus从设备。该软件支持ModbusRTU、ASCII、TCP/IP。用来帮助开发人员测试Modbus从设备，或者其它Modbus协议的测试和仿真。它支持多文档接口，即，可以同时监视多个从设备/数据域。每个窗口简单地设定从设备ID，功能，地址，大小和轮询间隔。你可以从任意一个窗口读写寄存器和线圈。如果你想改变一个单独的寄存器，简单地双击这个值即可。或者你可以改变多个寄存器/线圈值。提供数据的多种格式方式，比如浮点、双精度、长整型（可以字节序列交换）。</p>
-<p>Modbus Slave： Modbus从设备仿真器，可以仿真32个从设备/地址域。每个接口都提供了对EXCEL报表的OLE自动化支持。主要用来模拟Modbus从站设备,接收主站的命令包,回送数据包。帮助Modbus通讯设备开发人员进行Modbus通讯协议的模拟和测试，用于模拟、测试、调试Modbus通讯设备。可以32个窗口中模拟多达32个Modbus子设备。与Modbus Poll的用户界面相同，支持功能01, 02, 03, 04, 05, 06, 15, 16, 22和23，监视串口数据。</p>
-<h3 id="2-串口设置"><a href="#2-串口设置" class="headerlink" title="2. 串口设置"></a>2. 串口设置</h3><p>打开VSPD 7.2，单击“Add pair”按钮为计算机添加虚拟串口，如下图所示：</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222193824706.png" alt="image-20201222193824706"></p>
-<h3 id="3-主从站数据传输实现"><a href="#3-主从站数据传输实现" class="headerlink" title="3.主从站数据传输实现"></a>3.主从站数据传输实现</h3><p>使用Modbus Poll和Modbus Slave能模拟Modbus主从机之间的通讯，以下给出了RTU传输模式对线圈状态的读写的实现步骤</p>
-<h4 id="（1）设置从站"><a href="#（1）设置从站" class="headerlink" title="（1）设置从站"></a>（1）设置从站</h4><p>打开Modbus Slave，点击菜单“Setup”中“Slave Definition.. F2”进行参数设置，会弹出如下图对话框，将其中的Function设置为01，也就是使用01功能</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222215744511.png" alt="image-20201222215744511"></p>
-<p>点击菜单“Connection”中“Connect.. F3”进行连接。弹出连接对话框，按照如下设置即可</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222220431965.png" alt="image-20201222220110403"></p>
-<h4 id="（2）设置主站"><a href="#（2）设置主站" class="headerlink" title="（2）设置主站"></a>（2）设置主站</h4><p>打开Modbus Poll，点击菜单“Setup”中“Slave Definition.. F2”进行参数设置，会弹出如下图对话框，将Function设置为01功能码</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222220110403.png" alt="image-20201222220431965"></p>
-<p>点击菜单“Connection”中“Connect.. F3”进行连接。弹出连接对话框：</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222220533815.png" alt="image-20201222220533815"></p>
-<p>成功连接之后，Err = 0，Tx开始计时，点击“Display”菜单中的“Communication…”,可以调出串口收发数据帧监视信息对话框，用来查看分析收发的数据帧。如下图所示：</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222220838655.png" alt="image-20201222220838655"></p>
-<h4 id="（3）读线圈状态"><a href="#（3）读线圈状态" class="headerlink" title="（3）读线圈状态"></a>（3）读线圈状态</h4><p>在Modbus Slave 中双击任何一个线圈的值，会弹出如下的对话框，可以选择线圈的开启还是关闭，此时将第0个线圈开启</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222221812127.png" alt="image-20201222221812127"></p>
-<p>可以在Modbus Poll中看到主机的数据也会随之改变</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222225237386.png" alt="image-20201222221959697"></p>
-<p>打开串口收发数据帧监视信息对话框，可以看到数据帧发生了改变，从</p>
-<pre><code>000241-Tx:01 01 00 00 00 0A BC 0D
-000242-Rx:01 01 02 00 00 B9 FC</code></pre><p>变成了</p>
-<pre><code>000243-Tx:01 01 00 00 00 0A BC 0D
-000244-Rx:01 01 02 01 00 B8 6C</code></pre><p>也就是数据变成从00变成了01，这里用的是16进制来表示数据</p>
-<p>报文分析如下表</p>
-<table>
-<thead>
-<tr>
-<th align="center">从机地址</th>
-<th align="center">功能码</th>
-<th align="center">线圈起始地址</th>
-<th align="center">读取线圈个数</th>
-<th align="center">CRC校检</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">01</td>
-<td align="center">01</td>
-<td align="center">00 00</td>
-<td align="center">00 0A</td>
-<td align="center">BC 0D</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th align="center">从机地址</th>
-<th align="center">功能码</th>
-<th align="center">返回字节个数</th>
-<th align="center">线圈数据1</th>
-<th align="center">线圈数据2</th>
-<th align="center">CRC校检</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">01</td>
-<td align="center">01</td>
-<td align="center">02</td>
-<td align="center">01</td>
-<td align="center">00</td>
-<td align="center">B8 6C</td>
-</tr>
-</tbody></table>
-<h4 id="（4）写线圈状态"><a href="#（4）写线圈状态" class="headerlink" title="（4）写线圈状态"></a>（4）写线圈状态</h4><p>在Modbus Poll 中点击05，使用05功能码实现对线圈状态的写入，也可以直接双击对应的线圈值进行修改</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222225406107.png" alt="image-20201222225237386"></p>
-<p>修改之后，在Modbus Slave中可以看到对应的值发生了改变</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222230405220.png" alt="image-20201222225406107"></p>
-<p>串口收发数据帧监视信息对话框，可以看到数据帧为</p>
-<pre><code>000523-Tx:01 05 00 00 FF 00 8C 3A
-000524-Rx:01 05 00 00 FF 00 8C 3A</code></pre><p>报文分析</p>
-<table>
-<thead>
-<tr>
-<th align="center">从机地址</th>
-<th align="center">功能码</th>
-<th align="center">设置地址</th>
-<th align="center">设置内容</th>
-<th align="center">CRC校检</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">01</td>
-<td align="center">05</td>
-<td align="center">00 00</td>
-<td align="center">FF 00</td>
-<td align="center">8C 3A</td>
-</tr>
-</tbody></table>
-<p>也可以通过功能码15同时写多个线圈</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201230221207301.png" alt="image-20201222230405220"></p>
-<p>数据帧如下：</p>
-<pre><code>000697-Tx:01 0F 00 00 00 0A 02 3B 00 F6 08
-000698-Rx:01 0F 00 00 00 0A D5 CC</code></pre><p>报文分析</p>
-<table>
-<thead>
-<tr>
-<th align="center">从机地址</th>
-<th align="center">功能码</th>
-<th align="center">线圈起始地址</th>
-<th align="center">设置长度</th>
-<th align="center">发送字节个数</th>
-<th align="center">设置内容</th>
-<th align="center">CRC校检</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">01</td>
-<td align="center">0F</td>
-<td align="center">00 00</td>
-<td align="center">00 0A</td>
-<td align="center">02</td>
-<td align="center">3B 00</td>
-<td align="center">F6 08</td>
-</tr>
-</tbody></table>
-<h4 id="（5）补充"><a href="#（5）补充" class="headerlink" title="（5）补充"></a>（5）补充</h4><p>上述实现了功能码01，05，15对线圈状态的读写，功能码02与01的操作类似，至于03，06，16这三个功能码也与上诉的操作差不多，只是操作方式为字操作。</p>
-<h3 id="4-串口调试助手的使用"><a href="#4-串口调试助手的使用" class="headerlink" title="4.串口调试助手的使用"></a>4.串口调试助手的使用</h3><p>下面以报文</p>
-<pre><code>000697-Tx:01 0F 00 00 00 0A 02 3B 00 F6 08
-000698-Rx:01 0F 00 00 00 0A D5 CC</code></pre><p>为例，使用串口调试助手，手工发出 MODBUS 主、从站该发出的数据，并观察对方发出的数据。</p>
-<p>打开两个串口调试助手，按下图设置，可以模拟之前VSPD设立的虚拟串口</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201222221959697.png" alt="image-20201230221207301"></p>
-<p>在COM1的发送栏输入<code>01 0F 00 00 00 0A 02 3B 00 F6 08</code> 然后点击发送，在COM2的接收区域就能看到收到的报文</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201230221556973.png" alt="image-20201230221556973"></p>
-<p>在COM2的发送栏输入<code>01 0F 00 00 00 0A D5 CC</code>就能返回报文</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20201230221744103.png" alt="image-20201230221744103"></p>
-<h2 id="二、modbus-tk库的使用"><a href="#二、modbus-tk库的使用" class="headerlink" title="二、modbus_tk库的使用"></a>二、modbus_tk库的使用</h2><h3 id="1-介绍-1"><a href="#1-介绍-1" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>modbus tk是使用python语言实现的modbus协议栈， 该函数库可以实现TCP以及RTU传输方式。</p>
-<p>下载地址：<a href="https://github.com/ljean/modbus-tk" target="_blank" rel="noopener">https://github.com/ljean/modbus-tk</a></p>
-<h3 id="2-主机"><a href="#2-主机" class="headerlink" title="2.主机"></a>2.主机</h3><p>下载对应pip</p>
-<pre><code>pip install modbus_tk</code></pre><p>示例代码</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> serial
-
-<span class="token keyword">import</span> modbus_tk
-<span class="token keyword">import</span> modbus_tk<span class="token punctuation">.</span>defines <span class="token keyword">as</span> cst
-<span class="token keyword">from</span> modbus_tk <span class="token keyword">import</span> modbus_rtu
-
-PORT <span class="token operator">=</span> <span class="token string">"COM1"</span>
-<span class="token comment" spellcheck="true"># 此处可修改使用的串口</span>
-
-<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        master <span class="token operator">=</span> modbus_rtu<span class="token punctuation">.</span>RtuMaster<span class="token punctuation">(</span>
-            serial<span class="token punctuation">.</span>Serial<span class="token punctuation">(</span>port<span class="token operator">=</span>PORT<span class="token punctuation">,</span> baudrate<span class="token operator">=</span><span class="token number">9600</span><span class="token punctuation">,</span> bytesize<span class="token operator">=</span><span class="token number">8</span><span class="token punctuation">,</span> parity<span class="token operator">=</span><span class="token string">'O'</span><span class="token punctuation">,</span> stopbits<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> xonxoff<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
-        <span class="token punctuation">)</span>
-        <span class="token comment" spellcheck="true"># 设置设备的端口号、波特率、通信数据长度、奇偶校验、停止位、流控制</span>
-        master<span class="token punctuation">.</span>set_timeout<span class="token punctuation">(</span><span class="token number">5.0</span><span class="token punctuation">)</span>
-        master<span class="token punctuation">.</span>set_verbose<span class="token punctuation">(</span><span class="token boolean">True</span><span class="token punctuation">)</span>
-        read <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-        read <span class="token operator">=</span> master<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> cst<span class="token punctuation">.</span>READ_COILS<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
-        <span class="token comment" spellcheck="true">#master.execute(从机ID，功能码，读取位置，数据长度)</span>
-
-        <span class="token keyword">print</span><span class="token punctuation">(</span>read<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> read
-
-<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
-    main<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
-<p>上述代码实现了功能码01，对线圈状态的读取，这里用Modbus Slave将线圈状态设置如下</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20210106003745637.png" alt="image-20210106003745637"></p>
-<p>运行代码，结果如下</p>
-<pre><code>(0, 0, 0, 1, 1, 1, 0, 1, 1, 1)</code></pre><p>与设置的线圈状态一致，串口收发数据帧监视信息对话框也显示了相应的报文</p>
-<pre><code>000002-Rx:01 01 00 00 00 0A BC 0D
-000003-Tx:01 01 02 B8 03 8B FD</code></pre><p>功能码的使用方式如下</p>
-<pre class=" language-python"><code class="language-python"><span class="token triple-quoted-string string">'''
-    master.execute(1, cst.READ_COILS, 0, 10)
-    master.execute(1, cst.READ_DISCRETE_INPUTS, 0, 8)
-    master.execute(1, cst.READ_INPUT_REGISTERS, 100, 3)
-    master.execute(1, cst.READ_HOLDING_REGISTERS, 100, 12)
-    master.execute(从机ID，功能码，读取位置，数据长度)
-    master.execute(1, cst.WRITE_SINGLE_COIL, 7, output_value=1)
-    master.execute(1, cst.WRITE_SINGLE_REGISTER, 100, output_value=54)
-    master.execute(1, cst.WRITE_MULTIPLE_COILS, 0, output_value=[1, 1, 0, 1, 1, 0, 1, 1])
-    master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 100, output_value=xrange(12))
-    master.execute(从站ID; 功能码; 需要改变的地址位; output_vlaue=改变的内容)
-    功能代码cst
-    1～255中1～21是常用的，以下是读写专用的功能码
-    READ_COILS = 01 读线圈，位操作
-    READ_DISCRETE_INPUTS = 02 读离散输入状态，位操作
-    READ_HOLDING_REGISTERS = 03 读保持寄存器，字操作
-    READ_INPUT_REGISTERS = 04 读输入寄存器，字操作
-    WRITE_SINGLE_COIL = 05 写单线圈，位操作
-    WRITE_SINGLE_REGISTER = 06 写单一寄存器，字操作
-    WRITE_MULTIPLE_COILS = 15 写多个线圈【强制多点线圈】，位操作
-    WRITE_MULTIPLE_REGISTERS = 16 写多寄存器【写乘法寄存器】，字操作
-'''</span></code></pre>
-<h3 id="3-从机"><a href="#3-从机" class="headerlink" title="3.从机"></a>3.从机</h3><p>示例代码</p>
-<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> modbus_tk
-<span class="token keyword">import</span> modbus_tk<span class="token punctuation">.</span>defines <span class="token keyword">as</span> cst
-<span class="token keyword">from</span> modbus_tk <span class="token keyword">import</span> modbus_rtu
-<span class="token keyword">import</span> serial
-
-PORT <span class="token operator">=</span> <span class="token string">"COM2"</span>
-<span class="token comment" spellcheck="true"># 此处可修改使用的串口</span>
-
-<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token triple-quoted-string string">"""main"""</span>
-        <span class="token comment" spellcheck="true">#Create the server</span>
-    server <span class="token operator">=</span> modbus_rtu<span class="token punctuation">.</span>RtuServer<span class="token punctuation">(</span>serial<span class="token punctuation">.</span>Serial<span class="token punctuation">(</span>PORT<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
-    <span class="token keyword">try</span><span class="token punctuation">:</span>
-        server<span class="token punctuation">.</span>start<span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-        slave <span class="token operator">=</span> server<span class="token punctuation">.</span>add_slave<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-        <span class="token comment" spellcheck="true">#添加地址为1的从机</span>
-        slave<span class="token punctuation">.</span>add_block<span class="token punctuation">(</span><span class="token string">'0'</span><span class="token punctuation">,</span> cst<span class="token punctuation">.</span>HOLDING_REGISTERS<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
-        <span class="token comment" spellcheck="true">#添加取名为0的0~10内存块，设置为保持寄存器（03功能码）</span>
-        slave<span class="token punctuation">.</span>set_values<span class="token punctuation">(</span><span class="token string">'0'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-        <span class="token comment" spellcheck="true">#设置寄存器数值</span>
-        <span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
-                values <span class="token operator">=</span> slave<span class="token punctuation">.</span>get_values<span class="token punctuation">(</span><span class="token string">'0'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
-                <span class="token comment" spellcheck="true">#读取寄存器数值0~10</span>
-                <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'values read: %s\r\n'</span> <span class="token operator">%</span> <span class="token punctuation">(</span>str<span class="token punctuation">(</span>values<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>                            
-
-    <span class="token keyword">finally</span><span class="token punctuation">:</span>
-        server<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span>
-
-<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
-    main<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
-<p>运行结果如下</p>
-<pre><code>values read: (1, 1, 0, 1, 1, 0, 1, 1, 0, 0)</code></pre><p>在Modbus Poll 可以看到主从站通信正常（Err是因为之前还没运行代码）</p>
-<p><img src="https://gitee.com/yic666/blogimg/raw/master/image-20210106105049093.png" alt="image-20210106105049093"></p>
-
+                
             </div>
             <hr/>
 
@@ -697,7 +462,7 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="yic666.github.io/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/">yic666.github.io/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/</a>
+                    <a href="yic666.github.io/2021/03/17/Python%E5%AD%A6%E4%B9%A0/">yic666.github.io/2021/03/17/Python%E5%AD%A6%E4%B9%A0/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -734,15 +499,7 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/Modbus/">
-                                    <span class="chip bg-color">Modbus</span>
-                                </a>
-                            
-                                <a href="/tags/%E6%8A%A5%E5%91%8A/">
-                                    <span class="chip bg-color">报告</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -906,9 +663,10 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/03/17/Python%E5%AD%A6%E4%B9%A0/">
                     <div class="card-image">
@@ -926,9 +684,9 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -937,6 +695,7 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -947,31 +706,31 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/25/Markdown%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/">
+                <a href="/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Markdown入门学习">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Modbus主从站通信实现">
                         
-                        <span class="card-title">Markdown入门学习</span>
+                        <span class="card-title">Modbus主从站通信实现</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。
+                            Modbus是一种串行通信协议，是Modicon公司（现在的施耐德电气 Schneider Electric）于1979年为使用可编程逻辑控制器（PLC）通信而发表。Modbus已经成为工业领域通信协议的业界标准（De facto），并且现在是工业电子设备之间常用的连接方式。
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-01
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Markdown/" class="post-category">
-                                    Markdown
+                            <a href="/categories/Modbus/" class="post-category">
+                                    Modbus
                                 </a>
                             
                             
@@ -981,12 +740,12 @@ PORT <span class="token operator">=</span> <span class="token string">"COM2"</sp
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Markdown/">
-                        <span class="chip bg-color">Markdown</span>
+                    <a href="/tags/Modbus/">
+                        <span class="chip bg-color">Modbus</span>
                     </a>
                     
-                    <a href="/tags/%E7%AC%94%E8%AE%B0/">
-                        <span class="chip bg-color">笔记</span>
+                    <a href="/tags/%E6%8A%A5%E5%91%8A/">
+                        <span class="chip bg-color">报告</span>
                     </a>
                     
                 </div>
