@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Python学习, Yic">
-    <meta name="description" content="Python学习 | Yic">
+    <meta name="keywords" content="NumPy, Yic">
+    <meta name="description" content="NumPy 是一个 Python 包。 它代表 “Numeric Python”。 它是一个由多维数组对象和用于处理数组的例程集合组成的库。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Python学习 | Yic</title>
+    <title>NumPy | Yic</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -281,12 +281,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Python学习</h1>
+                    <h1 class="description center-align post-title">NumPy</h1>
                 </div>
             </div>
         </div>
@@ -401,12 +401,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Python/">
+                                <span class="chip bg-color">Python</span>
+                            </a>
+                        
+                            <a href="/tags/NumPy/">
+                                <span class="chip bg-color">NumPy</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Python/" class="post-category">
+                                Python
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -415,7 +432,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-03-17
+                    2021-03-26
                 </div>
                 
 
@@ -424,7 +441,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    947
                 </div>
                 
 
@@ -437,7 +454,72 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="NumPy简介"><a href="#NumPy简介" class="headerlink" title="NumPy简介"></a>NumPy简介</h2><ul>
+<li><p>NumPy 是一个 Python 包。 它代表 “Numeric Python”。 它是一个由多维数组对象和用于处理数组的例程集合组成的库。</p>
+</li>
+<li><p>Numeric，即 NumPy 的前身，是由 Jim Hugunin 开发的。 也开发了另一个包 Numarray ，它拥有一些额外的功能。 2005年，Travis Oliphant 通过将 Numarray 的功能集成到 Numeric 包中来创建 NumPy 包。 这个开源项目有很多贡献者。</p>
+</li>
+</ul>
+<p>导入NumPy函数库:</p>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> numpy
+<span class="token keyword">from</span> numpy <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np</code></pre>
+<h2 id="1-ndarray对象"><a href="#1-ndarray对象" class="headerlink" title="1.ndarray对象"></a>1.ndarray对象</h2><p>Numpy 的核心是连续的多维数组。<br>Numpy中的数组叫做<code>np.ndarray</code>，也可以使用别名<code>np.array</code>。<br>但这里的np.array与Python标准库中的array.array是不同的。<br>下列是几个<code>ndarray</code>中的重要属性：  </p>
+<p><strong>ndarray.ndim</strong><br>　　数组的维数。<br><strong>ndarray.shape</strong><br>　　数组的形状。<br><strong>ndarray.size</strong><br>　　数组的元素个数。<br><strong>ndarray.dtype</strong><br>　　数组的元素类型。  </p>
+<p>例子： 查看 data=np.arange(15).reshape(3,5) 对象属性</p>
+<pre class=" language-python"><code class="language-python">data<span class="token operator">=</span>np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span>data<span class="token punctuation">.</span>ndim<span class="token punctuation">,</span>data<span class="token punctuation">.</span>shape<span class="token punctuation">,</span>data<span class="token punctuation">.</span>size<span class="token punctuation">,</span>data<span class="token punctuation">.</span>dtype<span class="token punctuation">)</span></code></pre>
+<p>结果如下</p>
+<pre><code>[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]] 2 (3, 5) 15 int32</code></pre><h3 id="1-1-创建数组"><a href="#1-1-创建数组" class="headerlink" title="1.1 创建数组"></a>1.1 创建数组</h3><p><strong>1.使用array( )函数</strong></p>
+<p>创建数组有多种方式。你可以使用<code>np.array</code>直接用Python的元组和列表来创建，如果传递的是多层嵌套的序列，将创建多维数组。</p>
+<pre class=" language-python"><code class="language-python">a<span class="token operator">=</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+b<span class="token operator">=</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1.1</span><span class="token punctuation">,</span><span class="token number">2.2</span><span class="token punctuation">,</span><span class="token number">3.3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+c<span class="token operator">=</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">4.5</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#创建二维数组</span>
+d<span class="token operator">=</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>dtype<span class="token operator">=</span>complex<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#数组的类型可以在创建时显式声明</span></code></pre>
+<p><strong>2.使用arange( )函数</strong></p>
+<p>为了创建列表，NumPy提供了和 <code>range</code> 类似的函数，通过指定开始值、终值和步长来创建一维数组，注意数组不包括终值。</p>
+<pre class=" language-python"><code class="language-python">np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>start<span class="token punctuation">,</span>end<span class="token punctuation">,</span>step<span class="token punctuation">)</span>
+a<span class="token operator">=</span>np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span>
+b<span class="token operator">=</span>np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">0.3</span><span class="token punctuation">)</span><span class="token comment" spellcheck="true">#同样可以接收浮点数</span></code></pre>
+<p>arange函数可以看做是range函数的数组版，能生成一个一维数组，然后可以用reshape函数将一维数组改变成想要的形状，原数组的shape保持不变。</p>
+<pre class=" language-python"><code class="language-python">c <span class="token operator">=</span> a<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span></code></pre>
+<p>结果如下</p>
+<p>a：</p>
+<pre><code>array([ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90])</code></pre><p>b：</p>
+<pre><code>array([0. , 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7])</code></pre><p>c：</p>
+<pre><code>array([[ 0, 10],
+       [20, 30],
+       [40, 50],
+       [60, 70],
+       [80, 90]])</code></pre><p> <strong>3.使用linspace( )函数</strong></p>
+<p>在生成浮点数列表时，最好不要使用<code>np.arange</code>，而是使用<code>np.linspace</code>，linspace函数通过指定开始值、终值和元素个数来创建一维数组，可以通过endpoint关键字指定是否包括终值，缺省设置是包括终值。</p>
+<pre class=" language-python"><code class="language-python">np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span>start<span class="token punctuation">,</span>stop<span class="token punctuation">,</span>num<span class="token punctuation">)</span>
+np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 步长为1/9</span>
+np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> endpoint<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true"># 步长为1/10</span></code></pre>
+<p>结果如下</p>
+<pre><code>[0.         0.11111111 0.22222222 0.33333333 0.44444444 0.55555556
+ 0.66666667 0.77777778 0.88888889 1.        ]
+[0.  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9]</code></pre><p><strong>4.使用logspace( )函数</strong></p>
+<p>logspace函数和linspace类似，不过它创建等比数列，下面的例子产生1(10^0)到100(10^2)、有20个元素的等比数列</p>
+<pre class=" language-python"><code class="language-python">np<span class="token punctuation">.</span>logspace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span></code></pre>
+<pre><code>array([  1.        ,   1.27427499,   1.62377674,   2.06913808,
+         2.6366509 ,   3.35981829,   4.2813324 ,   5.45559478,
+         6.95192796,   8.8586679 ,  11.28837892,  14.38449888,
+        18.32980711,  23.35721469,  29.76351442,  37.92690191,
+        48.32930239,  61.58482111,  78.47599704, 100.        ])</code></pre><p><strong>6.从字节序列创建数组</strong></p>
+<p>使用frombuffer,  fromfile等函数可以从字节序列创建数组</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true">#frombuffer将data以流的形式读入转化成ndarray对象</span>
+<span class="token comment" spellcheck="true">#第一参数为stream,第二参数为返回值的数据类型，第三参数指定从stream的第几位开始读入</span>
+
+<span class="token comment" spellcheck="true">#data是字符串的时候，Python3默认str是Unicode类型，所以要转成bytestring在原str前加上b</span>
+
+s <span class="token operator">=</span>  b<span class="token string">'abc'</span>
+a <span class="token operator">=</span> np<span class="token punctuation">.</span>frombuffer<span class="token punctuation">(</span>s<span class="token punctuation">,</span>dtype<span class="token operator">=</span><span class="token string">'S1'</span><span class="token punctuation">,</span>offset<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#S1 定长为1的字符串</span>
+a</code></pre>
+<p>结果</p>
+<pre><code>array([b&#39;a&#39;, b&#39;c&#39;, b&#39;c&#39;], dtype=&#39;|S1&#39;</code></pre>
             </div>
             <hr/>
 
@@ -462,7 +544,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://yic666.gitee.io/2021/03/17/Python%E5%AD%A6%E4%B9%A0/">https://yic666.gitee.io/2021/03/17/Python%E5%AD%A6%E4%B9%A0/</a>
+                    <a href="https://yic666.gitee.io/2021/03/26/Numpy/">https://yic666.gitee.io/2021/03/26/Numpy/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -499,7 +581,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/Python/">
+                                    <span class="chip bg-color">Python</span>
+                                </a>
+                            
+                                <a href="/tags/NumPy/">
+                                    <span class="chip bg-color">NumPy</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -663,9 +753,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/03/26/Numpy/">
                     <div class="card-image">
@@ -683,9 +774,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-26
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-26
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -698,6 +789,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -720,48 +812,32 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/">
+                <a href="/2021/03/17/Python%E5%AD%A6%E4%B9%A0/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Modbus主从站通信实现">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Python学习">
                         
-                        <span class="card-title">Modbus主从站通信实现</span>
+                        <span class="card-title">Python学习</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Modbus是一种串行通信协议，是Modicon公司（现在的施耐德电气 Schneider Electric）于1979年为使用可编程逻辑控制器（PLC）通信而发表。Modbus已经成为工业领域通信协议的业界标准（De facto），并且现在是工业电子设备之间常用的连接方式。
+                            
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-01
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Modbus/" class="post-category">
-                                    Modbus
-                                </a>
-                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Yichang
                             
                         </span>
                     </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Modbus/">
-                        <span class="chip bg-color">Modbus</span>
-                    </a>
-                    
-                    <a href="/tags/%E6%8A%A5%E5%91%8A/">
-                        <span class="chip bg-color">报告</span>
-                    </a>
-                    
                 </div>
                 
             </div>
