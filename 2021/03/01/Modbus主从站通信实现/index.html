@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Modbus主从站通信实现一、Modbus Poll &amp; Modbus Slave1.介绍Modbus Poll ：Modbus主机仿真器，用于测试和调试Modbus从设备。该软件支持ModbusRTU、ASCII、TCP&#x2F;IP。用来帮助开发人员测试Modbus从设备，或者其它Modbus协议的测试和仿真。它支持多文档接口，即，可以同时监视多个从设备&#x2F;数据域。每个窗口简">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Modbus主从站通信实现">
+<meta property="og:url" content="http://example.com/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Modbus主从站通信实现一、Modbus Poll &amp; Modbus Slave1.介绍Modbus Poll ：Modbus主机仿真器，用于测试和调试Modbus从设备。该软件支持ModbusRTU、ASCII、TCP&#x2F;IP。用来帮助开发人员测试Modbus从设备，或者其它Modbus协议的测试和仿真。它支持多文档接口，即，可以同时监视多个从设备&#x2F;数据域。每个窗口简">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222193824706.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222215744511.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220431965.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220110403.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220533815.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220838655.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222221812127.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222225237386.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222225406107.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222230405220.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221207301.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222221959697.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221556973.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221744103.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20210106003745637.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20210106105049093.png">
+<meta property="article:published_time" content="2021-03-01T01:47:05.000Z">
+<meta property="article:modified_time" content="2022-07-29T01:39:54.535Z">
+<meta property="article:author" content="Yic">
+<meta property="article:tag" content="Modbus">
+<meta property="article:tag" content="报告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222193824706.png">
+
+
+<link rel="canonical" href="http://example.com/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/","path":"2021/03/01/Modbus主从站通信实现/","title":"Modbus主从站通信实现"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Modbus主从站通信实现 | Hexo</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">Modbus主从站通信实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Modbus-Poll-amp-Modbus-Slave"><span class="nav-number">1.1.</span> <span class="nav-text">一、Modbus Poll &amp; Modbus Slave</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%B2%E5%8F%A3%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 串口设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%BB%E4%BB%8E%E7%AB%99%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.主从站数据传输实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E8%AE%BE%E7%BD%AE%E4%BB%8E%E7%AB%99"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">（1）设置从站</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E8%AE%BE%E7%BD%AE%E4%B8%BB%E7%AB%99"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">（2）设置主站</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E8%AF%BB%E7%BA%BF%E5%9C%88%E7%8A%B6%E6%80%81"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">（3）读线圈状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%884%EF%BC%89%E5%86%99%E7%BA%BF%E5%9C%88%E7%8A%B6%E6%80%81"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">（4）写线圈状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EF%BC%885%EF%BC%89%E8%A1%A5%E5%85%85"><span class="nav-number">1.1.3.5.</span> <span class="nav-text">（5）补充</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95%E5%8A%A9%E6%89%8B%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.串口调试助手的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81modbus-tk%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">二、modbus_tk库的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%BB%E6%9C%BA"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BB%8E%E6%9C%BA"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.从机</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/01/Modbus%E4%B8%BB%E4%BB%8E%E7%AB%99%E9%80%9A%E4%BF%A1%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Modbus主从站通信实现 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Modbus主从站通信实现
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-03-01 09:47:05" itemprop="dateCreated datePublished" datetime="2021-03-01T09:47:05+08:00">2021-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-07-29 09:39:54" itemprop="dateModified" datetime="2022-07-29T09:39:54+08:00">2022-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Modbus/" itemprop="url" rel="index"><span itemprop="name">Modbus</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Modbus主从站通信实现"><a href="#Modbus主从站通信实现" class="headerlink" title="Modbus主从站通信实现"></a>Modbus主从站通信实现</h1><h2 id="一、Modbus-Poll-amp-Modbus-Slave"><a href="#一、Modbus-Poll-amp-Modbus-Slave" class="headerlink" title="一、Modbus Poll &amp; Modbus Slave"></a>一、Modbus Poll &amp; Modbus Slave</h2><h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>Modbus Poll ：Modbus主机仿真器，用于测试和调试Modbus从设备。该软件支持ModbusRTU、ASCII、TCP&#x2F;IP。用来帮助开发人员测试Modbus从设备，或者其它Modbus协议的测试和仿真。它支持多文档接口，即，可以同时监视多个从设备&#x2F;数据域。每个窗口简单地设定从设备ID，功能，地址，大小和轮询间隔。你可以从任意一个窗口读写寄存器和线圈。如果你想改变一个单独的寄存器，简单地双击这个值即可。或者你可以改变多个寄存器&#x2F;线圈值。提供数据的多种格式方式，比如浮点、双精度、长整型（可以字节序列交换）。</p>
+<p>Modbus Slave： Modbus从设备仿真器，可以仿真32个从设备&#x2F;地址域。每个接口都提供了对EXCEL报表的OLE自动化支持。主要用来模拟Modbus从站设备,接收主站的命令包,回送数据包。帮助Modbus通讯设备开发人员进行Modbus通讯协议的模拟和测试，用于模拟、测试、调试Modbus通讯设备。可以32个窗口中模拟多达32个Modbus子设备。与Modbus Poll的用户界面相同，支持功能01, 02, 03, 04, 05, 06, 15, 16, 22和23，监视串口数据。</p>
+<h3 id="2-串口设置"><a href="#2-串口设置" class="headerlink" title="2. 串口设置"></a>2. 串口设置</h3><p>打开VSPD 7.2，单击“Add pair”按钮为计算机添加虚拟串口，如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222193824706.png" alt="image-20201222193824706"></p>
+<h3 id="3-主从站数据传输实现"><a href="#3-主从站数据传输实现" class="headerlink" title="3.主从站数据传输实现"></a>3.主从站数据传输实现</h3><p>使用Modbus Poll和Modbus Slave能模拟Modbus主从机之间的通讯，以下给出了RTU传输模式对线圈状态的读写的实现步骤</p>
+<h4 id="（1）设置从站"><a href="#（1）设置从站" class="headerlink" title="（1）设置从站"></a>（1）设置从站</h4><p>打开Modbus Slave，点击菜单“Setup”中“Slave Definition.. F2”进行参数设置，会弹出如下图对话框，将其中的Function设置为01，也就是使用01功能</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222215744511.png" alt="image-20201222215744511"></p>
+<p>点击菜单“Connection”中“Connect.. F3”进行连接。弹出连接对话框，按照如下设置即可</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220431965.png" alt="image-20201222220110403"></p>
+<h4 id="（2）设置主站"><a href="#（2）设置主站" class="headerlink" title="（2）设置主站"></a>（2）设置主站</h4><p>打开Modbus Poll，点击菜单“Setup”中“Slave Definition.. F2”进行参数设置，会弹出如下图对话框，将Function设置为01功能码</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220110403.png" alt="image-20201222220431965"></p>
+<p>点击菜单“Connection”中“Connect.. F3”进行连接。弹出连接对话框：</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220533815.png" alt="image-20201222220533815"></p>
+<p>成功连接之后，Err &#x3D; 0，Tx开始计时，点击“Display”菜单中的“Communication…”,可以调出串口收发数据帧监视信息对话框，用来查看分析收发的数据帧。如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222220838655.png" alt="image-20201222220838655"></p>
+<h4 id="（3）读线圈状态"><a href="#（3）读线圈状态" class="headerlink" title="（3）读线圈状态"></a>（3）读线圈状态</h4><p>在Modbus Slave 中双击任何一个线圈的值，会弹出如下的对话框，可以选择线圈的开启还是关闭，此时将第0个线圈开启</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222221812127.png" alt="image-20201222221812127"></p>
+<p>可以在Modbus Poll中看到主机的数据也会随之改变</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222225237386.png" alt="image-20201222221959697"></p>
+<p>打开串口收发数据帧监视信息对话框，可以看到数据帧发生了改变，从</p>
+<pre><code>000241-Tx:01 01 00 00 00 0A BC 0D
+000242-Rx:01 01 02 00 00 B9 FC
+</code></pre>
+<p>变成了</p>
+<pre><code>000243-Tx:01 01 00 00 00 0A BC 0D
+000244-Rx:01 01 02 01 00 B8 6C
+</code></pre>
+<p>也就是数据变成从00变成了01，这里用的是16进制来表示数据</p>
+<p>报文分析如下表</p>
+<table>
+<thead>
+<tr>
+<th align="center">从机地址</th>
+<th align="center">功能码</th>
+<th align="center">线圈起始地址</th>
+<th align="center">读取线圈个数</th>
+<th align="center">CRC校检</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">00 00</td>
+<td align="center">00 0A</td>
+<td align="center">BC 0D</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">从机地址</th>
+<th align="center">功能码</th>
+<th align="center">返回字节个数</th>
+<th align="center">线圈数据1</th>
+<th align="center">线圈数据2</th>
+<th align="center">CRC校检</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">02</td>
+<td align="center">01</td>
+<td align="center">00</td>
+<td align="center">B8 6C</td>
+</tr>
+</tbody></table>
+<h4 id="（4）写线圈状态"><a href="#（4）写线圈状态" class="headerlink" title="（4）写线圈状态"></a>（4）写线圈状态</h4><p>在Modbus Poll 中点击05，使用05功能码实现对线圈状态的写入，也可以直接双击对应的线圈值进行修改</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222225406107.png" alt="image-20201222225237386"></p>
+<p>修改之后，在Modbus Slave中可以看到对应的值发生了改变</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222230405220.png" alt="image-20201222225406107"></p>
+<p>串口收发数据帧监视信息对话框，可以看到数据帧为</p>
+<pre><code>000523-Tx:01 05 00 00 FF 00 8C 3A
+000524-Rx:01 05 00 00 FF 00 8C 3A
+</code></pre>
+<p>报文分析</p>
+<table>
+<thead>
+<tr>
+<th align="center">从机地址</th>
+<th align="center">功能码</th>
+<th align="center">设置地址</th>
+<th align="center">设置内容</th>
+<th align="center">CRC校检</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">01</td>
+<td align="center">05</td>
+<td align="center">00 00</td>
+<td align="center">FF 00</td>
+<td align="center">8C 3A</td>
+</tr>
+</tbody></table>
+<p>也可以通过功能码15同时写多个线圈</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221207301.png" alt="image-20201222230405220"></p>
+<p>数据帧如下：</p>
+<pre><code>000697-Tx:01 0F 00 00 00 0A 02 3B 00 F6 08
+000698-Rx:01 0F 00 00 00 0A D5 CC
+</code></pre>
+<p>报文分析</p>
+<table>
+<thead>
+<tr>
+<th align="center">从机地址</th>
+<th align="center">功能码</th>
+<th align="center">线圈起始地址</th>
+<th align="center">设置长度</th>
+<th align="center">发送字节个数</th>
+<th align="center">设置内容</th>
+<th align="center">CRC校检</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">01</td>
+<td align="center">0F</td>
+<td align="center">00 00</td>
+<td align="center">00 0A</td>
+<td align="center">02</td>
+<td align="center">3B 00</td>
+<td align="center">F6 08</td>
+</tr>
+</tbody></table>
+<h4 id="（5）补充"><a href="#（5）补充" class="headerlink" title="（5）补充"></a>（5）补充</h4><p>上述实现了功能码01，05，15对线圈状态的读写，功能码02与01的操作类似，至于03，06，16这三个功能码也与上诉的操作差不多，只是操作方式为字操作。</p>
+<h3 id="4-串口调试助手的使用"><a href="#4-串口调试助手的使用" class="headerlink" title="4.串口调试助手的使用"></a>4.串口调试助手的使用</h3><p>下面以报文</p>
+<pre><code>000697-Tx:01 0F 00 00 00 0A 02 3B 00 F6 08
+000698-Rx:01 0F 00 00 00 0A D5 CC
+</code></pre>
+<p>为例，使用串口调试助手，手工发出 MODBUS 主、从站该发出的数据，并观察对方发出的数据。</p>
+<p>打开两个串口调试助手，按下图设置，可以模拟之前VSPD设立的虚拟串口</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201222221959697.png" alt="image-20201230221207301"></p>
+<p>在COM1的发送栏输入<code>01 0F 00 00 00 0A 02 3B 00 F6 08</code> 然后点击发送，在COM2的接收区域就能看到收到的报文</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221556973.png" alt="image-20201230221556973"></p>
+<p>在COM2的发送栏输入<code>01 0F 00 00 00 0A D5 CC</code>就能返回报文</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20201230221744103.png" alt="image-20201230221744103"></p>
+<h2 id="二、modbus-tk库的使用"><a href="#二、modbus-tk库的使用" class="headerlink" title="二、modbus_tk库的使用"></a>二、modbus_tk库的使用</h2><h3 id="1-介绍-1"><a href="#1-介绍-1" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>modbus tk是使用python语言实现的modbus协议栈， 该函数库可以实现TCP以及RTU传输方式。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/ljean/modbus-tk">https://github.com/ljean/modbus-tk</a></p>
+<h3 id="2-主机"><a href="#2-主机" class="headerlink" title="2.主机"></a>2.主机</h3><p>下载对应pip</p>
+<pre><code>pip install modbus_tk
+</code></pre>
+<p>示例代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> modbus_tk</span><br><span class="line"><span class="keyword">import</span> modbus_tk.defines <span class="keyword">as</span> cst</span><br><span class="line"><span class="keyword">from</span> modbus_tk <span class="keyword">import</span> modbus_rtu</span><br><span class="line"></span><br><span class="line">PORT = <span class="string">&quot;COM1&quot;</span></span><br><span class="line"><span class="comment"># 此处可修改使用的串口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">        master = modbus_rtu.RtuMaster(</span><br><span class="line">            serial.Serial(port=PORT, baudrate=<span class="number">9600</span>, bytesize=<span class="number">8</span>, parity=<span class="string">&#x27;O&#x27;</span>, stopbits=<span class="number">1</span>, xonxoff=<span class="number">0</span>)</span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 设置设备的端口号、波特率、通信数据长度、奇偶校验、停止位、流控制</span></span><br><span class="line">        master.set_timeout(<span class="number">5.0</span>)</span><br><span class="line">        master.set_verbose(<span class="literal">True</span>)</span><br><span class="line">        read = []</span><br><span class="line">        read = master.execute(<span class="number">1</span>, cst.READ_COILS, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">        <span class="comment">#master.execute(从机ID，功能码，读取位置，数据长度)</span></span><br><span class="line">       </span><br><span class="line">        <span class="built_in">print</span>(read)</span><br><span class="line">        <span class="keyword">return</span> read</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>上述代码实现了功能码01，对线圈状态的读取，这里用Modbus Slave将线圈状态设置如下</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20210106003745637.png" alt="image-20210106003745637"></p>
+<p>运行代码，结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0, 0, 0, 1, 1, 1, 0, 1, 1, 1)</span><br></pre></td></tr></table></figure>
+
+<p>与设置的线圈状态一致，串口收发数据帧监视信息对话框也显示了相应的报文</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">000002-Rx:01 01 00 00 00 0A BC 0D</span><br><span class="line">000003-Tx:01 01 02 B8 03 8B FD</span><br></pre></td></tr></table></figure>
+
+<p>功能码的使用方式如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    master.execute(1, cst.READ_COILS, 0, 10)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.READ_DISCRETE_INPUTS, 0, 8)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.READ_INPUT_REGISTERS, 100, 3)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.READ_HOLDING_REGISTERS, 100, 12)</span></span><br><span class="line"><span class="string">    master.execute(从机ID，功能码，读取位置，数据长度)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.WRITE_SINGLE_COIL, 7, output_value=1)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.WRITE_SINGLE_REGISTER, 100, output_value=54)</span></span><br><span class="line"><span class="string">    master.execute(1, cst.WRITE_MULTIPLE_COILS, 0, output_value=[1, 1, 0, 1, 1, 0, 1, 1])</span></span><br><span class="line"><span class="string">    master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 100, output_value=xrange(12))</span></span><br><span class="line"><span class="string">    master.execute(从站ID; 功能码; 需要改变的地址位; output_vlaue=改变的内容)</span></span><br><span class="line"><span class="string">    功能代码cst</span></span><br><span class="line"><span class="string">    1～255中1～21是常用的，以下是读写专用的功能码</span></span><br><span class="line"><span class="string">    READ_COILS = 01 读线圈，位操作</span></span><br><span class="line"><span class="string">    READ_DISCRETE_INPUTS = 02 读离散输入状态，位操作</span></span><br><span class="line"><span class="string">    READ_HOLDING_REGISTERS = 03 读保持寄存器，字操作</span></span><br><span class="line"><span class="string">    READ_INPUT_REGISTERS = 04 读输入寄存器，字操作</span></span><br><span class="line"><span class="string">    WRITE_SINGLE_COIL = 05 写单线圈，位操作</span></span><br><span class="line"><span class="string">    WRITE_SINGLE_REGISTER = 06 写单一寄存器，字操作</span></span><br><span class="line"><span class="string">    WRITE_MULTIPLE_COILS = 15 写多个线圈【强制多点线圈】，位操作</span></span><br><span class="line"><span class="string">    WRITE_MULTIPLE_REGISTERS = 16 写多寄存器【写乘法寄存器】，字操作</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-从机"><a href="#3-从机" class="headerlink" title="3.从机"></a>3.从机</h3><p>示例代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> modbus_tk</span><br><span class="line"><span class="keyword">import</span> modbus_tk.defines <span class="keyword">as</span> cst</span><br><span class="line"><span class="keyword">from</span> modbus_tk <span class="keyword">import</span> modbus_rtu</span><br><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"></span><br><span class="line">PORT = <span class="string">&quot;COM2&quot;</span></span><br><span class="line"><span class="comment"># 此处可修改使用的串口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;main&quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment">#Create the server</span></span><br><span class="line">    server = modbus_rtu.RtuServer(serial.Serial(PORT))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        server.start()</span><br><span class="line"></span><br><span class="line">        slave = server.add_slave(<span class="number">1</span>)</span><br><span class="line">        <span class="comment">#添加地址为1的从机</span></span><br><span class="line">        slave.add_block(<span class="string">&#x27;0&#x27;</span>, cst.HOLDING_REGISTERS, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">        <span class="comment">#添加取名为0的0~10内存块，设置为保持寄存器（03功能码）</span></span><br><span class="line">        slave.set_values(<span class="string">&#x27;0&#x27;</span>, <span class="number">0</span>, [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">        <span class="comment">#设置寄存器数值</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                values = slave.get_values(<span class="string">&#x27;0&#x27;</span>, <span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">                <span class="comment">#读取寄存器数值0~10</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;values read: %s\r\n&#x27;</span> % (<span class="built_in">str</span>(values)))                            </span><br><span class="line">           </span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        server.stop()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values read: (1, 1, 0, 1, 1, 0, 1, 1, 0, 0)</span><br></pre></td></tr></table></figure>
+
+<p>在Modbus Poll 可以看到主从站通信正常（Err是因为之前还没运行代码）</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20210106105049093.png" alt="image-20210106105049093"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Modbus/" rel="tag"># Modbus</a>
+              <a href="/tags/%E6%8A%A5%E5%91%8A/" rel="tag"># 报告</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/25/Markdown%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="prev" title="Markdown入门学习">
+                  <i class="fa fa-chevron-left"></i> Markdown入门学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/26/Numpy/" rel="next" title="NumPy">
+                  NumPy <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
