@@ -123,18 +123,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -163,6 +163,226 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">视频行为识别博客笔记</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-09-05 15:17:56" itemprop="dateCreated datePublished" datetime="2022-09-05T15:17:56+08:00">2022-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-09-08 11:05:53" itemprop="dateModified" datetime="2022-09-08T11:05:53+08:00">2022-09-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频行为识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>博客原文地址：<a target="_blank" rel="noopener" href="https://blog.qure.ai/notes/deep-learning-for-videos-action-recognition-review#sec-2">Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai)</a></p>
+<h1 id="动作识别以及难点"><a href="#动作识别以及难点" class="headerlink" title="动作识别以及难点"></a>动作识别以及难点</h1><p>1.巨量的计算资源</p>
+<p>一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。</p>
+<p>2.需考虑上下时刻场景</p>
+<p>动作识别需包含跨帧获取时空信息</p>
+<p>3.设计分类网络结构</p>
+<p>需设计能够捕获时空信息的架构</p>
+<p>4.没有标准的<strong>benchmark</strong></p>
+<h1 id="方法概述"><a href="#方法概述" class="headerlink" title="方法概述"></a>方法概述</h1><h2 id="传统CV方法"><a href="#传统CV方法" class="headerlink" title="传统CV方法"></a>传统CV方法</h2><p>基本可汇总为以下三步：</p>
+<p>1.针对视频明显特征区域做提取，提取为密集向量或稀疏的兴趣点集合。（这一步之前一直是人工提取，后来提出的iDT算法改善了该流程）</p>
+<p>2.提取的特征转化为固定尺寸的向量，来描述该视频的内容。这一步最流行的做法是Bag of visual words</p>
+<p>3.定义分类器，根据提取的视频特征向量，选定分类器，做分类训练和预测</p>
+<h2 id="深度学习方法"><a href="#深度学习方法" class="headerlink" title="深度学习方法"></a>深度学习方法</h2><p>3D卷积于2013年被用于动作识别，且无需其他的输入作为帮助。而2014年有两篇突破性的研究论文被发表。</p>
+<h3 id="单流网络"><a href="#单流网络" class="headerlink" title="单流网络"></a>单流网络</h3><p><a target="_blank" rel="noopener" href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/42455.pdf">https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/42455.pdf</a></p>
+<p>这篇论文使用2D预训练卷积以探索多种方法来融合连续帧的时间信息</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg" alt="Karpathy_fusion"></p>
+<p>如上图,视频的所有连续帧都作为不同设置的输入。 <em>Single frame</em> 使用单一的网络架构在最后阶段融合所有帧的信息;<em>Late fusion</em>融合使用两个共享参数的网络，间隔15帧，并在最后结合预测。<em>Early fusion</em>在第一层通过卷积将超过10帧进行融合。 <em>Slow fusion</em>涉及多个阶段的融合，兼顾早期和晚期融合之间的平衡。</p>
+<p>不过与基于人工标定特征的方法相比,效果不好,作者推断有以下问题:一是学习到的时空特征没有捕捉到运动特征;二是由于数据集的多样性较低，学习如此详细的特征非常困难</p>
+<h3 id="双流网络"><a href="#双流网络" class="headerlink" title="双流网络"></a>双流网络</h3><p><img src="https://blog.qure.ai/assets/images/actionrec/2stream_high.png" alt="2 stream architecture"></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1406.2199.pdf">https://arxiv.org/pdf/1406.2199.pdf</a></p>
+<p>这篇论文在上文单流网络的基础上,设计一个获取动作特征的光流模型。这样就形成了双流模型，一个负责获取空间信息，一个负责获取时间信息。</p>
+<p>尽管该方法取得了不错的效果，但还是有以下几个缺点：<br>一 视频的预测还是依据从视频中抽取的部分样本。对于长视频来说，在特征学习中还是会损失时序信息。<br>二 在训练时，从视频中抽取片段样本时由于是均匀抽取，这样会有错误标签的现象（即指定动作并不存在该样本片段中）。<br>三 在光流使用前，需要对视频预先做光流的抽取操作。</p>
+<h1 id="论文总结"><a href="#论文总结" class="headerlink" title="论文总结"></a>论文总结</h1><p>以下论文在某种程度上是两篇论文(单流和两流)的演变。而围绕这些论文反复出现的方法可以总结如下，所有的论文都是基于这些基本观点的即兴创作。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/recurrent_theme_high.png" alt="SegNet Architecture"></p>
+<h2 id="LRCN（Long-term-Recurrent-Convolutional-Network）"><a href="#LRCN（Long-term-Recurrent-Convolutional-Network）" class="headerlink" title="LRCN（Long-term Recurrent Convolutional Network）"></a>LRCN（Long-term Recurrent Convolutional Network）</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1411.4389">https://arxiv.org/abs/1411.4389</a></p>
+<h3 id="关键贡献"><a href="#关键贡献" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>基于之前的工作使用RNN来代替基于流的设计</li>
+<li>用于视频表示的编码器架构的扩展</li>
+<li>动作识别的端到端可训练架构</li>
+</ol>
+<h3 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h3><p>在这之前有利用CNN对视频片段做特征提取，然后再用LSTM对时序的特征做最终分类，但效果不好。而LRCN是在卷积块(编码器)之后使用LSTM块(解码器)即端到端训练，同时也使用RGB和光流都作为输入，并将预测结果加权相加得到好的效果。</p>
+<p><img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220905164221964.png" alt="image-20220905164221964"></p>
+<h3 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h3><ol>
+<li>将视频分为片段后，会导致某些片段没有标签对应的动作，从而干扰模型的效果</li>
+<li>无法捕捉长期的时间信息</li>
+<li>使用光流作为特征意味着需要分别计算流特征</li>
+</ol>
+<p>基于上述缺陷，新的工作通过使用更低分辨率的视频和更长的视频片段（60帧）以实现更好的性能。</p>
+<h2 id="C3D"><a href="#C3D" class="headerlink" title="C3D"></a>C3D</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1412.0767">https://arxiv.org/pdf/1412.0767</a></p>
+<h3 id="关键贡献-1"><a href="#关键贡献-1" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>利用三维卷积网络做特征提取器</li>
+<li>广泛搜索最佳3D卷积内核和架构</li>
+<li>使用反卷积层解释模型决策</li>
+</ol>
+<h3 id="解释-1"><a href="#解释-1" class="headerlink" title="解释"></a>解释</h3><p><img src="https://blog.qure.ai/assets/images//actionrec/c3d_high.png" alt="SegNet Architecture"></p>
+<p>另外,作者使用了反卷积层来解释这样的设计，他们的发现是，在最初的几帧中，网络关注的是空间外观，并在随后的几帧中跟踪运动。</p>
+<p><img src="https://blog.qure.ai/assets/images//actionrec/trial.gif" alt="SegNet Architecture"></p>
+<h3 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h3><ol>
+<li>长时间模型的建模依旧是个未解决的问题</li>
+<li>过于庞大的网络在训练上计算过慢</li>
+</ol>
+<h3 id="Note："><a href="#Note：" class="headerlink" title="Note："></a>Note：</h3><p><img src="https://blog.qure.ai/assets/images/actionrec/fstcn_high.png" alt="SegNet Architecture"></p>
+<p>FSTCN，分解3D卷积网络，主要思路是将三维卷积分解为空间二维卷积，然后是时间一维卷积。将一维卷积放在二维卷积层之后，实现二维时域和信道维的卷积。</p>
+<h2 id="三维卷积-注意力机制"><a href="#三维卷积-注意力机制" class="headerlink" title="三维卷积+注意力机制"></a>三维卷积+注意力机制</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1502.08029">https://arxiv.org/abs/1502.08029</a></p>
+<h3 id="关键贡献-2"><a href="#关键贡献-2" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>新颖的3D CNN-RNN编码器-解码器结构，可以捕捉局部时空信息</li>
+<li>使用注意力机制来获取全局上下文</li>
+</ol>
+<h3 id="解释-2"><a href="#解释-2" class="headerlink" title="解释"></a>解释</h3><p>虽然这项工作与动作识别没有直接的关系，但在视频表征方面是具有里程碑意义的工作。本文采用三维CNN + LSTM作为视频描述任务的基础架构。在基础上，作者使用一个预先训练的3D CNN来提高效果。</p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><p>其设置与LRCN中描述的编码器-解码器架构几乎相同，但有两个不同之处：</p>
+<ol>
+<li>并非单纯的使用了3D卷积做LSTM的特征向量输入。对于每一帧，先通过3D卷积获取feature maps，再通过2D卷积对其帧集获取feature maps集合。2D和3D CNN使用的是预先训练的，而不是像LRCN这样的端到端训练。</li>
+<li>并非平均所有帧的时间向量。加权平均值的方法用于结合时间特征。在每个时间步上，根据LSTM输出来确定注意力权重。</li>
+</ol>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/Larochelle_paper_high.png" alt="Attention Mechanism"></p>
+<h2 id="TwoStreamFusion"><a href="#TwoStreamFusion" class="headerlink" title="TwoStreamFusion"></a>TwoStreamFusion</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1604.06573">https://arxiv.org/abs/1604.06573</a></p>
+<h3 id="关键贡献-3"><a href="#关键贡献-3" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>通过更好的远距离损失的远距离时间建模</li>
+<li>新颖的多层次融合架构</li>
+</ol>
+<h3 id="解释-3"><a href="#解释-3" class="headerlink" title="解释"></a>解释</h3><p>在这个工作中，作者使用了基本的双流架构，并采用了两种新颖的方法，在提高性能的同时并不会带来任何参数的显著增加。</p>
+<ol>
+<li>空间流和时间流的融合：以洗头和刷牙为例，空间网络可以捕捉视频中的空间相关性（判断头发还是牙齿），时间网络则可以捕捉到视频中每个空间位置的周期性运动。因此，将人脸特定区域的空间特征映射到相应区域的时间特征映射是非常重要的。为了达到同样的效果，网络需要在较早的水平上进行融合，使相同像素位置的响应处于对应状态，而不是在最后进行融合。</li>
+<li>跨时间框架组合时间净输出，以便对长期依赖也进行建模。</li>
+</ol>
+<h3 id="算法-1"><a href="#算法-1" class="headerlink" title="算法"></a>算法</h3><p>与双流架构基本一样，除了</p>
+<ol>
+<li><p>如下图所示，Conv_5层的输出均通过卷积层+池化层的方式融合，而此算法则在最后一层加了另一种融合，最后融合输出作为spatiotemporal loss。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/fusion_strategies_high.png" alt="SegNet Architecture"></p>
+</li>
+<li><p>时间融合采用跨时间叠加的时间网络输出，采用conv+pooling融合的方法计算时间损失</p>
+</li>
+</ol>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/2streamfusion.png" alt="SegNet Architecture"></p>
+<h2 id="TSN"><a href="#TSN" class="headerlink" title="TSN"></a>TSN</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.00859">https://arxiv.org/abs/1608.00859</a></p>
+<h3 id="关键贡献-4"><a href="#关键贡献-4" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>针对长期时间建模的有效解决方案</li>
+<li>确定BN、dropout和预训练是一种有效的尝试</li>
+</ol>
+<h3 id="解释-4"><a href="#解释-4" class="headerlink" title="解释"></a>解释</h3><p>与基本的双流架构有两个主要的不同：</p>
+<ol>
+<li>他们建议在整个视频中稀疏地采样片段，以更好地建模长期时间信号，而不是在整个视频中随机采样。</li>
+<li>为了最终的预测，作者在视频层面探索了多种策略。最好的策略是<ol>
+<li>通过对片段平均，分别组合数十个时间和空间流(以及其他流，如果涉及其他输入模式)</li>
+<li>对所有类融合最终的空间和时间得分使用加权平均和应用softmax。</li>
+</ol>
+</li>
+</ol>
+<p>该工作的另一个重要部分是解决过拟合问题(由于数据集规模较小)，并演示使用现在流行的技术，如批处理规范化、Dropout和预训练来应对。作者还评估了两种新的光流输入模式，即弯曲光流和RGB差。</p>
+<h3 id="算法-2"><a href="#算法-2" class="headerlink" title="算法"></a>算法</h3><p>在训练和预测过程中，将一段视频分成K段，每段时长相等。然后，从K个片段中随机抽取片段。其余的步骤仍然类似于上面提到的双流架构的更改。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/tsn_high.png" alt="SegNet Architecture"></p>
+<h2 id="ActionVLAD"><a href="#ActionVLAD" class="headerlink" title="ActionVLAD"></a>ActionVLAD</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1704.02895.pdf">https://arxiv.org/pdf/1704.02895.pdf</a></p>
+<h3 id="关键贡献-5"><a href="#关键贡献-5" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>可学习的视频级聚合功能</li>
+<li>具有视频级聚合特征的端到端可训练模型，以捕获长期依赖</li>
+</ol>
+<h3 id="解释-5"><a href="#解释-5" class="headerlink" title="解释"></a>解释</h3><p>作者最显著的贡献是使用了可学习的特性聚合(VLAD)，而不是使用maxpool或avgpool的普通聚合。聚合技术类似于视觉词汇。有多个基于锚点(比如$c_1$, $c_k$)的学习词汇，代表k个典型的动作(或子动作)相关的时空特征。两个流结构中的每个流的输出都按照k空间的动作词特征进行编码——每个特征都是输出与任何给定的空间或时间位置对应的锚点的差值。</p>
+<p>（没看懂）</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/actionvlad.png" alt="SegNet Architecture"></p>
+<p>平均或最大池只作为一个描述符来表示整个点的分布，这对于表示由多个子动作组成的整个视频来说是次优的。相比之下，提出的视频聚合通过将描述符空间分割为<strong>k个单元</strong>并在每个单元内池化来表示具有多个子动作的描述符的整个分布。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/pooling_difference_high.png" alt="SegNet Architecture"></p>
+<h2 id="HiddenTwoStream"><a href="#HiddenTwoStream" class="headerlink" title="HiddenTwoStream"></a>HiddenTwoStream</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.00389">https://arxiv.org/abs/1704.00389</a></p>
+<h3 id="关键贡献-6"><a href="#关键贡献-6" class="headerlink" title="关键贡献"></a>关键贡献</h3><p>提出一种新颖的使用单独的网络实时生成光流输入的架构</p>
+<h3 id="解释-6"><a href="#解释-6" class="headerlink" title="解释"></a>解释</h3><p>光流在双流架构的使用使得必须预先计算每个采样帧的光流，从而对存储和速度产生不利影响。这篇论文提出了一种使用无监督架构来生成光流的方法。</p>
+<p>光流法可以被当成是一种图像重建问题。给定一对相邻的帧$l_1、l_2$作为输入，CNN生成一个流场$V$，然后利用预测的流场$V$和$l_2$，利用反翘曲将$l_1$重构为$l_1^{‘}$，使$l_1$与重构的差值最小。</p>
+<h3 id="算法-3"><a href="#算法-3" class="headerlink" title="算法"></a>算法</h3><p>作者探索了多种策略和架构，在不太影响精度的前提下，以最大的帧数和最小的参数产生光流。最后的体系结构与前面提到的双流体系结构相同</p>
+<ol>
+<li>时间流现在有堆叠在一般时间流架构的顶部的光流生成网络(MotionNet)。时间流的输入现在是后续帧而不是预处理的光流。</li>
+<li>对于MotionNet的无监督训练，还有额外的多层次损失</li>
+</ol>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/hidden2stream_high.png" alt="SegNet Architecture"></p>
+<h2 id="I3D"><a href="#I3D" class="headerlink" title="I3D"></a>I3D</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1705.07750">https://arxiv.org/abs/1705.07750</a></p>
+<h3 id="关键贡献-7"><a href="#关键贡献-7" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>利用预训练将基于3D的模型结合到两个流架构中</li>
+<li>Kinetics数据集用于未来的基准测试和改进的行动数据集的多样性</li>
+</ol>
+<h3 id="解释-7"><a href="#解释-7" class="headerlink" title="解释"></a>解释</h3><p>作者不是使用单一的3D网络，而是在双流架构中为两个流使用两个不同的3D网络。此外，为了利用预训练的2D模型，作者在第三维中重复了2D预训练的权重。现在的空间流输入由时间维度上叠加的帧组成，而不是像基本的两种流结构那样由单个帧组成。</p>
+<h2 id="T3D"><a href="#T3D" class="headerlink" title="T3D"></a>T3D</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.08200">https://arxiv.org/abs/1711.08200</a></p>
+<h3 id="关键贡献-8"><a href="#关键贡献-8" class="headerlink" title="关键贡献"></a>关键贡献</h3><ol>
+<li>跨可变深度组合时间信息的架构</li>
+<li>新颖的训练架构和技术，以监督2D预训练的网络转移到3D网络</li>
+</ol>
+<h3 id="解释-8"><a href="#解释-8" class="headerlink" title="解释"></a>解释</h3><p>作者扩展了在I3D上完成的工作，但建议使用基于单一流3D DenseNet的架构，在密集块之后叠加多深度时间池化层(时间过渡层)，以捕获不同的时间深度。多深度池化是通过池化不同时间大小的核来实现的。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/ttl_layer_high.png" alt="SegNet Architecture"></p>
+<p>除上述内容外，作者还设计了一种新的技术，以在预先培训的2D Conv Nets和T3D中监督转移学习。2D预三角网和T3D都是从视频中呈现的框架和剪辑，其中剪辑和视频可能来自同一视频。该体系结构是基于相同的三角形来预测0&#x2F;1的，并且预测的误差通过T3D NET进行了反向传播，以便有效地传输知识。</p>
+<p><img src="https://blog.qure.ai/assets/images/actionrec/transfer_learning_high.png" alt="SegNet Architecture"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
