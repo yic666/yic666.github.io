@@ -28,10 +28,10 @@
 <meta property="og:description" content="摘要、引言、结论 本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。 本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-10-18T02:48:59.000Z">
-<meta property="article:modified_time" content="2022-11-23T12:37:23.448Z">
+<meta property="article:modified_time" content="2023-01-10T13:18:27.236Z">
 <meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="动作识别">
 <meta property="article:tag" content="笔记">
-<meta property="article:tag" content="行为识别">
 <meta property="article:tag" content="Fine-Grained">
 <meta name="twitter:card" content="summary">
 
@@ -118,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E5%BC%95%E8%A8%80%E7%BB%93%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">摘要、引言、结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">提出的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dsts%E5%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">DSTS层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%81%E8%A7%A6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.1.</span> <span class="nav-text">突触机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E7%A9%BA%E4%B8%93%E9%97%A8%E5%8C%96"><span class="nav-number">2.2.2.</span> <span class="nav-text">时空专门化</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E5%BC%95%E8%A8%80%E7%BB%93%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">摘要、引言、结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">提出的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dsts%E5%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">DSTS层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%81%E8%A7%A6%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.1.</span> <span class="nav-text">突触机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E7%A9%BA%E4%B8%93%E9%97%A8%E5%8C%96"><span class="nav-number">2.2.2.</span> <span class="nav-text">时空专门化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%B8%B8%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.3.</span> <span class="nav-text">上下游学习</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -131,7 +131,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -142,7 +142,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -217,7 +217,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-11-23 20:37:23" itemprop="dateModified" datetime="2022-11-23T20:37:23+08:00">2022-11-23</time>
+      <time title="Modified: 2023-01-10 21:18:27" itemprop="dateModified" datetime="2023-01-10T21:18:27+08:00">2023-01-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -350,7 +350,81 @@ class="math inline">\(X_T\)</span>，分别用于学习细粒度的空间和时�
 X_{S}=(\mathbf{1}-\mathbf{b}) \cdot X, \\
 X_{T}=\mathbf{b} \cdot X,
 \end{array}
-\]</span></p>
+\]</span> 其中<span
+class="math inline">\(\mathbf{1}\)</span>是一个长度为<span
+class="math inline">\(N_{in}\)</span>的向量，大小为1，而<span
+class="math inline">\(\cdot\)</span>指的是沿通道维度的乘法，同时将<span
+class="math inline">\(b\)</span>和<span class="math inline">\((1 -
+b)\)</span>的每个元素视为一个通道。 <span class="math display">\[
+\begin{array}{l}
+Z_{S}=S_{a}\left(X_{S}\right) \\
+Z_{T}=T_{a}\left(X_{T}\right)
+\end{array}
+\]</span> 其中<span
+class="math inline">\(Z_S\)</span>表示捕获输入特征图空间信息的特征<span
+class="math inline">\(X\)</span>，而<span
+class="math inline">\(Z_T\)</span>表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为<span
+class="math inline">\(Z&#39;_S\)</span>和<span
+class="math inline">\(Z&#39;_t\)</span>
+，输出特征图为两者之和。最后，对Z进行1 × 1 ×
+1卷积，融合空间和时间特征。而融合的特征<span
+class="math inline">\(Z&#39;\)</span>将作为下一层DSTS或分类器的输入。</p>
+<figure>
+<img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png"
+alt="image-20221123205910863" />
+<figcaption aria-hidden="true">image-20221123205910863</figcaption>
+</figure>
+<h2 id="上下游学习">上下游学习</h2>
+<p>为了进一步提高DSTS模块的性能，论文设计了一个UDL算法，该算法可以更好地优化与动态决策相关的模型参数，称之为上游参数。动态决策相关的上游参数（例如评分核<span
+class="math inline">\(m\)</span>和门参数<span
+class="math inline">\(g\)</span>）和处理输入的下游参数（例如时空算子<span
+class="math inline">\(S\)</span>和<span
+class="math inline">\(T\)</span>）会在端到端的训练中联合训练，而这的挑战主要是上游参数也会影响到下游参数的训练。因此，作者使用元学习（meta-learning）优化上游参数，同时考虑下游参数的影响，从而提高下游参数的学习能力，提高整体性能。</p>
+<blockquote>
+<p>元学习算法由三步骤组成。第一步，通过更新下游参数的同时冻结上游参数从而模拟使用当前上游参数集进行动态决策时，下游参数的训练过程。第二步，在验证集上评估模型在held-out样本的性能。来自该评估的二阶梯度(相对于上游参数)提供了如何更新上游参数的反馈，以便它们在训练期间的动态决策可以改进下游参数的学习过程，从而在held-out样本上获得更好的性能。最后一步，使用元优化的上游参数对下游参数进行优化，这些参数现在在模型中做出动态决策，以便下游参数能够从训练中获得更多好处，并提高(测试)性能。</p>
+</blockquote>
+<p>具体地说，在每一次迭代中，在训练数据中采样两个mini-batch：训练样本<span
+class="math inline">\(D_{train}\)</span>和验证样本<span
+class="math inline">\(D_{val}\)</span>。</p>
+<ul>
+<li><p>Simulated Update Step：在<span
+class="math inline">\(D_{train}\)</span>上使用监督loss更新下游参数<span
+class="math inline">\(d\)</span> <span class="math display">\[
+\hat{d}=d-\alpha \nabla_{d} \ell\left(u, d ; D_{\text {train }}\right)
+\]</span> 其中，<span
+class="math inline">\(\alpha\)</span>为学习率超参数，<span
+class="math inline">\(u\)</span>和<span
+class="math inline">\(d\)</span>分别表示上游和下游参数。在这个步骤中<span
+class="math inline">\(u\)</span>保持固定。</p></li>
+<li><p>Meta-Update Step：在<span
+class="math inline">\(D_{val}\)</span>中验证更新后的模型，当上游参数<span
+class="math inline">\(u\)</span>在第一个模拟更新步骤中用于决策时，使用关于<span
+class="math inline">\(u\)</span>的二阶梯度更新上游参数<span
+class="math inline">\(u\)</span> <span class="math display">\[
+u^{\prime}=u-\alpha \nabla_{u} \ell\left(\hat{u}, \hat{d} ; D_{v a
+l}\right)
+\]</span> 其中<span class="math inline">\(\hat{u}\)</span>是<span
+class="math inline">\(u\)</span>的副本，但不计算关于<span
+class="math inline">\(\hat{u}\)</span>的梯度。这里需要计算的梯度指的是<span
+class="math inline">\(u^{\prime}\)</span>关于<span
+class="math inline">\(\hat{d}\)</span>中<span
+class="math inline">\(u\)</span>的梯度，即二阶梯度。这些二阶梯度为如何调节<span
+class="math inline">\(u\)</span>提供反馈以更好地训练下游参数，从而提高在不可见样本的性能。在这个步骤中<span
+class="math inline">\(d\)</span>保持固定。</p></li>
+<li><p>Actual Update Step：保持<span
+class="math inline">\(u^{\prime}\)</span>冻结的情况下更新<span
+class="math inline">\(d\)</span> <span class="math display">\[
+d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train
+}}\right)
+\]</span></p></li>
+</ul>
+<figure>
+<img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png"
+alt="image-20221124161756656" />
+<figcaption aria-hidden="true">image-20221124161756656</figcaption>
+</figure>
 
     </div>
 
@@ -360,8 +434,8 @@ X_{T}=\mathbf{b} \cdot X,
 
     <footer class="post-footer">
           <div class="post-tags">
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
               <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
-              <a href="/tags/%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB/" rel="tag"># 行为识别</a>
               <a href="/tags/Fine-Grained/" rel="tag"># Fine-Grained</a>
           </div>
 
@@ -374,6 +448,9 @@ X_{T}=\mathbf{b} \cdot X,
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2023/01/08/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/" rel="next" title="《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记">
+                  《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记 <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -394,7 +471,7 @@ X_{T}=\mathbf{b} \cdot X,
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
