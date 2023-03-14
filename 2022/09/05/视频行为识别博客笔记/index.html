@@ -20,26 +20,35 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="博客原文地址：Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai) 动作识别以及难点 1.巨量的计算资源 一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。 2.需考虑上下时刻场景 动作识别需包含跨帧获取时空信息 3.设计分类网络结构 需">
+    <meta name="description" content="博客原文地址：Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai) 动作识别以及难点 1.巨量的计算资源 一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。 2.需考虑上下时刻场景 动作识别需包含跨帧获取时空信息 3.设计分类网络结构 需设计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="视频行为识别博客笔记">
 <meta property="og:url" content="http://example.com/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="博客原文地址：Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai) 动作识别以及难点 1.巨量的计算资源 一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。 2.需考虑上下时刻场景 动作识别需包含跨帧获取时空信息 3.设计分类网络结构 需">
+<meta property="og:description" content="博客原文地址：Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai) 动作识别以及难点 1.巨量的计算资源 一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。 2.需考虑上下时刻场景 动作识别需包含跨帧获取时空信息 3.设计分类网络结构 需设计">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg">
 <meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/2stream_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/recurrent_theme_high.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220905164221964.png">
 <meta property="og:image" content="https://blog.qure.ai/assets/images//actionrec/c3d_high.png">
 <meta property="og:image" content="https://blog.qure.ai/assets/images//actionrec/trial.gif">
 <meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/fstcn_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/Larochelle_paper_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/fusion_strategies_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/2streamfusion.png">
 <meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/tsn_high.png">
 <meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/actionvlad.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/pooling_difference_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/hidden2stream_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/ttl_layer_high.png">
+<meta property="og:image" content="https://blog.qure.ai/assets/images/actionrec/transfer_learning_high.png">
 <meta property="article:published_time" content="2022-09-05T07:17:56.000Z">
-<meta property="article:modified_time" content="2023-01-10T13:18:58.174Z">
+<meta property="article:modified_time" content="2023-03-13T04:26:02.609Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="笔记">
 <meta property="article:tag" content="动作识别">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.qure.ai/assets/images/actionrec/2stream_high.png">
+<meta name="twitter:image" content="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg">
 
 
 <link rel="canonical" href="http://example.com/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/">
@@ -124,8 +133,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB%E4%BB%A5%E5%8F%8A%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">动作识别以及难点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">方法概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9Fcv%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">传统CV方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">深度学习方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.1.</span> <span class="nav-text">单流网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.2.</span> <span class="nav-text">双流网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">论文总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lrcnlong-term-recurrent-convolutional-network"><span class="nav-number">3.1.</span> <span class="nav-text">LRCN（Long-term
-Recurrent Convolutional Network）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE"><span class="nav-number">3.1.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">3.1.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">3.1.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c3d"><span class="nav-number">3.2.</span> <span class="nav-text">C3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7-1"><span class="nav-number">3.2.3.</span> <span class="nav-text">缺陷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#note"><span class="nav-number">3.2.4.</span> <span class="nav-text">Note：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">三维卷积+注意力机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-2"><span class="nav-number">3.3.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-2"><span class="nav-number">3.3.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#twostreamfusion"><span class="nav-number">3.4.</span> <span class="nav-text">TwoStreamFusion</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-3"><span class="nav-number">3.4.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-3"><span class="nav-number">3.4.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-1"><span class="nav-number">3.4.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tsn"><span class="nav-number">3.5.</span> <span class="nav-text">TSN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-4"><span class="nav-number">3.5.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-4"><span class="nav-number">3.5.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-2"><span class="nav-number">3.5.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actionvlad"><span class="nav-number">3.6.</span> <span class="nav-text">ActionVLAD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-5"><span class="nav-number">3.6.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-5"><span class="nav-number">3.6.2.</span> <span class="nav-text">解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hiddentwostream"><span class="nav-number">3.7.</span> <span class="nav-text">HiddenTwoStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-6"><span class="nav-number">3.7.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-6"><span class="nav-number">3.7.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-3"><span class="nav-number">3.7.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#i3d"><span class="nav-number">3.8.</span> <span class="nav-text">I3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-7"><span class="nav-number">3.8.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-7"><span class="nav-number">3.8.2.</span> <span class="nav-text">解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#t3d"><span class="nav-number">3.9.</span> <span class="nav-text">T3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-8"><span class="nav-number">3.9.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-8"><span class="nav-number">3.9.2.</span> <span class="nav-text">解释</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB%E4%BB%A5%E5%8F%8A%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">动作识别以及难点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">方法概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9Fcv%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">传统CV方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">深度学习方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.1.</span> <span class="nav-text">单流网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="nav-number">2.2.2.</span> <span class="nav-text">双流网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">论文总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lrcnlong-term-recurrent-convolutional-network"><span class="nav-number">3.1.</span> <span class="nav-text">LRCN（Long-term Recurrent Convolutional Network）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE"><span class="nav-number">3.1.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">3.1.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">3.1.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c3d"><span class="nav-number">3.2.</span> <span class="nav-text">C3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7-1"><span class="nav-number">3.2.3.</span> <span class="nav-text">缺陷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#note"><span class="nav-number">3.2.4.</span> <span class="nav-text">Note：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%BB%B4%E5%8D%B7%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">三维卷积+注意力机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-2"><span class="nav-number">3.3.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-2"><span class="nav-number">3.3.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95"><span class="nav-number">3.3.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#twostreamfusion"><span class="nav-number">3.4.</span> <span class="nav-text">TwoStreamFusion</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-3"><span class="nav-number">3.4.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-3"><span class="nav-number">3.4.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-1"><span class="nav-number">3.4.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tsn"><span class="nav-number">3.5.</span> <span class="nav-text">TSN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-4"><span class="nav-number">3.5.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-4"><span class="nav-number">3.5.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-2"><span class="nav-number">3.5.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actionvlad"><span class="nav-number">3.6.</span> <span class="nav-text">ActionVLAD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-5"><span class="nav-number">3.6.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-5"><span class="nav-number">3.6.2.</span> <span class="nav-text">解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hiddentwostream"><span class="nav-number">3.7.</span> <span class="nav-text">HiddenTwoStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-6"><span class="nav-number">3.7.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-6"><span class="nav-number">3.7.2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-3"><span class="nav-number">3.7.3.</span> <span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#i3d"><span class="nav-number">3.8.</span> <span class="nav-text">I3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-7"><span class="nav-number">3.8.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-7"><span class="nav-number">3.8.2.</span> <span class="nav-text">解释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#t3d"><span class="nav-number">3.9.</span> <span class="nav-text">T3D</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B4%A1%E7%8C%AE-8"><span class="nav-number">3.9.1.</span> <span class="nav-text">关键贡献</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A-8"><span class="nav-number">3.9.2.</span> <span class="nav-text">解释</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -138,18 +146,18 @@ Recurrent Convolutional Network）</span></a><ol class="nav-child"><li class="na
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -224,7 +232,7 @@ Recurrent Convolutional Network）</span></a><ol class="nav-child"><li class="na
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 21:18:58" itemprop="dateModified" datetime="2023-01-10T21:18:58+08:00">2023-01-10</time>
+      <time title="Modified: 2023-03-13 12:26:02" itemprop="dateModified" datetime="2023-03-13T12:26:02+08:00">2023-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -246,10 +254,7 @@ Recurrent Convolutional Network）</span></a><ol class="nav-child"><li class="na
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>博客原文地址：<a
-target="_blank" rel="noopener" href="https://blog.qure.ai/notes/deep-learning-for-videos-action-recognition-review#sec-2">Deep
-Learning for Videos: A 2018 Guide to Action Recognition
-(qure.ai)</a></p>
+        <p>博客原文地址：<a target="_blank" rel="noopener" href="https://blog.qure.ai/notes/deep-learning-for-videos-action-recognition-review#sec-2">Deep Learning for Videos: A 2018 Guide to Action Recognition (qure.ai)</a></p>
 <h1 id="动作识别以及难点">动作识别以及难点</h1>
 <p>1.巨量的计算资源</p>
 <p>一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。</p>
@@ -262,8 +267,7 @@ Learning for Videos: A 2018 Guide to Action Recognition
 <h2 id="传统cv方法">传统CV方法</h2>
 <p>基本可汇总为以下三步：</p>
 <p>1.针对视频明显特征区域做提取，提取为密集向量或稀疏的兴趣点集合。（这一步之前一直是人工提取，后来提出的iDT算法改善了该流程）</p>
-<p>2.提取的特征转化为固定尺寸的向量，来描述该视频的内容。这一步最流行的做法是Bag
-of visual words</p>
+<p>2.提取的特征转化为固定尺寸的向量，来描述该视频的内容。这一步最流行的做法是Bag of visual words</p>
 <p>3.定义分类器，根据提取的视频特征向量，选定分类器，做分类训练和预测</p>
 <h2 id="深度学习方法">深度学习方法</h2>
 <p>3D卷积于2013年被用于动作识别，且无需其他的输入作为帮助。而2014年有两篇突破性的研究论文被发表。</p>
@@ -271,40 +275,23 @@ of visual words</p>
 <p>https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/42455.pdf</p>
 <p>这篇论文使用2D预训练卷积以探索多种方法来融合连续帧的时间信息</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg"
-alt="Karpathy_fusion" />
-<figcaption aria-hidden="true">Karpathy_fusion</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg" alt="Karpathy_fusion" /><figcaption aria-hidden="true">Karpathy_fusion</figcaption>
 </figure>
-<p>如上图,视频的所有连续帧都作为不同设置的输入。 <em>Single frame</em>
-使用单一的网络架构在最后阶段融合所有帧的信息;<em>Late
-fusion</em>融合使用两个共享参数的网络，间隔15帧，并在最后结合预测。<em>Early
-fusion</em>在第一层通过卷积将超过10帧进行融合。 <em>Slow
-fusion</em>涉及多个阶段的融合，兼顾早期和晚期融合之间的平衡。</p>
+<p>如上图,视频的所有连续帧都作为不同设置的输入。 <em>Single frame</em> 使用单一的网络架构在最后阶段融合所有帧的信息;<em>Late fusion</em>融合使用两个共享参数的网络，间隔15帧，并在最后结合预测。<em>Early fusion</em>在第一层通过卷积将超过10帧进行融合。 <em>Slow fusion</em>涉及多个阶段的融合，兼顾早期和晚期融合之间的平衡。</p>
 <p>不过与基于人工标定特征的方法相比,效果不好,作者推断有以下问题:一是学习到的时空特征没有捕捉到运动特征;二是由于数据集的多样性较低，学习如此详细的特征非常困难</p>
 <h3 id="双流网络">双流网络</h3>
 <figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/2stream_high.png"
-alt="2 stream architecture" />
-<figcaption aria-hidden="true">2 stream architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/2stream_high.png" alt="2 stream architecture" /><figcaption aria-hidden="true">2 stream architecture</figcaption>
 </figure>
 <p>https://arxiv.org/pdf/1406.2199.pdf</p>
 <p>这篇论文在上文单流网络的基础上,设计一个获取动作特征的光流模型。这样就形成了双流模型，一个负责获取空间信息，一个负责获取时间信息。</p>
-<p>尽管该方法取得了不错的效果，但还是有以下几个缺点： 一
-视频的预测还是依据从视频中抽取的部分样本。对于长视频来说，在特征学习中还是会损失时序信息。
-二
-在训练时，从视频中抽取片段样本时由于是均匀抽取，这样会有错误标签的现象（即指定动作并不存在该样本片段中）。
-三 在光流使用前，需要对视频预先做光流的抽取操作。</p>
+<p>尽管该方法取得了不错的效果，但还是有以下几个缺点： 一 视频的预测还是依据从视频中抽取的部分样本。对于长视频来说，在特征学习中还是会损失时序信息。 二 在训练时，从视频中抽取片段样本时由于是均匀抽取，这样会有错误标签的现象（即指定动作并不存在该样本片段中）。 三 在光流使用前，需要对视频预先做光流的抽取操作。</p>
 <h1 id="论文总结">论文总结</h1>
 <p>以下论文在某种程度上是两篇论文(单流和两流)的演变。而围绕这些论文反复出现的方法可以总结如下，所有的论文都是基于这些基本观点的即兴创作。</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/recurrent_theme_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/recurrent_theme_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
-<h2 id="lrcnlong-term-recurrent-convolutional-network">LRCN（Long-term
-Recurrent Convolutional Network）</h2>
+<h2 id="lrcnlong-term-recurrent-convolutional-network">LRCN（Long-term Recurrent Convolutional Network）</h2>
 <p>https://arxiv.org/abs/1411.4389</p>
 <h3 id="关键贡献">关键贡献</h3>
 <ol type="1">
@@ -315,10 +302,7 @@ Recurrent Convolutional Network）</h2>
 <h3 id="解释">解释</h3>
 <p>在这之前有利用CNN对视频片段做特征提取，然后再用LSTM对时序的特征做最终分类，但效果不好。而LRCN是在卷积块(编码器)之后使用LSTM块(解码器)即端到端训练，同时也使用RGB和光流都作为输入，并将预测结果加权相加得到好的效果。</p>
 <figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220905164221964.png"
-alt="image-20220905164221964" />
-<figcaption aria-hidden="true">image-20220905164221964</figcaption>
+<img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220905164221964.png" alt="image-20220905164221964" /><figcaption aria-hidden="true">image-20220905164221964</figcaption>
 </figure>
 <h3 id="缺陷">缺陷</h3>
 <ol type="1">
@@ -337,15 +321,11 @@ alt="image-20220905164221964" />
 </ol>
 <h3 id="解释-1">解释</h3>
 <figure>
-<img src="https://blog.qure.ai/assets/images//actionrec/c3d_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images//actionrec/c3d_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <p>另外,作者使用了反卷积层来解释这样的设计，他们的发现是，在最初的几帧中，网络关注的是空间外观，并在随后的几帧中跟踪运动。</p>
 <figure>
-<img src="https://blog.qure.ai/assets/images//actionrec/trial.gif"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images//actionrec/trial.gif" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <h3 id="缺陷-1">缺陷</h3>
 <ol type="1">
@@ -354,9 +334,7 @@ alt="SegNet Architecture" />
 </ol>
 <h3 id="note">Note：</h3>
 <figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/fstcn_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/fstcn_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <p>FSTCN，分解3D卷积网络，主要思路是将三维卷积分解为空间二维卷积，然后是时间一维卷积。将一维卷积放在二维卷积层之后，实现二维时域和信道维的卷积。</p>
 <h2 id="三维卷积注意力机制">三维卷积+注意力机制</h2>
@@ -367,22 +345,15 @@ alt="SegNet Architecture" />
 <li>使用注意力机制来获取全局上下文</li>
 </ol>
 <h3 id="解释-2">解释</h3>
-<p>虽然这项工作与动作识别没有直接的关系，但在视频表征方面是具有里程碑意义的工作。本文采用三维CNN
-+ LSTM作为视频描述任务的基础架构。在基础上，作者使用一个预先训练的3D
-CNN来提高效果。</p>
+<p>虽然这项工作与动作识别没有直接的关系，但在视频表征方面是具有里程碑意义的工作。本文采用三维CNN + LSTM作为视频描述任务的基础架构。在基础上，作者使用一个预先训练的3D CNN来提高效果。</p>
 <h3 id="算法">算法</h3>
 <p>其设置与LRCN中描述的编码器-解码器架构几乎相同，但有两个不同之处：</p>
 <ol type="1">
-<li>并非单纯的使用了3D卷积做LSTM的特征向量输入。对于每一帧，先通过3D卷积获取feature
-maps，再通过2D卷积对其帧集获取feature maps集合。2D和3D
-CNN使用的是预先训练的，而不是像LRCN这样的端到端训练。</li>
+<li>并非单纯的使用了3D卷积做LSTM的特征向量输入。对于每一帧，先通过3D卷积获取feature maps，再通过2D卷积对其帧集获取feature maps集合。2D和3D CNN使用的是预先训练的，而不是像LRCN这样的端到端训练。</li>
 <li>并非平均所有帧的时间向量。加权平均值的方法用于结合时间特征。在每个时间步上，根据LSTM输出来确定注意力权重。</li>
 </ol>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/Larochelle_paper_high.png"
-alt="Attention Mechanism" />
-<figcaption aria-hidden="true">Attention Mechanism</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/Larochelle_paper_high.png" alt="Attention Mechanism" /><figcaption aria-hidden="true">Attention Mechanism</figcaption>
 </figure>
 <h2 id="twostreamfusion">TwoStreamFusion</h2>
 <p>https://arxiv.org/abs/1604.06573</p>
@@ -400,21 +371,14 @@ alt="Attention Mechanism" />
 <h3 id="算法-1">算法</h3>
 <p>与双流架构基本一样，除了</p>
 <ol type="1">
-<li><p>如下图所示，Conv_5层的输出均通过卷积层+池化层的方式融合，而此算法则在最后一层加了另一种融合，最后融合输出作为spatiotemporal
-loss。</p>
+<li><p>如下图所示，Conv_5层的输出均通过卷积层+池化层的方式融合，而此算法则在最后一层加了另一种融合，最后融合输出作为spatiotemporal loss。</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/fusion_strategies_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/fusion_strategies_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure></li>
 <li><p>时间融合采用跨时间叠加的时间网络输出，采用conv+pooling融合的方法计算时间损失</p></li>
 </ol>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/2streamfusion.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/2streamfusion.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <h2 id="tsn">TSN</h2>
 <p>https://arxiv.org/abs/1608.00859</p>
@@ -437,9 +401,7 @@ alt="SegNet Architecture" />
 <h3 id="算法-2">算法</h3>
 <p>在训练和预测过程中，将一段视频分成K段，每段时长相等。然后，从K个片段中随机抽取片段。其余的步骤仍然类似于上面提到的双流架构的更改。</p>
 <figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/tsn_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/tsn_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <h2 id="actionvlad">ActionVLAD</h2>
 <p>https://arxiv.org/pdf/1704.02895.pdf</p>
@@ -449,21 +411,14 @@ alt="SegNet Architecture" />
 <li>具有视频级聚合特征的端到端可训练模型，以捕获长期依赖</li>
 </ol>
 <h3 id="解释-5">解释</h3>
-<p>作者最显著的贡献是使用了可学习的特性聚合(VLAD)，而不是使用maxpool或avgpool的普通聚合。聚合技术类似于视觉词汇。有多个基于锚点(比如<span
-class="math inline">\(c_1\)</span>, <span
-class="math inline">\(c_k\)</span>)的学习词汇，代表k个典型的动作(或子动作)相关的时空特征。两个流结构中的每个流的输出都按照k空间的动作词特征进行编码——每个特征都是输出与任何给定的空间或时间位置对应的锚点的差值。</p>
+<p>作者最显著的贡献是使用了可学习的特性聚合(VLAD)，而不是使用maxpool或avgpool的普通聚合。聚合技术类似于视觉词汇。有多个基于锚点(比如<span class="math inline">\(c_1\)</span>, <span class="math inline">\(c_k\)</span>)的学习词汇，代表k个典型的动作(或子动作)相关的时空特征。两个流结构中的每个流的输出都按照k空间的动作词特征进行编码——每个特征都是输出与任何给定的空间或时间位置对应的锚点的差值。</p>
 <p>（没看懂）</p>
 <figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/actionvlad.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/actionvlad.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <p>平均或最大池只作为一个描述符来表示整个点的分布，这对于表示由多个子动作组成的整个视频来说是次优的。相比之下，提出的视频聚合通过将描述符空间分割为<strong>k个单元</strong>并在每个单元内池化来表示具有多个子动作的描述符的整个分布。</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/pooling_difference_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/pooling_difference_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <h2 id="hiddentwostream">HiddenTwoStream</h2>
 <p>https://arxiv.org/abs/1704.00389</p>
@@ -471,14 +426,7 @@ alt="SegNet Architecture" />
 <p>提出一种新颖的使用单独的网络实时生成光流输入的架构</p>
 <h3 id="解释-6">解释</h3>
 <p>光流在双流架构的使用使得必须预先计算每个采样帧的光流，从而对存储和速度产生不利影响。这篇论文提出了一种使用无监督架构来生成光流的方法。</p>
-<p>光流法可以被当成是一种图像重建问题。给定一对相邻的帧<span
-class="math inline">\(l_1、l_2\)</span>作为输入，CNN生成一个流场<span
-class="math inline">\(V\)</span>，然后利用预测的流场<span
-class="math inline">\(V\)</span>和<span
-class="math inline">\(l_2\)</span>，利用反翘曲将<span
-class="math inline">\(l_1\)</span>重构为<span
-class="math inline">\(l_1^{&#39;}\)</span>，使<span
-class="math inline">\(l_1\)</span>与重构的差值最小。</p>
+<p>光流法可以被当成是一种图像重建问题。给定一对相邻的帧<span class="math inline">\(l_1、l_2\)</span>作为输入，CNN生成一个流场<span class="math inline">\(V\)</span>，然后利用预测的流场<span class="math inline">\(V\)</span>和<span class="math inline">\(l_2\)</span>，利用反翘曲将<span class="math inline">\(l_1\)</span>重构为<span class="math inline">\(l_1^{&#39;}\)</span>，使<span class="math inline">\(l_1\)</span>与重构的差值最小。</p>
 <h3 id="算法-3">算法</h3>
 <p>作者探索了多种策略和架构，在不太影响精度的前提下，以最大的帧数和最小的参数产生光流。最后的体系结构与前面提到的双流体系结构相同</p>
 <ol type="1">
@@ -486,10 +434,7 @@ class="math inline">\(l_1\)</span>与重构的差值最小。</p>
 <li>对于MotionNet的无监督训练，还有额外的多层次损失</li>
 </ol>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/hidden2stream_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/hidden2stream_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 <h2 id="i3d">I3D</h2>
 <p>https://arxiv.org/abs/1705.07750</p>
@@ -508,22 +453,13 @@ alt="SegNet Architecture" />
 <li>新颖的训练架构和技术，以监督2D预训练的网络转移到3D网络</li>
 </ol>
 <h3 id="解释-8">解释</h3>
-<p>作者扩展了在I3D上完成的工作，但建议使用基于单一流3D
-DenseNet的架构，在密集块之后叠加多深度时间池化层(时间过渡层)，以捕获不同的时间深度。多深度池化是通过池化不同时间大小的核来实现的。</p>
+<p>作者扩展了在I3D上完成的工作，但建议使用基于单一流3D DenseNet的架构，在密集块之后叠加多深度时间池化层(时间过渡层)，以捕获不同的时间深度。多深度池化是通过池化不同时间大小的核来实现的。</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/ttl_layer_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/ttl_layer_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
-<p>除上述内容外，作者还设计了一种新的技术，以在预先培训的2D Conv
-Nets和T3D中监督转移学习。2D预三角网和T3D都是从视频中呈现的框架和剪辑，其中剪辑和视频可能来自同一视频。该体系结构是基于相同的三角形来预测0/1的，并且预测的误差通过T3D
-NET进行了反向传播，以便有效地传输知识。</p>
+<p>除上述内容外，作者还设计了一种新的技术，以在预先培训的2D Conv Nets和T3D中监督转移学习。2D预三角网和T3D都是从视频中呈现的框架和剪辑，其中剪辑和视频可能来自同一视频。该体系结构是基于相同的三角形来预测0/1的，并且预测的误差通过T3D NET进行了反向传播，以便有效地传输知识。</p>
 <figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/transfer_learning_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
+<img src="https://blog.qure.ai/assets/images/actionrec/transfer_learning_high.png" alt="SegNet Architecture" /><figcaption aria-hidden="true">SegNet Architecture</figcaption>
 </figure>
 
     </div>
@@ -534,7 +470,6 @@ alt="SegNet Architecture" />
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
           </div>
 
@@ -542,9 +477,6 @@ alt="SegNet Architecture" />
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/03/26/Numpy/" rel="prev" title="NumPy">
-                  <i class="fa fa-chevron-left"></i> NumPy
-                </a>
             </div>
             <div class="post-nav-item">
                 <a href="/2022/09/12/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/" rel="next" title="视频理解相关论文">
