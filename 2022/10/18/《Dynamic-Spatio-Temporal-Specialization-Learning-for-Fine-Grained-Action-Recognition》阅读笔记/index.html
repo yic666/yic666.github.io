@@ -20,20 +20,24 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要、引言、结论 本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。 本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一">
+    <meta name="description" content="摘要、引言、结论 本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。 本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action Recognition》阅读笔记">
 <meta property="og:url" content="http://example.com/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="摘要、引言、结论 本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。 本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一">
+<meta property="og:description" content="摘要、引言、结论 本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。 本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一方">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png">
 <meta property="article:published_time" content="2022-10-18T02:48:59.000Z">
-<meta property="article:modified_time" content="2023-01-10T13:22:00.942Z">
+<meta property="article:modified_time" content="2023-03-13T04:27:12.637Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="Fine-Grained Action Recognition">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png">
 
 
 <link rel="canonical" href="http://example.com/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
@@ -131,18 +135,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -217,7 +221,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-01-10 21:22:00" itemprop="dateModified" datetime="2023-01-10T21:22:00+08:00">2023-01-10</time>
+      <time title="Modified: 2023-03-13 12:27:12" itemprop="dateModified" datetime="2023-03-13T12:27:12+08:00">2023-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -240,190 +244,87 @@
     
     <div class="post-body" itemprop="articleBody">
         <h1 id="摘要引言结论">摘要、引言、结论</h1>
-<p>本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal
-Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。</p>
+<p>本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。</p>
 <p>本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一方面(空间或时间)。</p>
-<p>而在端到端的训练中，需要训练两种类型的参数：upstream
-参数（如评分核和门参数）用于做动态决策和downstream参数（如时空算子）用于处理输入。由于上流参数的训练也会影响到下流参数，因此本文设计了一种上游-下游学习的算法（UDL），学习如何做出对下游参数训练有积极影响的决策，提高DSTS模块的性能。</p>
+<p>而在端到端的训练中，需要训练两种类型的参数：upstream 参数（如评分核和门参数）用于做动态决策和downstream参数（如时空算子）用于处理输入。由于上流参数的训练也会影响到下流参数，因此本文设计了一种上游-下游学习的算法（UDL），学习如何做出对下游参数训练有积极影响的决策，提高DSTS模块的性能。</p>
 <p>解决的问题：成功地区分具有细微差别的操作类别（细粒度设置中较高的类间相似性）</p>
 <h1 id="提出的方法">提出的方法</h1>
 <h2 id="概述">概述</h2>
 <p>对于每个输入样本，每层中只有一个专门神经元被激活——这种动态激活发生在论文所说的突触机制，而且这种突出机制使得每个专门的神经元旨在相似的样本子集上被激活。由于训练过程中，每个专门神经元只在包含相似样本的子集上训练，因此训练loss会促使专门的神经元去学习处理与这些样本相关的细粒度信息，而不是学到更多常见的辨别性线索。</p>
 <figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png"
-alt="image-20221019154610958" />
-<figcaption aria-hidden="true">image-20221019154610958</figcaption>
+<img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png" alt="image-20221019154610958" /><figcaption aria-hidden="true">image-20221019154610958</figcaption>
 </figure>
-<p>DSTS的图示如上，DSTS处理从backbone传过来的特征。DSTS模块内有L层，每一层都由N个专门化神经元组成。当特征映射X被输入到第j个DSTS层时，首先计算每个专门化神经元<span
-class="math inline">\(n_{ij}\)</span>的脉冲值<span
-class="math inline">\(v_{ij}\)</span>，接着该层中具有最高脉冲值的神经元被Gumbel-
-Softmax激活。在被送入分类器之前，一个从backbone到输出的跳过连接被加到生成的特征。</p>
-<p>为简单起见，将batchsize设置为1，假设预训练的backbone输出的特征图为<span
-class="math inline">\(X \in \mathbb{R}^{N_{i n} \times N_{t} \times
-N_{h} \times N_{w}}\)</span>，其中<span class="math inline">\(N_{i n},
-N_{t}, N_{h},
-N_{w}\)</span>代表特征图的通道、时间、高度和宽度的维度。DSTS模块由L层组成，每层由N个专门的神经元组成。定义第j层的第i个专门神经元为<span
-class="math inline">\(n_{ij}\)</span>，每个专门的神经元<span
-class="math inline">\(n_{ij}\)</span>都有一个评分核<span
-class="math inline">\(m_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{i n} \times 1 \times 1 \times
-1}\)</span>(大小为1×1×1，用于高效编码特征图X的所有通道的信息)，一个由卷积核组成的空间算子<span
-class="math inline">\(S_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{\text {in }} \times 1 \times 3 \times
-3}\)</span>，一个由卷积核组成的时间算子<span class="math inline">\(T_{i
-j} \in \mathbb{R}^{N_{\text {out }} \times N_{i n} \times 3 \times 1
-\times 1}\)</span>，以及门<span class="math inline">\(g_{i j} \in
-\mathbb{R}^{N_{i n}}\)</span></p>
+<p>DSTS的图示如上，DSTS处理从backbone传过来的特征。DSTS模块内有L层，每一层都由N个专门化神经元组成。当特征映射X被输入到第j个DSTS层时，首先计算每个专门化神经元<span class="math inline">\(n_{ij}\)</span>的脉冲值<span class="math inline">\(v_{ij}\)</span>，接着该层中具有最高脉冲值的神经元被Gumbel- Softmax激活。在被送入分类器之前，一个从backbone到输出的跳过连接被加到生成的特征。</p>
+<p>为简单起见，将batchsize设置为1，假设预训练的backbone输出的特征图为<span class="math inline">\(X \in \mathbb{R}^{N_{i n} \times N_{t} \times N_{h} \times N_{w}}\)</span>，其中<span class="math inline">\(N_{i n}, N_{t}, N_{h}, N_{w}\)</span>代表特征图的通道、时间、高度和宽度的维度。DSTS模块由L层组成，每层由N个专门的神经元组成。定义第j层的第i个专门神经元为<span class="math inline">\(n_{ij}\)</span>，每个专门的神经元<span class="math inline">\(n_{ij}\)</span>都有一个评分核<span class="math inline">\(m_{i j} \in \mathbb{R}^{N_{\text {out }} \times N_{i n} \times 1 \times 1 \times 1}\)</span>(大小为1×1×1，用于高效编码特征图X的所有通道的信息)，一个由卷积核组成的空间算子<span class="math inline">\(S_{i j} \in \mathbb{R}^{N_{\text {out }} \times N_{\text {in }} \times 1 \times 3 \times 3}\)</span>，一个由卷积核组成的时间算子<span class="math inline">\(T_{i j} \in \mathbb{R}^{N_{\text {out }} \times N_{i n} \times 3 \times 1 \times 1}\)</span>，以及门<span class="math inline">\(g_{i j} \in \mathbb{R}^{N_{i n}}\)</span></p>
 <h2 id="dsts层">DSTS层</h2>
 <h3 id="突触机制"><strong>突触机制</strong></h3>
-<p>为了专业化效应的突触机制，每一个专门神经元上都包含一个用于在scoring
-convolution的输入特征图X的评分核。输出的结果会被求和以得到反映输入特征映射X与专门化神经元<span
-class="math inline">\(n_i\)</span>的细粒度专门化能力之间的相关性得分，称之为脉冲<span
-class="math inline">\(v_i\)</span>。专门化神经元产生的脉冲越高，专门化神经元的知识与输入特征的相关性越高，就越有可能被激活。</p>
+<p>为了专业化效应的突触机制，每一个专门神经元上都包含一个用于在scoring convolution的输入特征图X的评分核。输出的结果会被求和以得到反映输入特征映射X与专门化神经元<span class="math inline">\(n_i\)</span>的细粒度专门化能力之间的相关性得分，称之为脉冲<span class="math inline">\(v_i\)</span>。专门化神经元产生的脉冲越高，专门化神经元的知识与输入特征的相关性越高，就越有可能被激活。</p>
 <ol type="1">
-<li>首先在X上应用一个评分核为<span
-class="math inline">\(m_i\)</span>的卷积</li>
+<li>首先在X上应用一个评分核为<span class="math inline">\(m_i\)</span>的卷积</li>
 </ol>
 <p><span class="math display">\[
 q_{i}=m_{i}(X)
 \]</span></p>
-<p>其中，<span
-class="math inline">\(m_{i}(·)\)</span>是评分卷积的简略表示，<span
-class="math inline">\(q_{i} \in \mathbb{R}^{N_{\text {out }} \times
-Q_{t} \times Q_{h} \times Q_{w}}\)</span> 。</p>
+<p>其中，<span class="math inline">\(m_{i}(·)\)</span>是评分卷积的简略表示，<span class="math inline">\(q_{i} \in \mathbb{R}^{N_{\text {out }} \times Q_{t} \times Q_{h} \times Q_{w}}\)</span> 。</p>
 <ol start="2" type="1">
-<li>把<span
-class="math inline">\(q_i\)</span>中的所有元素相加，就得到了特殊神经元<span
-class="math inline">\(n_i\)</span>的脉冲<span
-class="math inline">\(v_i\)</span>。</li>
+<li>把<span class="math inline">\(q_i\)</span>中的所有元素相加，就得到了特殊神经元<span class="math inline">\(n_i\)</span>的脉冲<span class="math inline">\(v_i\)</span>。</li>
 </ol>
 <p><span class="math display">\[
-v_{i}=\sum_{u_{c}=1}^{N_{\text {out }}} \sum_{u_{t}=1}^{Q_{t}}
-\sum_{u_{h}=1}^{Q_{h}} \sum_{u_{w}=1}^{Q_{w}} q_{i, u_{c}, u_{t}, u_{h},
-u_{w}}\\
+v_{i}=\sum_{u_{c}=1}^{N_{\text {out }}} \sum_{u_{t}=1}^{Q_{t}} \sum_{u_{h}=1}^{Q_{h}} \sum_{u_{w}=1}^{Q_{w}} q_{i, u_{c}, u_{t}, u_{h}, u_{w}}\\
 \mathcal{V}=\left\{v_{i}\right\}_{i=1}^{N}
 \]</span></p>
 <ol start="3" type="1">
-<li><p>在<span
-class="math inline">\(\mathcal{V}\)</span>上应用Gumbel-Softmax技术来选择一个特定的神经元进行激活。</p>
-<p>激活特定神经元<span
-class="math inline">\(n_a\)</span>的选择是通过在所选指标a处产生一个具有1的one-hot向量来实现的。在训练过程中，Gumbel-Softmax允许梯度通过这种选择机制反向传播。在测试过程中，被激活的神经元<span
-class="math inline">\(n_a\)</span>是在<span
-class="math inline">\(\mathcal{V}\)</span>里具有最高脉冲的，以及具有最相关的专门化来区分与输入X相似的样本。</p></li>
+<li><p>在<span class="math inline">\(\mathcal{V}\)</span>上应用Gumbel-Softmax技术来选择一个特定的神经元进行激活。</p>
+<p>激活特定神经元<span class="math inline">\(n_a\)</span>的选择是通过在所选指标a处产生一个具有1的one-hot向量来实现的。在训练过程中，Gumbel-Softmax允许梯度通过这种选择机制反向传播。在测试过程中，被激活的神经元<span class="math inline">\(n_a\)</span>是在<span class="math inline">\(\mathcal{V}\)</span>里具有最高脉冲的，以及具有最相关的专门化来区分与输入X相似的样本。</p></li>
 </ol>
-<p>作者认为，突触机制对于专门神经元的专门化是至关重要的。卷积滤波器会对相似的特征图输入产生相似的想要，因此<span
-class="math inline">\(q_i\)</span>和<span
-class="math inline">\(v_i\)</span>对于相似的特征图会趋于相似。于是，在训练过程中，相似的特征图极有可能为相同的专门化神经元产生高脉冲得分(并激活);而这个神经元将只在相似样本的子集上被更新，这样就能使得这个神经元专门研究细粒度的差异来区分它们。</p>
+<p>作者认为，突触机制对于专门神经元的专门化是至关重要的。卷积滤波器会对相似的特征图输入产生相似的想要，因此<span class="math inline">\(q_i\)</span>和<span class="math inline">\(v_i\)</span>对于相似的特征图会趋于相似。于是，在训练过程中，相似的特征图极有可能为相同的专门化神经元产生高脉冲得分(并激活);而这个神经元将只在相似样本的子集上被更新，这样就能使得这个神经元专门研究细粒度的差异来区分它们。</p>
 <blockquote>
-<p><a
-target="_blank" rel="noopener" href="https://wmathor.com/index.php/archives/1595/">Gumbel-Softmax完全解析
-- mathor (wmathor.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://wmathor.com/index.php/archives/1595/">Gumbel-Softmax完全解析 - mathor (wmathor.com)</a></p>
 </blockquote>
 <h3 id="时空专门化"><strong>时空专门化</strong></h3>
-<p>直观地说，在<span
-class="math inline">\(n_a\)</span>被激活后，可以简单地在X上应用一个三维卷积核(对应于<span
-class="math inline">\(n_a\)</span>)来提取时空信息。但在细粒度动作识别，动作之间的细粒度差异会存在与动作的更多时空方面，因此还优化了专门化神经元的结构，以专门关注更多空间或更多时间的细粒度信息。</p>
+<p>直观地说，在<span class="math inline">\(n_a\)</span>被激活后，可以简单地在X上应用一个三维卷积核(对应于<span class="math inline">\(n_a\)</span>)来提取时空信息。但在细粒度动作识别，动作之间的细粒度差异会存在与动作的更多时空方面，因此还优化了专门化神经元的结构，以专门关注更多空间或更多时间的细粒度信息。</p>
 <p>更具体地说，时空专门化方法适应专门化神经元的体系结构，为每个输入通道选择空间算子或时间算子。空间算符使用二维卷积集中在特征映射的空间方面，而时间算子使用关注时间方面的一维卷积。在训练过程中，这种架构设计使得每个专门神经元利用所选方面的相似样本之间每个通道的细粒度差异，这样能具有更好的敏感度。通过让模型调整架构来选择每个通道的操作子从而实现更大的识别能力，而这种架构决策是通过门参数来学习的，当专门神经元专注于某个方面是有益的，门参数将学会使用相应的运算子。</p>
 <ol type="1">
 <li>Spatio-temporal Architectural Decisions using Gates</li>
 </ol>
-<p>专门化神经元的门参数<span class="math inline">\(g_a\)</span>由<span
-class="math inline">\(N_{in}\)</span>个元素组成，每个元素对应一个输入通道。每个门参数决定了对应的通道是用空间还是时间算子处理的。</p>
-<p>在正向传递过程中，使用改进的Semhash方法从门参数<span
-class="math inline">\(g_a\)</span>中采样二进制决策，获得二进制向量<span
-class="math inline">\(\mathbf{b} \in\{0,1\}^{N_{i
-n}}\)</span>。改进的Semhash方法使得我们可以以端对端的方式训练门参数<span
-class="math inline">\(g_a\)</span>。我们把b的第l个元素表示为<span
-class="math inline">\(b_l\)</span>。如果<span
-class="math inline">\(b_l\)</span>为0则对应的输入通道<span
-class="math inline">\(l\)</span>将使用空间算子，如果<span
-class="math inline">\(b_l\)</span>为1则使用时间算子。</p>
+<p>专门化神经元的门参数<span class="math inline">\(g_a\)</span>由<span class="math inline">\(N_{in}\)</span>个元素组成，每个元素对应一个输入通道。每个门参数决定了对应的通道是用空间还是时间算子处理的。</p>
+<p>在正向传递过程中，使用改进的Semhash方法从门参数<span class="math inline">\(g_a\)</span>中采样二进制决策，获得二进制向量<span class="math inline">\(\mathbf{b} \in\{0,1\}^{N_{i n}}\)</span>。改进的Semhash方法使得我们可以以端对端的方式训练门参数<span class="math inline">\(g_a\)</span>。我们把b的第l个元素表示为<span class="math inline">\(b_l\)</span>。如果<span class="math inline">\(b_l\)</span>为0则对应的输入通道<span class="math inline">\(l\)</span>将使用空间算子，如果<span class="math inline">\(b_l\)</span>为1则使用时间算子。</p>
 <ol start="2" type="1">
 <li>Specialized Spatio-Temporal Processing</li>
 </ol>
-<p>在获得通道型架构决策b后，可以从通道型输入特征映射X的选择开始，得到如下的特征<span
-class="math inline">\(X_S\)</span>和<span
-class="math inline">\(X_T\)</span>，分别用于学习细粒度的空间和时间信息
-<span class="math display">\[
+<p>在获得通道型架构决策b后，可以从通道型输入特征映射X的选择开始，得到如下的特征<span class="math inline">\(X_S\)</span>和<span class="math inline">\(X_T\)</span>，分别用于学习细粒度的空间和时间信息 <span class="math display">\[
 \begin{array}{r}
 X_{S}=(\mathbf{1}-\mathbf{b}) \cdot X, \\
 X_{T}=\mathbf{b} \cdot X,
 \end{array}
-\]</span> 其中<span
-class="math inline">\(\mathbf{1}\)</span>是一个长度为<span
-class="math inline">\(N_{in}\)</span>的向量，大小为1，而<span
-class="math inline">\(\cdot\)</span>指的是沿通道维度的乘法，同时将<span
-class="math inline">\(b\)</span>和<span class="math inline">\((1 -
-b)\)</span>的每个元素视为一个通道。 <span class="math display">\[
+\]</span> 其中<span class="math inline">\(\mathbf{1}\)</span>是一个长度为<span class="math inline">\(N_{in}\)</span>的向量，大小为1，而<span class="math inline">\(\cdot\)</span>指的是沿通道维度的乘法，同时将<span class="math inline">\(b\)</span>和<span class="math inline">\((1 - b)\)</span>的每个元素视为一个通道。 <span class="math display">\[
 \begin{array}{l}
 Z_{S}=S_{a}\left(X_{S}\right) \\
 Z_{T}=T_{a}\left(X_{T}\right)
 \end{array}
-\]</span> 其中<span
-class="math inline">\(Z_S\)</span>表示捕获输入特征图空间信息的特征<span
-class="math inline">\(X\)</span>，而<span
-class="math inline">\(Z_T\)</span>表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为<span
-class="math inline">\(Z&#39;_S\)</span>和<span
-class="math inline">\(Z&#39;_t\)</span>
-，输出特征图为两者之和。最后，对Z进行1 × 1 ×
-1卷积，融合空间和时间特征。而融合的特征<span
-class="math inline">\(Z&#39;\)</span>将作为下一层DSTS或分类器的输入。</p>
+\]</span> 其中<span class="math inline">\(Z_S\)</span>表示捕获输入特征图空间信息的特征<span class="math inline">\(X\)</span>，而<span class="math inline">\(Z_T\)</span>表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为<span class="math inline">\(Z&#39;_S\)</span>和<span class="math inline">\(Z&#39;_t\)</span> ，输出特征图为两者之和。最后，对Z进行1 × 1 × 1卷积，融合空间和时间特征。而融合的特征<span class="math inline">\(Z&#39;\)</span>将作为下一层DSTS或分类器的输入。</p>
 <figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png"
-alt="image-20221123205910863" />
-<figcaption aria-hidden="true">image-20221123205910863</figcaption>
+<img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png" alt="image-20221123205910863" /><figcaption aria-hidden="true">image-20221123205910863</figcaption>
 </figure>
 <h2 id="上下游学习">上下游学习</h2>
-<p>为了进一步提高DSTS模块的性能，论文设计了一个UDL算法，该算法可以更好地优化与动态决策相关的模型参数，称之为上游参数。动态决策相关的上游参数（例如评分核<span
-class="math inline">\(m\)</span>和门参数<span
-class="math inline">\(g\)</span>）和处理输入的下游参数（例如时空算子<span
-class="math inline">\(S\)</span>和<span
-class="math inline">\(T\)</span>）会在端到端的训练中联合训练，而这的挑战主要是上游参数也会影响到下游参数的训练。因此，作者使用元学习（meta-learning）优化上游参数，同时考虑下游参数的影响，从而提高下游参数的学习能力，提高整体性能。</p>
+<p>为了进一步提高DSTS模块的性能，论文设计了一个UDL算法，该算法可以更好地优化与动态决策相关的模型参数，称之为上游参数。动态决策相关的上游参数（例如评分核<span class="math inline">\(m\)</span>和门参数<span class="math inline">\(g\)</span>）和处理输入的下游参数（例如时空算子<span class="math inline">\(S\)</span>和<span class="math inline">\(T\)</span>）会在端到端的训练中联合训练，而这的挑战主要是上游参数也会影响到下游参数的训练。因此，作者使用元学习（meta-learning）优化上游参数，同时考虑下游参数的影响，从而提高下游参数的学习能力，提高整体性能。</p>
 <blockquote>
 <p>元学习算法由三步骤组成。第一步，通过更新下游参数的同时冻结上游参数从而模拟使用当前上游参数集进行动态决策时，下游参数的训练过程。第二步，在验证集上评估模型在held-out样本的性能。来自该评估的二阶梯度(相对于上游参数)提供了如何更新上游参数的反馈，以便它们在训练期间的动态决策可以改进下游参数的学习过程，从而在held-out样本上获得更好的性能。最后一步，使用元优化的上游参数对下游参数进行优化，这些参数现在在模型中做出动态决策，以便下游参数能够从训练中获得更多好处，并提高(测试)性能。</p>
 </blockquote>
-<p>具体地说，在每一次迭代中，在训练数据中采样两个mini-batch：训练样本<span
-class="math inline">\(D_{train}\)</span>和验证样本<span
-class="math inline">\(D_{val}\)</span>。</p>
+<p>具体地说，在每一次迭代中，在训练数据中采样两个mini-batch：训练样本<span class="math inline">\(D_{train}\)</span>和验证样本<span class="math inline">\(D_{val}\)</span>。</p>
 <ul>
-<li><p>Simulated Update Step：在<span
-class="math inline">\(D_{train}\)</span>上使用监督loss更新下游参数<span
-class="math inline">\(d\)</span> <span class="math display">\[
+<li><p>Simulated Update Step：在<span class="math inline">\(D_{train}\)</span>上使用监督loss更新下游参数<span class="math inline">\(d\)</span> <span class="math display">\[
 \hat{d}=d-\alpha \nabla_{d} \ell\left(u, d ; D_{\text {train }}\right)
-\]</span> 其中，<span
-class="math inline">\(\alpha\)</span>为学习率超参数，<span
-class="math inline">\(u\)</span>和<span
-class="math inline">\(d\)</span>分别表示上游和下游参数。在这个步骤中<span
-class="math inline">\(u\)</span>保持固定。</p></li>
-<li><p>Meta-Update Step：在<span
-class="math inline">\(D_{val}\)</span>中验证更新后的模型，当上游参数<span
-class="math inline">\(u\)</span>在第一个模拟更新步骤中用于决策时，使用关于<span
-class="math inline">\(u\)</span>的二阶梯度更新上游参数<span
-class="math inline">\(u\)</span> <span class="math display">\[
-u^{\prime}=u-\alpha \nabla_{u} \ell\left(\hat{u}, \hat{d} ; D_{v a
-l}\right)
-\]</span> 其中<span class="math inline">\(\hat{u}\)</span>是<span
-class="math inline">\(u\)</span>的副本，但不计算关于<span
-class="math inline">\(\hat{u}\)</span>的梯度。这里需要计算的梯度指的是<span
-class="math inline">\(u^{\prime}\)</span>关于<span
-class="math inline">\(\hat{d}\)</span>中<span
-class="math inline">\(u\)</span>的梯度，即二阶梯度。这些二阶梯度为如何调节<span
-class="math inline">\(u\)</span>提供反馈以更好地训练下游参数，从而提高在不可见样本的性能。在这个步骤中<span
-class="math inline">\(d\)</span>保持固定。</p></li>
-<li><p>Actual Update Step：保持<span
-class="math inline">\(u^{\prime}\)</span>冻结的情况下更新<span
-class="math inline">\(d\)</span> <span class="math display">\[
-d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train
-}}\right)
+\]</span> 其中，<span class="math inline">\(\alpha\)</span>为学习率超参数，<span class="math inline">\(u\)</span>和<span class="math inline">\(d\)</span>分别表示上游和下游参数。在这个步骤中<span class="math inline">\(u\)</span>保持固定。</p></li>
+<li><p>Meta-Update Step：在<span class="math inline">\(D_{val}\)</span>中验证更新后的模型，当上游参数<span class="math inline">\(u\)</span>在第一个模拟更新步骤中用于决策时，使用关于<span class="math inline">\(u\)</span>的二阶梯度更新上游参数<span class="math inline">\(u\)</span> <span class="math display">\[
+u^{\prime}=u-\alpha \nabla_{u} \ell\left(\hat{u}, \hat{d} ; D_{v a l}\right)
+\]</span> 其中<span class="math inline">\(\hat{u}\)</span>是<span class="math inline">\(u\)</span>的副本，但不计算关于<span class="math inline">\(\hat{u}\)</span>的梯度。这里需要计算的梯度指的是<span class="math inline">\(u^{\prime}\)</span>关于<span class="math inline">\(\hat{d}\)</span>中<span class="math inline">\(u\)</span>的梯度，即二阶梯度。这些二阶梯度为如何调节<span class="math inline">\(u\)</span>提供反馈以更好地训练下游参数，从而提高在不可见样本的性能。在这个步骤中<span class="math inline">\(d\)</span>保持固定。</p></li>
+<li><p>Actual Update Step：保持<span class="math inline">\(u^{\prime}\)</span>冻结的情况下更新<span class="math inline">\(d\)</span> <span class="math display">\[
+d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train }}\right)
 \]</span></p></li>
 </ul>
 <figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png"
-alt="image-20221124161756656" />
-<figcaption aria-hidden="true">image-20221124161756656</figcaption>
+<img src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png" alt="image-20221124161756656" /><figcaption aria-hidden="true">image-20221124161756656</figcaption>
 </figure>
 
     </div>
@@ -434,8 +335,8 @@ alt="image-20221124161756656" />
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/Fine-Grained-Action-Recognition/" rel="tag"># Fine-Grained Action Recognition</a>
           </div>
 

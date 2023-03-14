@@ -27,13 +27,17 @@
 <meta property="og:site_name" content="Yic">
 <meta property="og:description" content="CVPR 2021 摘要 本文的目标是对未裁剪视频中的动作进行细粒度分类，其中动作可以在时间上扩展，也可以只跨越视频的几帧。将其转换为查询-响应机制，其中每个查询处理特定的问题，并拥有自己的响应标签集。 贡献：  提出了一个新的模型—时态查询网络（TQN)—它支持查询-响应功能，以及对细粒度操作的结构理解 提出了一种新的方法-随机特征库更新-在不同长度的视频上训练网络，并使用响应细粒度">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230218195704209.png">
+<meta property="og:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png">
+<meta property="og:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png">
 <meta property="article:published_time" content="2023-02-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-02-23T08:21:31.745Z">
+<meta property="article:modified_time" content="2023-03-13T04:27:35.123Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="Fine-Grained Action Recognition">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230218195704209.png">
 
 
 <link rel="canonical" href="http://example.com/2023/02/19/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/">
@@ -118,8 +122,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#temporal-query-networks"><span class="nav-number">2.</span> <span class="nav-text">Temporal Query Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#queryattributes-%E6%9F%A5%E8%AF%A2%E5%B1%9E%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">Query–Attributes 查询属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E8%A7%89-backbone"><span class="nav-number">2.2.</span> <span class="nav-text">视觉 backbone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tqn-decoder"><span class="nav-number">2.3.</span> <span class="nav-text">TQN decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.4.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussion-tqn-and-detr"><span class="nav-number">2.5.</span> <span class="nav-text">Discussion: TQN and DETR</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%9B%B4%E6%96%B0%E7%89%B9%E5%BE%81%E5%BA%93-stochastically-updated-feature-bank"><span class="nav-number">3.</span> <span class="nav-text">随机更新特征库
-Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E7%B1%BB%E5%88%AB%E5%88%86%E8%A7%A3%E4%B8%BA%E5%B1%9E%E6%80%A7%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.</span> <span class="nav-text">将类别分解为属性查询</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#temporal-query-networks"><span class="nav-number">2.</span> <span class="nav-text">Temporal Query Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#queryattributes-%E6%9F%A5%E8%AF%A2%E5%B1%9E%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">Query–Attributes 查询属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E8%A7%89-backbone"><span class="nav-number">2.2.</span> <span class="nav-text">视觉 backbone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tqn-decoder"><span class="nav-number">2.3.</span> <span class="nav-text">TQN decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.4.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discussion-tqn-and-detr"><span class="nav-number">2.5.</span> <span class="nav-text">Discussion: TQN and DETR</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%9B%B4%E6%96%B0%E7%89%B9%E5%BE%81%E5%BA%93-stochastically-updated-feature-bank"><span class="nav-number">3.</span> <span class="nav-text">随机更新特征库 Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E7%B1%BB%E5%88%AB%E5%88%86%E8%A7%A3%E4%B8%BA%E5%B1%9E%E6%80%A7%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.</span> <span class="nav-text">将类别分解为属性查询</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -132,18 +135,18 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +221,7 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-02-23 16:21:31" itemprop="dateModified" datetime="2023-02-23T16:21:31+08:00">2023-02-23</time>
+      <time title="Modified: 2023-03-13 12:27:35" itemprop="dateModified" datetime="2023-03-13T12:27:35+08:00">2023-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,95 +255,50 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
 </ol>
 <h1 id="temporal-query-networks">Temporal Query Networks</h1>
 <figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230218195704209.png"
-alt="Temporal Query Network" />
-<figcaption aria-hidden="true">Temporal Query Network</figcaption>
+<img src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230218195704209.png" alt="Temporal Query Network" /><figcaption aria-hidden="true">Temporal Query Network</figcaption>
 </figure>
 <p>时间查询网络(TQN)在未修剪的视频中快速识别发生的区分性事件(只跨越几帧)，并且可以在只有弱监督的情况下进行训练，即没有事件的时间位置或持续时间信息。它通过学习一组置换不变的查询向量来实现这一点，这些查询向量对应于关于事件及其属性的预定义查询，使用Transformer[56]解码器层将其转换为响应向量，并从3D卷积网络主干中提取视觉特征。图2给出了模型的概述。视觉骨干和TQN解码器描述如下。</p>
 <h2 id="queryattributes-查询属性">Query–Attributes 查询属性</h2>
 <p>查询集query set： <span class="math display">\[
 \mathcal{Q}=\left\{q_{i}\right\}_{i=1}^{K}
-\]</span> 其中每一个查询<span
-class="math inline">\(q_i\)</span>都有一个相关的属性集： <span
-class="math display">\[
-\mathcal{A}_{i}=\left\{a_{1}^{i}, a_{2}^{i}, \ldots, a_{n_{i}-1}^{i},
-\varnothing\right\}
-\]</span> 由<span
-class="math inline">\(q_i\)</span>的响应的可接受值<span
-class="math inline">\(a_j^i\)</span>组成</p>
-<p>例如，在跳水视频中，查询可以是圈数，属性集为可能的计数{0.5,1.0,2.5};或者在体操中，查询可以是项目类型，属性集为{vault,
-floor-exercise, balanced beam}</p>
+\]</span> 其中每一个查询<span class="math inline">\(q_i\)</span>都有一个相关的属性集： <span class="math display">\[
+\mathcal{A}_{i}=\left\{a_{1}^{i}, a_{2}^{i}, \ldots, a_{n_{i}-1}^{i}, \varnothing\right\}
+\]</span> 由<span class="math inline">\(q_i\)</span>的响应的可接受值<span class="math inline">\(a_j^i\)</span>组成</p>
+<p>例如，在跳水视频中，查询可以是圈数，属性集为可能的计数{0.5,1.0,2.5};或者在体操中，查询可以是项目类型，属性集为{vault, floor-exercise, balanced beam}</p>
 <h2 id="视觉-backbone">视觉 backbone</h2>
-<p>给定一个未修剪的视频，使用3D
-ConvNet提取8帧连续不重叠剪辑的第一个视觉特征: <span
-class="math display">\[
+<p>给定一个未修剪的视频，使用3D ConvNet提取8帧连续不重叠剪辑的第一个视觉特征: <span class="math display">\[
 \boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2}, \ldots, \Phi_{t}\right)
-\]</span> 其中<span
-class="math inline">\(t\)</span>是剪辑片段的总数，<span
-class="math inline">\(\Phi_{i} \in
-\mathbb{R}^{d}\)</span>是d维剪辑级视觉特征。</p>
+\]</span> 其中<span class="math inline">\(t\)</span>是剪辑片段的总数，<span class="math inline">\(\Phi_{i} \in \mathbb{R}^{d}\)</span>是d维剪辑级视觉特征。</p>
 <p>在整个视频中密集地提取特征有两个原因：</p>
 <ol type="1">
 <li>避免了引起时间混叠，也避免了丢失快速事件(只跨越几帧)</li>
 <li>从完整视频中选择片段进行分类是次优的，因为这些事件的位置是未知的</li>
 </ol>
 <h2 id="tqn-decoder">TQN decoder</h2>
-<p>给定剪辑级特征和标签查询，TQN解码器为每个查询输出一个响应。具体而言，对于每一个标签查询<span
-class="math inline">\(q_i\)</span>，学习一个矢量<span
-class="math inline">\(\mathbf{q}_{i} \in
-\mathbb{R}^{d_{q}}\)</span>，通过对视觉特征的关注产生一个响应矢量<span
-class="math inline">\(\mathbf{r}_{i} \in
-\mathbb{R}^{d_{q}}\)</span>。然后将每个响应矢量<span
-class="math inline">\(\mathbf{r}_{i}\)</span>独立线性分类到相应的属性集<span
-class="math inline">\(\mathcal{A}_{i}\)</span>中。</p>
+<p>给定剪辑级特征和标签查询，TQN解码器为每个查询输出一个响应。具体而言，对于每一个标签查询<span class="math inline">\(q_i\)</span>，学习一个矢量<span class="math inline">\(\mathbf{q}_{i} \in \mathbb{R}^{d_{q}}\)</span>，通过对视觉特征的关注产生一个响应矢量<span class="math inline">\(\mathbf{r}_{i} \in \mathbb{R}^{d_{q}}\)</span>。然后将每个响应矢量<span class="math inline">\(\mathbf{r}_{i}\)</span>独立线性分类到相应的属性集<span class="math inline">\(\mathcal{A}_{i}\)</span>中。</p>
 <h2 id="训练">训练</h2>
-<p>通过反向传播将来自视觉编码器和TQN解码器的模型参数与属性分类器<span
-class="math inline">\(\Psi_{i}\)</span>进行端到端的联合训练。</p>
-<p>这个训练的loss是一个单个分类器损失的多任务组合，是属性集<span
-class="math inline">\(\mathcal{A}_{i}\)</span>上对数<span
-class="math inline">\(\Psi_{i} \cdot
-\mathbf{r}_{i}^{(M)}\)</span>上的Softmax交叉熵损失<span
-class="math inline">\(\mathcal{L}_{C E}\)</span> <span
-class="math display">\[
-\mathcal{L}_{\text {total }}=\sum_{i=1}^{K} \mathcal{L}_{C
-E}^{(i)}\left(a^{i}, \Psi_{i} \cdot \mathbf{r}_{i}^{(M)}\right)
-\]</span> 其中<span class="math inline">\(a_i\)</span>是标签查询<span
-class="math inline">\(q_i\)</span>的groud-truth属性。</p>
+<p>通过反向传播将来自视觉编码器和TQN解码器的模型参数与属性分类器<span class="math inline">\(\Psi_{i}\)</span>进行端到端的联合训练。</p>
+<p>这个训练的loss是一个单个分类器损失的多任务组合，是属性集<span class="math inline">\(\mathcal{A}_{i}\)</span>上对数<span class="math inline">\(\Psi_{i} \cdot \mathbf{r}_{i}^{(M)}\)</span>上的Softmax交叉熵损失<span class="math inline">\(\mathcal{L}_{C E}\)</span> <span class="math display">\[
+\mathcal{L}_{\text {total }}=\sum_{i=1}^{K} \mathcal{L}_{C E}^{(i)}\left(a^{i}, \Psi_{i} \cdot \mathbf{r}_{i}^{(M)}\right)
+\]</span> 其中<span class="math inline">\(a_i\)</span>是标签查询<span class="math inline">\(q_i\)</span>的groud-truth属性。</p>
 <p>本质上，TQN解码器学习建立查询向量和相关视觉特征之间的时间对应关系以生成响应。由于查询向量本身是学习的，它们被优化为“专家”，可以在未修剪的时间特征流中定位相应的事件。</p>
 <h2 id="discussion-tqn-and-detr">Discussion: TQN and DETR</h2>
 <p>DETR[4]是最近提出的一种基于Transformer的目标检测模型，同样采用非自回归并行解码一次性输出目标检测。然而，有三个关键的区别：</p>
 <ol type="1">
 <li>DETR对象查询都是等价的-因为它们的输出都指定了相同的“标签空间”(对象类和它们的RoI)，本质上查询是学习位置编码。相比之下，TQN查询具有不同的语义，具有对应事件类型和属性的语义;它们的输出响应向量每个指定一组不同的属性，属性的数量依赖于查询。</li>
-<li>由于TQN响应与这些查询绑定，它们可以在直接监督属性标签的情况下进行训练，从而避免了DETR中使用的预测和真实值之间的训练时间
-Hungarian Matching[33]。</li>
+<li>由于TQN响应与这些查询绑定，它们可以在直接监督属性标签的情况下进行训练，从而避免了DETR中使用的预测和真实值之间的训练时间 Hungarian Matching[33]。</li>
 <li>TQN没有时间上的定位监督，而DETR训练有提供(空间)位置。因此，尽管TQN的任务是(隐式)检测事件，但它是在更弱的监督下完成的。</li>
 </ol>
-<h1
-id="随机更新特征库-stochastically-updated-feature-bank">随机更新特征库
-Stochastically Updated Feature Bank</h1>
+<h1 id="随机更新特征库-stochastically-updated-feature-bank">随机更新特征库 Stochastically Updated Feature Bank</h1>
 <p>对整个未修剪的视频输入帧进行密集的时间采样是检测时间位置未知的快速判别事件的关键。但是问题在于GPU显存的限制，无法在每次训练迭代中转发密集采样的帧。作者使用特征内存库来克服这些限制。</p>
-<p>记忆库缓存clip级别的3D卷积网络视觉特征。对于给定的视频，clip特征<span
-class="math inline">\(\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2},
-\ldots,
-\Phi_{t}\right)\)</span>可以被相互独立提取。缓存库是由预训练的3D卷积网络中提取的所有训练视频的片段特征初始化的。然后在每次训练迭代中，固定数量的<span
-class="math inline">\(n_{online}\)</span>个随机采样clip通过视觉编码器计算得到，而剩下的<span
-class="math inline">\((r-n_{online})\)</span>个clip特征则从缓存库中获得。然后将两组视觉特征组合并输入TQN解码器进行最终预测和反向传播以更新模型参数。最后，将在线计算得到的记忆库中的clip特征替换为在线特征。在推理过程中，所有的特征都是在没有缓存库的情况下在线计算的。</p>
+<p>记忆库缓存clip级别的3D卷积网络视觉特征。对于给定的视频，clip特征<span class="math inline">\(\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2}, \ldots, \Phi_{t}\right)\)</span>可以被相互独立提取。缓存库是由预训练的3D卷积网络中提取的所有训练视频的片段特征初始化的。然后在每次训练迭代中，固定数量的<span class="math inline">\(n_{online}\)</span>个随机采样clip通过视觉编码器计算得到，而剩下的<span class="math inline">\((r-n_{online})\)</span>个clip特征则从缓存库中获得。然后将两组视觉特征组合并输入TQN解码器进行最终预测和反向传播以更新模型参数。最后，将在线计算得到的记忆库中的clip特征替换为在线特征。在推理过程中，所有的特征都是在没有缓存库的情况下在线计算的。</p>
 <figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png"
-alt="image-20230219134722818" />
-<figcaption aria-hidden="true">image-20230219134722818</figcaption>
+<img src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png" alt="image-20230219134722818" /><figcaption aria-hidden="true">image-20230219134722818</figcaption>
 </figure>
 <h1 id="将类别分解为属性查询">将类别分解为属性查询</h1>
-<p>在本节中，作者演示了通常与细粒度视频识别数据集相关的预定义的N个类别<span
-class="math inline">\(\mathcal{C}=\left\{c_{1}, c_{2}, \ldots,
-c_{N}\right\}\)</span>集合如何被分解为属性查询。在这些数据集中，类别在微妙的细节上有所不同，例如特定类型、持续时间或特定事件序列的数量。这些事件可能是快速发生(持续时间短)，但时间位置和持续时间未知。</p>
+<p>在本节中，作者演示了通常与细粒度视频识别数据集相关的预定义的N个类别<span class="math inline">\(\mathcal{C}=\left\{c_{1}, c_{2}, \ldots, c_{N}\right\}\)</span>集合如何被分解为属性查询。在这些数据集中，类别在微妙的细节上有所不同，例如特定类型、持续时间或特定事件序列的数量。这些事件可能是快速发生(持续时间短)，但时间位置和持续时间未知。</p>
 <figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png"
-alt="image-20230219150729217" />
-<figcaption aria-hidden="true">image-20230219150729217</figcaption>
+<img src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png" alt="image-20230219150729217" /><figcaption aria-hidden="true">image-20230219150729217</figcaption>
 </figure>
 
     </div>
@@ -351,8 +309,8 @@ alt="image-20230219150729217" />
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/Fine-Grained-Action-Recognition/" rel="tag"># Fine-Grained Action Recognition</a>
           </div>
 
@@ -365,6 +323,9 @@ alt="image-20230219150729217" />
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2023/03/13/TimesFormer%E4%B8%8EViViT/" rel="next" title="TimeSFormer与ViViT">
+                  TimeSFormer与ViViT <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
