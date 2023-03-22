@@ -55,13 +55,13 @@ $$
   s=0,\dots,S-1\\
   t=0,\dots,T-1
 \end{smallmatrix}\big\}  
-\label{eq:sSA}
+
 $$
 复杂度为$O(TS^2)$。在仅spatial-only注意力之后，对cls-token执行简单的时间平均  $\mathbf{z}_{final} = \frac{1}{T}\sum\limits_{t} \mathbf{z}^{L-1}_{t,cls}$以获得一个特征，该特征被馈送到线性分类器。
 
 而TimeSFormer提出的factorised attention如下：
 $$
-   \begin{split}
+\begin{split}
         \tilde{\mathbf{y}}^{l}_{s,t} = \sum_{t'=0}^{T-1} \textrm{Softmax}\{(\mathbf{q}^{l}_{s,t} \cdot \mathbf{k}^{l}_{s,t'})/\sqrt{d_h}\} \mathbf{v}^{l}_{s,t'}, \\
         \mathbf{y}^{l}_{s,t} = \sum_{s'=0}^{S-1} \textrm{Softmax}\{\tilde{\mathbf{q}}^{l}_{s,t} \cdot \tilde{\mathbf{k}}^{l}_{s',t})/\sqrt{d_h}\} \tilde{\mathbf{v}}^{l}_{s',t},
     \end{split}
@@ -72,7 +72,7 @@ $$
           t=0,\dots,T-1
         \end{Bmatrix},
     \end{split}
-    \label{eq:fSA}
+    
 $$
 并且把复杂度降低到$O(T^2S + TS^2)$​。然而，时间注意是对固定的空间位置进行的，当有相机或物体运动以及帧间存在空间错位时，时间注意是无效的。
 
@@ -103,7 +103,7 @@ $$
   s=0,\dots,S-1\\
   t=0,\dots,T-1
 \end{smallmatrix}\big\}.  
-\label{eq:oursSA}
+
 $$
 
 ### Temporal Attention aggregation
