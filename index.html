@@ -200,9 +200,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2023-03-17 10:44:02 / Modified: 19:53:59" itemprop="dateCreated datePublished" datetime="2023-03-17T10:44:02+08:00">2023-03-17</time>
+      <time title="Created: 2023-03-17 10:44:02" itemprop="dateCreated datePublished" datetime="2023-03-17T10:44:02+08:00">2023-03-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-03-22 11:25:05" itemprop="dateModified" datetime="2023-03-22T11:25:05+08:00">2023-03-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,10 +277,10 @@ class="math inline">\(\mathbb{R}^d \rightarrow \mathbb{R}^{4d}
 \rightarrow \mathbb{R}^d\)</span>）层来处理前一层的视觉标记<span
 class="math inline">\(\mathbf{Z}^l\in\mathbb{R}^{(TS+1) \times
 d}\)</span>，如下所示： <span class="math display">\[
-\mathbf{Y}^{l} &amp; = &amp; \textrm{MSA}(\textrm{LN}(\mathbf{Z}^{l-1}))
-+ \mathbf{Z}^{l-1},\\
-\mathbf{Z}^{l+1} &amp; = &amp; \textrm{MLP}(\textrm{LN}(\mathbf{Y}^{l}))
-+ \mathbf{Y}^{l}.
+\mathbf{Y}^{l}  =  \textrm{MSA}(\textrm{LN}(\mathbf{Z}^{l-1})) +
+\mathbf{Z}^{l-1},\\
+\mathbf{Z}^{l+1}  =  \textrm{MLP}(\textrm{LN}(\mathbf{Y}^{l})) +
+\mathbf{Y}^{l}.
 \]</span> 单个时空注意力的计算可被表示为 <span class="math display">\[
 \mathbf{y}^{l}_{s,t} = \sum_{t&#39;=0}^{T-1} \sum_{s&#39;=0}^{S-1}
 \textrm{Softmax}\{(\mathbf{q}^{l}_{s,t} \cdot
@@ -512,7 +518,7 @@ class="math inline">\(O(TS)\)</span>。</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-17 10:44:31" itemprop="dateModified" datetime="2023-03-17T10:44:31+08:00">2023-03-17</time>
+      <time title="Modified: 2023-03-22 11:26:48" itemprop="dateModified" datetime="2023-03-22T11:26:48+08:00">2023-03-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -720,9 +726,9 @@ d}\)</span>，被添加到token中以保留位置信息，因为变换器中后�
 个变换器层组成的编码器中。 每一层 <span
 class="math inline">\(\ell\)</span> 都包括多头自注意力、层归一化 (LN) 和
 MLP 块，如下所示： <span class="math display">\[
-\mathbf{y}^{\ell} &amp;= \text{MSA}(\text{LN}(\mathbf{z}^\ell))
+\mathbf{y}^{\ell} = \text{MSA}(\text{LN}(\mathbf{z}^\ell))
 +\mathbf{z}^\ell  \\
-\mathbf{z}^{\ell + 1} &amp;= \text{MLP}(\text{LN}(\mathbf{y}^\ell)) +
+\mathbf{z}^{\ell + 1} = \text{MLP}(\text{LN}(\mathbf{y}^\ell)) +
 \mathbf{y}^\ell
 \]</span> MLP 由两个线性投影组成，它们之间由 GELU 非线性分隔，token维度
 <span class="math inline">\(d\)</span> 在所有层中保持不变。
