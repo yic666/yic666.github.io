@@ -89,7 +89,7 @@ $$
 $$
 \sum_{t'=t-t_w}^{t+t_w}  \textrm{Softmax}\{(\mathbf{q}^{l}_{s,t} \cdot \mathbf{k}^{l}_{s',t'})/\sqrt{d_h}\} \mathbf{v}^{l}_{s',t'}
 $$
-即它需要计算 $2t_w+1$ 个注意力，每个时间位置在 $[-t_w, t_w]$ 上计算一个。相反，论文建议在 $[-t_w, t_w]$ 上计算一个注意力，这可以通过 $\mathbf{q}^{l}_{s,t}$ 关注 $\mathbf{k}^{l}_{s’,-t_w:t_w} \triangleq [\mathbf{k}{l}_{s’,t-t_w};\dots;\mathbf{k}{l}_{s’,t+t_w}] \in \mathbb{R}^{(2t_w+1)d_h}$ 来实现。注意，为了匹配 $\mathbf{q}^{l}_{s,t}$ 和 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 的维度，通常需要对 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 进行进一步投影到 $\mathbb{R}^{d_h}$，其复杂度为 $O((2t_w+1)d_h^2)$。为了缓解这种情况， 使用``移位技巧’‘，它允许在 $O(d_h)$ 内同时执行零成本降维、时空混合和注意力（在 $\mathbf{q}^{l}_{s,t}$ 和 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 之间）。具体来说，每个 $t’ \in [-t_w, t_w]$ 被分配 $d_h^{t’}$ 个来自 $d_h$ 的通道（即 $\sum_{t’} d_h^{t’} = d_h$）。设 $\mathbf{k}^{l}_{s’,t’}(d_h^{t’})\in \mathbb{R}^{d_h^{t’}}$ 表示索引 $\mathbf{k}^{l}_{s’,t’}$ 中的 $d_h^{t’}$ 个通道的运算符。然后，构造一个新的key向量：
+即它需要计算 $2t_w+1$ 个注意力，每个时间位置在 $[-t_w, t_w]$ 上计算一个。相反，论文建议在 $[-t_w, t_w]$ 上计算一个注意力，这可以通过 $\mathbf{q}^{l}_{s,t}$ 关注 $\mathbf{k}^{l}_{s’,-t_w:t_w} \triangleq [\mathbf{k}{l}_{s’,t-t_w};\dots;\mathbf{k}{l}_{s’,t+t_w}] \in \mathbb{R}^{(2t_w+1)d_h}$ 来实现。注意，为了匹配 $\mathbf{q}^{l}_{s,t}$ 和 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 的维度，通常需要对 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 进行进一步投影到 $\mathbb{R}^{d_h}$，其复杂度为 $O((2t_w+1)d_h^2)$。为了缓解这种情况， 使用``移位技巧’‘（类似TSM），它允许在 $O(d_h)$ 内同时执行零成本降维、时空混合和注意力（在 $\mathbf{q}^{l}_{s,t}$ 和 $\mathbf{k}^{l}_{s’,-t_w:t_w}$ 之间）。具体来说，每个 $t’ \in [-t_w, t_w]$ 被分配 $d_h^{t’}$ 个来自 $d_h$ 的通道（即 $\sum_{t’} d_h^{t’} = d_h$）。设 $\mathbf{k}^{l}_{s’,t’}(d_h^{t’})\in \mathbb{R}^{d_h^{t’}}$ 表示索引 $\mathbf{k}^{l}_{s’,t’}$ 中的 $d_h^{t’}$ 个通道的运算符。然后，构造一个新的key向量：
 $$
 \tilde{\mathbf{k}}^{l}_{s',-t_w:t_w} \triangleq [\mathbf{k}^{l}_{s',t-t_w}(d_h^{t-t_w}), \dots, \mathbf{k}^{l}_{s',t+t_w}(d_h^{t+t_w})]\in \mathbb{R}^{d_h}
     
@@ -221,3 +221,5 @@ class TemporalShift(nn.Module):
 
         return out.view(nt, num_heads, d, c)
 ```
+
+可以看到`TemporalShift`部分代码就是TSM的代码[temporal-shift-module](https://github.com/mit-han-lab/temporal-shift-module)，也就是说XViT类似于ViT以TSM的方式去获得时序信息。
