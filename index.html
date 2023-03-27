@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -172,6 +172,111 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/23/MViT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/23/MViT/" class="post-title-link" itemprop="url">MViT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-03-23 21:11:34" itemprop="dateCreated datePublished" datetime="2023-03-23T21:11:34+08:00">2023-03-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-03-27 12:47:20" itemprop="dateModified" datetime="2023-03-27T12:47:20+08:00">2023-03-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>paper: https://arxiv.org/abs/2104.11227</p>
+<p>code: https://github.com/facebookresearch/SlowFast</p>
+<h1 id="摘要">摘要</h1>
+<p>我们提出了用于视频和图像识别的多尺度视觉Transformer（MViT），通过将多尺度特征层次结构的开创性想法与Transformer模型相连接。多尺度Transformer具有多个通道-分辨率尺度阶段。从输入分辨率和小通道维度开始，这些阶段在减小空间分辨率的同时分层扩展通道容量。这创建了一个多尺度特征金字塔，早期层以高空间分辨率操作，以模拟简单的低层次视觉信息，而深层以空间粗糙但复杂的高维特征操作。我们评估了这个基本的架构先验来模拟视觉信号的密集性质，针对多种视频识别任务进行了评估，其中它的表现优于依赖于大规模外部预训练的并且计算和参数成本高5-10倍的同时期视觉Transformer。我们进一步去除了时间维度，并将我们的模型应用于图像分类，其中它比视觉Transformer之前的工作中表现更好。</p>
+<h1 id="方法">方法</h1>
+<p>通用多尺度变压器架构是建立在stages得核心概念上的。每一个stage由多个具有特定时空分辨率和channel维度的Transformer块组成。主要思想是逐步扩大信道容量，同时汇集网络从输入到输出的分辨率。</p>
+<h2 id="多头池化注意力">多头池化注意力</h2>
+<p>多头池化注意力（Multi Head Pooling
+Attention,MHPA）是一种可以在Transformer块中灵活建模不同分辨率的自注意力算子，使得多尺度Transformer可以在不断变化的时空分辨率下运行。与原始的多头注意力算子相比，MHPA将潜在张量序列进行池化，以减少参与输入的序列长度(分辨率)，如下图。
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230326125003.png"
+alt="20230326125003" /> 输入<span class="math inline">\(X \in
+\mathbb{R}^{L \times D}\)</span>是一个序列长度为<span
+class="math inline">\(L\)</span>的<span
+class="math inline">\(D\)</span>维输入张量，与MHA一样得到query、key、value：</p>
+<p><span class="math display">\[
+\hat{Q} = XW_{Q} \quad \hat{K} = XW_{K} \quad \hat{V} = XW_{V}
+\]</span></p>
+<p><strong>池化算子</strong>：<span
+class="math inline">\(\mathcal{P}(\cdot ;
+\mathbf{\Theta})\)</span>沿着每个维度对输入张量执行池化核计算。<span
+class="math inline">\(\mathbf{\Theta}\)</span>内的参数为<span
+class="math inline">\(\mathbf{\Theta} := (\mathbf{k}, \mathbf{s},
+\mathbf{p})\)</span>，分别对应池化核大小、步长、padding。因此注意力
+机制的计算会变为：</p>
+<p><span class="math display">\[
+\operatorname{PA}(\cdot) = \operatorname{Softmax}(\mathcal{P}(Q;
+\mathbf{\Theta}_Q)\mathcal{P}(K;
+\mathbf{\Theta}_K)^T/\sqrt{d})\mathcal{P}(V; \mathbf{\Theta}_V),
+\]</span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/17/XVit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -208,7 +313,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-23 14:59:22" itemprop="dateModified" datetime="2023-03-23T14:59:22+08:00">2023-03-23</time>
+      <time title="Modified: 2023-03-23 22:06:03" itemprop="dateModified" datetime="2023-03-23T22:06:03+08:00">2023-03-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -231,7 +336,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>paper: https://arxiv.org/abs/2106.05968</p>
-<p>code:https://github.com/1adrianb/video-transformers</p>
+<p>code: https://github.com/1adrianb/video-transformers</p>
 <h1 id="摘要">摘要</h1>
 <p>本文研究的是利用Transformer进行视频识别。最近在这一领域的尝试在识别精度方面已经证明了有希望的结果，但在许多情况下，由于对时间信息的额外建模，它们也被证明会导致显著的计算开销。在这项工作中，我们提出了一个视频Transformer模型，其复杂性与视频序列中的帧数成线性比例，因此与基于图像的Transformer模型相比没有开销。为了实现这一点，我们的模型对视频Transformer中使用的全时空注意力做了两个近似:(a)它将时间注意力限制在局部时间窗口，并利用Transformer的深度来获得视频序列的全时间覆盖。(b)它使用高效的时空混合来联合关注空间和时间位置，而不会在纯空间注意力模型的基础上产生任何额外的成本。我们还展示了如何集成2个非常轻量级的全局时间关注机制，以最小的计算成本提供额外的精度改进。我们证明了我们的模型在最流行的视频识别数据集上产生非常高的识别精度，同时比其他视频转换器模型更有效。代码将被提供。</p>
 <figure>
@@ -382,7 +487,8 @@ class="math inline">\(\mathbf{k}^{l}_{s’,-t_w:t_w}\)</span>
 进行进一步投影到 <span
 class="math inline">\(\mathbb{R}^{d_h}\)</span>，其复杂度为 <span
 class="math inline">\(O((2t_w+1)d_h^2)\)</span>。为了缓解这种情况，
-使用``移位技巧’‘，它允许在 <span class="math inline">\(O(d_h)\)</span>
+使用``移位技巧’‘（类似TSM），它允许在 <span
+class="math inline">\(O(d_h)\)</span>
 内同时执行零成本降维、时空混合和注意力（在 <span
 class="math inline">\(\mathbf{q}^{l}_{s,t}\)</span> 和 <span
 class="math inline">\(\mathbf{k}^{l}_{s’,-t_w:t_w}\)</span>
@@ -445,6 +551,9 @@ class="math inline">\(\mathbf{z}^{l}_{0, t} = \frac{1}{S}\sum_{s}
 class="math inline">\(R=1\)</span>）。请注意，对于<span
 class="math inline">\(R=1\)</span>，Summary token引起的额外成本是<span
 class="math inline">\(O(TS)\)</span>。</p>
+<!-- # 实验
+
+## 网络架构等细节 -->
 <h1 id="代码">代码</h1>
 <h2 id="模型整体">模型整体</h2>
 <p>模型部分由ViT作为Base_model，在ViT的基础上主要修改了Attention部分，取其中一个<code>Transformer_block</code>打印如下所示：</p>
@@ -459,6 +568,65 @@ target="_blank" rel="noopener" href="https://github.com/1adrianb/video-transform
 其中的<code>control_point_query</code>和<code>control_point_value</code>是一个继承<code>nn.Identity</code>类的名为<code>AfterReconstruction</code>的类，起到一个占位的作用，而在<a
 target="_blank" rel="noopener" href="https://github.com/1adrianb/video-transformers/blob/main/slowfast/models/temporal_shift.py">temporal_shift.py</a>中的make_temporal_shift函数会用<code>TemporalShift</code>类去替代这个<code>AfterReconstruction</code>。
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">make_temporal_shift</span>(<span class="params">net, n_segment, n_div=<span class="number">8</span>, locations_list=[]</span>):</span><br><span class="line">    n_segment_list = [n_segment] * <span class="number">20</span></span><br><span class="line">    <span class="keyword">assert</span> n_segment_list[-<span class="number">1</span>] &gt; <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    counter = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> idx, block <span class="keyword">in</span> <span class="built_in">enumerate</span>(net.blocks):</span><br><span class="line">        <span class="keyword">if</span> idx <span class="keyword">in</span> locations_list:</span><br><span class="line">            net.blocks[idx].attn.control_point_query = TemporalShift(</span><br><span class="line">                net.blocks[idx].attn.control_point_query,</span><br><span class="line">                n_segment=n_segment_list[counter + <span class="number">2</span>],</span><br><span class="line">                n_div=n_div,</span><br><span class="line">            )</span><br><span class="line">            net.blocks[idx].attn.control_point_value = TemporalShift(</span><br><span class="line">                net.blocks[idx].attn.control_point_value,</span><br><span class="line">                n_segment=n_segment_list[counter + <span class="number">2</span>],</span><br><span class="line">                n_div=n_div,</span><br><span class="line">            )</span><br><span class="line">            counter += <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TemporalShift</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, net, n_segment=<span class="number">3</span>, n_div=<span class="number">8</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(TemporalShift, self).__init__()</span><br><span class="line">        self.net = net</span><br><span class="line">        self.n_segment = n_segment</span><br><span class="line">        self.fold_div = n_div</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        nt, num_heads, d, c = x.size()</span><br><span class="line">        n_batch = nt // self.n_segment</span><br><span class="line">        x = x.view(n_batch, self.n_segment, num_heads, d, c)</span><br><span class="line">        fold = c * num_heads // self.fold_div</span><br><span class="line"></span><br><span class="line">        x = (</span><br><span class="line">            x.permute(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line">            .contiguous()</span><br><span class="line">            .view(n_batch, self.n_segment, num_heads * c, d)</span><br><span class="line">        )</span><br><span class="line">        out = torch.zeros_like(x)</span><br><span class="line">        out[:, :-<span class="number">1</span>, :fold] = x[:, <span class="number">1</span>:, :fold]  <span class="comment"># shift left</span></span><br><span class="line">        out[:, <span class="number">1</span>:, fold : <span class="number">2</span> * fold] = x[:, :-<span class="number">1</span>, fold : <span class="number">2</span> * fold]  <span class="comment"># shift right</span></span><br><span class="line">        out[:, :, <span class="number">2</span> * fold :] = x[:, :, <span class="number">2</span> * fold :]  <span class="comment"># not shift</span></span><br><span class="line"></span><br><span class="line">        out = (</span><br><span class="line">            out.view(n_batch, self.n_segment, num_heads, c, d)</span><br><span class="line">            .permute(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line">            .contiguous()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> out.view(nt, num_heads, d, c)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>TemporalShift</code>部分代码就是TSM的代码<a
+target="_blank" rel="noopener" href="https://github.com/mit-han-lab/temporal-shift-module">temporal-shift-module</a>，也就是说XViT类似于ViT以TSM的方式去获得时序信息。</p>
+<h2 id="temporal-attention-aggregation-1">Temporal Attention
+aggregation</h2>
+<p>论文采用轻量级的时间注意(TA)机制处理最后一层注意力层所输出的cls——token，相关代码在<a
+target="_blank" rel="noopener" href="https://github.com/1adrianb/video-transformers/blob/main/slowfast/models/head_helper.py">head_helper.py</a>，如下所示
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, position_ids</span>):</span><br><span class="line">    <span class="comment"># temporal encoder (Longformer)</span></span><br><span class="line">    B, D, E = x.shape</span><br><span class="line"></span><br><span class="line">    cls_tokens = self.cls_token.expand(</span><br><span class="line">        B, -<span class="number">1</span>, -<span class="number">1</span></span><br><span class="line">    )  <span class="comment"># stole cls_tokens impl from Phil Wang, thanks</span></span><br><span class="line">    x = torch.cat((cls_tokens, x), dim=<span class="number">1</span>)</span><br><span class="line">    x = self.temporal_encoder(x)</span><br><span class="line">    <span class="comment"># MLP head</span></span><br><span class="line">    x = self.mlp_head(x[:, <span class="number">0</span>])</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<h1 id="from-chatgpt-just-for-fun">From ChatGPT (Just for fun)</h1>
+<p>Summary: The paper proposes a video recognition model using
+Transformers that scales linearly with the number of frames and avoids
+computational overhead by approximating space-time attention with local
+temporal windows and efficient space-time mixing.</p>
+<p>Core Problems and Solutions:</p>
+<ul>
+<li>Computational overhead induced by modeling temporal information in
+video recognition with Transformers. (Solution: proposing a model that
+scales linearly with the number of frames by approximating space-time
+attention with local temporal windows and efficient space-time
+mixing).</li>
+</ul>
+<p>Main Insights and Lessons Learned:</p>
+<ul>
+<li>The proposed video recognition model achieves state-of-the-art
+results while avoiding computational overheads.</li>
+<li>The use of local temporal windows and efficient space-time mixing
+can significantly reduce the complexity of video recognition
+models.</li>
+</ul>
+<p>Questions:</p>
+<ol type="1">
+<li>How does the proposed video recognition model compare to existing
+models in terms of recognition accuracy?</li>
+<li>How does the model's efficiency compare to other approaches that
+avoid computational overhead in video recognition?</li>
+<li>Can the proposed approach be extended to other applications that use
+video data, such as action recognition or video captioning?</li>
+</ol>
+<p>Future Research Directions:</p>
+<ol type="1">
+<li>Investigating the impact of the proposed model on different video
+recognition tasks and datasets.</li>
+<li>Exploring the use of local temporal windows and efficient space-time
+mixing in other areas of video analysis, such as action recognition or
+video captioning.</li>
+<li>Extending the proposed approach to incorporate other types of
+attention mechanisms or to combine it with other efficient architectures
+for video recognition.</li>
+</ol>
+<p>Relevant Documents:</p>
+<ol type="1">
+<li>"Attention is All You Need" by Vaswani et al.</li>
+<li>"Temporal Segment Networks: Towards Good Practices for Deep Action
+Recognition" by Wang et al.</li>
+<li>"Deep Residual Learning for Image Recognition" by He et al.</li>
+<li>"A Closer Look at Spatiotemporal Convolutions for Action
+Recognition" by Tran et al.</li>
+<li>"Convolutional Sequence to Sequence Learning" by Gehring et
+al.✏</li>
+</ol>
 
       
     </div>
