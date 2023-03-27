@@ -1,7 +1,7 @@
 ---
 title: XVit
 date: 2023-03-17 10:44:02
-tags: [Transformer-based]
+tags: [Transformer-based,代码]
 categories: [视频理解]
 ---
 
@@ -9,7 +9,7 @@ categories: [视频理解]
 
 paper: https://arxiv.org/abs/2106.05968
 
-code:https://github.com/1adrianb/video-transformers
+code: https://github.com/1adrianb/video-transformers
 
 # 摘要
 
@@ -117,6 +117,11 @@ $$
 
 作为TA的替代方案，论文还提出了一种简单的轻量级机制，用于在网络中间层的不同帧之间进行信息交换。给定每一帧$t$的token集，$\mathbf{Z}_{t}^{l-1}\in\mathbb{R}^{(S+1)\times d_h}$（通过连接所有token$\mathbf{z}_{s,t}^{l-1}, s=0,\dots,S$来构造），计算得到$R$个token$\mathbf{Z}^{l}_{r, t} = \phi(\mathbf{Z}_{t}^{l-1})\in\mathbb{R}^{R\times d_h}$组成的一个新token集，这样的一个token集总结了帧信息，因此被命名为“摘要”token。然后将这些token附加到所有帧的visual token中，以计算key和value，以便query向量处理原始key和Summary标记。论文探讨了$\phi(.)$执行简单空间平均的情况，即$\mathbf{z}^{l}_{0, t} = \frac{1}{S}\sum_{s} \mathbf{z}^{l}_{s,t}$在每一帧的token上（对于这种情况，$R=1$）。请注意，对于$R=1$，Summary token引起的额外成本是$O(TS)$。
 
+<!-- # 实验
+
+## 网络架构等细节 -->
+
+
 # 代码
 ## 模型整体
 模型部分由ViT作为Base_model，在ViT的基础上主要修改了Attention部分，取其中一个`Transformer_block`打印如下所示：
@@ -223,3 +228,54 @@ class TemporalShift(nn.Module):
 ```
 
 可以看到`TemporalShift`部分代码就是TSM的代码[temporal-shift-module](https://github.com/mit-han-lab/temporal-shift-module)，也就是说XViT类似于ViT以TSM的方式去获得时序信息。
+
+## Temporal Attention aggregation
+
+论文采用轻量级的时间注意(TA)机制处理最后一层注意力层所输出的cls——token，相关代码在[head_helper.py](https://github.com/1adrianb/video-transformers/blob/main/slowfast/models/head_helper.py)，如下所示
+```python
+def forward(self, x, position_ids):
+    # temporal encoder (Longformer)
+    B, D, E = x.shape
+
+    cls_tokens = self.cls_token.expand(
+        B, -1, -1
+    )  # stole cls_tokens impl from Phil Wang, thanks
+    x = torch.cat((cls_tokens, x), dim=1)
+    x = self.temporal_encoder(x)
+    # MLP head
+    x = self.mlp_head(x[:, 0])
+    return x
+```
+
+# From ChatGPT (Just for fun)
+
+Summary: The paper proposes a video recognition model using Transformers that scales linearly with the number of frames and avoids computational overhead by approximating space-time attention with local temporal windows and efficient space-time mixing.
+
+Core Problems and Solutions:
+
+- Computational overhead induced by modeling temporal information in video recognition with Transformers. (Solution: proposing a model that scales linearly with the number of frames by approximating space-time attention with local temporal windows and efficient space-time mixing).
+
+Main Insights and Lessons Learned:
+
+- The proposed video recognition model achieves state-of-the-art results while avoiding computational overheads.
+- The use of local temporal windows and efficient space-time mixing can significantly reduce the complexity of video recognition models.
+
+Questions:
+
+1. How does the proposed video recognition model compare to existing models in terms of recognition accuracy?
+2. How does the model's efficiency compare to other approaches that avoid computational overhead in video recognition?
+3. Can the proposed approach be extended to other applications that use video data, such as action recognition or video captioning?
+
+Future Research Directions:
+
+1. Investigating the impact of the proposed model on different video recognition tasks and datasets.
+2. Exploring the use of local temporal windows and efficient space-time mixing in other areas of video analysis, such as action recognition or video captioning.
+3. Extending the proposed approach to incorporate other types of attention mechanisms or to combine it with other efficient architectures for video recognition.
+
+Relevant Documents:
+
+1. "Attention is All You Need" by Vaswani et al.
+2. "Temporal Segment Networks: Towards Good Practices for Deep Action Recognition" by Wang et al.
+3. "Deep Residual Learning for Image Recognition" by He et al.
+4. "A Closer Look at Spatiotemporal Convolutions for Action Recognition" by Tran et al.
+5. "Convolutional Sequence to Sequence Learning" by Gehring et al.✏
