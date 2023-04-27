@@ -36,10 +36,10 @@ Video Swin Transformer的总体架构如图所示，它展示了其tiny版本（
 通过移动窗口划分方法，两个连续的视频Swin变换器块被计算为
 
 $$
-    {{\hat{\bf{z}}}^{l}} = \text{3DW-MSA}\left( {\text{LN}\left( {{{\bf{z}}^{l - 1}}} \right)} \right) + {\bf{z}}^{l - 1},\nonumber\\
-    {{\bf{z}}^l} = \text{FFN}\left( {\text{LN}\left( {{{\hat{\bf{z}}}^{l}}} \right)} \right) + {{\hat{\bf{z}}}^{l}},\nonumber\\
-    {{\hat{\bf{z}}}^{l+1}} = \text{3DSW-MSA}\left( {\text{LN}\left( {{{\bf{z}}^{l}}} \right)} \right) + {\bf{z}}^{l}, \nonumber\\
-    {{\bf{z}}^{l+1}} = \text{FFN}\left( {\text{LN}\left( {{{\hat{\bf{z}}}^{l+1}}} \right)} \right) + {{\hat{\bf{z}}}^{l+1}}, 
+    { {\hat{\bf{z} } }^{l} } = \text{3DW-MSA}\left( {\text{LN}\left( { { {\bf{z} }^{l - 1} } } \right)} \right) + {\bf{z} }^{l - 1},\\\\
+    { {\bf{z} }^l} = \text{FFN}\left( {\text{LN}\left( { { {\hat{\bf{z} } }^{l} } } \right) } \right) + { {\hat{\bf{z} } }^{l} },\\\\
+    { {\hat{\bf{z} } }^{l+1} } = \text{3DSW-MSA}\left( {\text{LN}\left( { { {\bf{z} }^{l} } } \right)} \right) + {\bf{z} }^{l}, \\\\
+    { {\bf{z} }^{l+1} } = \text{FFN}\left( {\text{LN}\left( { { {\hat{\bf{z} } }^{l+1} } } \right)} \right) + { {\hat{\bf{z} } }^{l+1} }, 
 $$
 
 其中，${\hat{\bf{z}}}^l$和${\bf{z}}^l$分别表示第$l$块的3D(S)W-MSA模块和FFN模块的输出特征；$\text{3DW-MSA}$和$\text{3DSW-MSA}$分别表示使用常规和移动窗口划分配置的基于3D窗口的多头自注意力。
