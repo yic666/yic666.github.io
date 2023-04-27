@@ -28,7 +28,7 @@
 <meta property="og:description" content="Prompting Visual-Language Models for Efficient Video Understanding ECCV2022 paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2112.04478 code: https:&#x2F;&#x2F;github.com&#x2F;ju-chen&#x2F;Efficient-Prompt 基于图像的视觉语言模型  Pre-training">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-01T06:25:58.000Z">
-<meta property="article:modified_time" content="2023-04-27T02:30:52.399Z">
+<meta property="article:modified_time" content="2023-04-27T02:37:23.055Z">
 <meta property="article:author" content="Yic-gdut">
 <meta property="article:tag" content="CLIP">
 <meta property="article:tag" content="Efficient">
@@ -220,7 +220,7 @@ Adapting Image Models for Efficient Video Action Recognition</span></a><ol class
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-04-27 10:30:52" itemprop="dateModified" datetime="2023-04-27T10:30:52+08:00">2023-04-27</time>
+      <time title="Modified: 2023-04-27 10:37:23" itemprop="dateModified" datetime="2023-04-27T10:37:23+08:00">2023-04-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -301,10 +301,10 @@ class="math inline">\(\{a_i\}\)</span>会与所有的动作类别共享，也就
 <span class="math display">\[
 \begin{align*}
 &amp;c_{\text{archery}} = \mathrm{\Phi}_{\text{text}}(a_{1}, \dots,
-{TOKENISER}(\text{&#39;&#39;}\text{\underline{archery}\text{&#39;&#39;}}),
+\mathrm{TOKENISER}(\text{&#39;&#39;}\text{\underline{archery}&#39;&#39;}),
 \dots, a_{k}) \\
 &amp;c_{\text{bowling}} = \mathrm{\Phi}_{\text{text}}(a_{1},
-\dots,  {TOKENISER}(\text{&#39;&#39;}\text{\underline{bowling}\text{&#39;&#39;}}),
+\dots,  \mathrm{TOKENISER}(\text{&#39;&#39;}\text{\underline{bowling}&#39;&#39;}),
 \dots, a_{k})
 \end{align*}
 \]</span></li>
