@@ -14,7 +14,7 @@ code: https://github.com/ju-chen/Efficient-Prompt
 
 ## 基于图像的视觉语言模型
 
-![20230406151516](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230406151516.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230406151516.png)
 
 ### Pre-training
 
@@ -49,8 +49,8 @@ $$
 1. 动作识别：为了生成动作分类器，我们通过将标记化的类别名称输入预训练的文本编码器$\mathrm{\Phi}_{\text{text}}$来构造“虚拟”提示模板，如下式，其中$a_i \in \mathbb{R} ^{D}$表示第i个提示向量，由几个可学习参数组成，$D$是向量维度。提示向量$\{a_i\}$会与所有的动作类别共享，也就是只是对于任务是专有的。
 $$
 \begin{align*}
-&c_{\text{archery}} = \mathrm{\Phi}_{\text{text}}(a_{1}, \dots, {TOKENISER}(\text{``\underline{archery}''}), \dots, a_{k}) \\
-&c_{\text{bowling}} = \mathrm{\Phi}_{\text{text}}(a_{1}, \dots,  {TOKENISER}(\text{``\underline{bowling}''}), \dots, a_{k}) 
+&c_{\text{archery}} = \mathrm{\Phi}_{\text{text}}(a_{1}, \dots, \mathrm{TOKENISER}(\text{''}\text{\underline{archery}''}), \dots, a_{k}) \\
+&c_{\text{bowling}} = \mathrm{\Phi}_{\text{text}}(a_{1}, \dots,  \mathrm{TOKENISER}(\text{''}\text{\underline{bowling}''}), \dots, a_{k}) 
 \end{align*}
 $$
 2. 动作定位：采用two-stage范式，首先检测潜在的类别未知动作建议(详见第4.1节)，然后对这些检测到的建议执行动作分类。
@@ -93,18 +93,18 @@ code: https://github.com/park-jungin/dualpath
 
 Parameter-efficient transfer learning (PETL),参数高效迁移学习，在自然语言处理(NLP)中首次被使用，用于解决全/部分微调的内存和参数效率低下的问题。主要目标是通过仅使用少量可训练参数进行微调，在下游任务上获得相当或超过的性能。
 
-![20230421132548](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421132548.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421132548.png)
 
 1. Visual prompt tuning (VPT) 在Transformer块的Input Tokens前添加$K$个可训练的prompt token，同时冻结预训练的参数。Input Tokens为   
-   ![20230421133836](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421133836.png)
+   ![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421133836.png)
 2. AdaptFormer学习一个可训练的bottleneck模块。这个模块会与Transformer块中的MLP层平行，即输入为中间特征$z$，AdaptFormer block的输出可表示为
-    ![20230421134535](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421134535.png)
+    ![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421134535.png)
 3. Pro-tuning使用连续的2D卷积层从每个Transformer块的输出中预测特定于任务的视觉提示v。每个块的输出会被reshaped为 $P \times P \times C$以应用于2D卷积 。
-   ![20230421140433](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421140433.png)
+   ![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421140433.png)
 4. ST-adapter采用的adapter结构为在向下投影层和激活函数之间插入深度方向的3D卷积层。相较于AdaptFormer，ST-adapter会接受所有帧的token使得模型可以捕捉到视频中的时间特征。输出可表示为：
-![20230421141151](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421141151.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421141151.png)
 
-![20230421142701](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421142701.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421142701.png)
 
 ## Spatial adaptation
 
@@ -112,7 +112,7 @@ Parameter-efficient transfer learning (PETL),参数高效迁移学习，在自�
 
 空间token的集$\mathbf{X}^{\text{SP}}_t$包括可学习的位置编码$\mathbf{p}^{SP}$和空间class token $\mathbf{x}_{t}^{\mathrm{SP}}\{[\mathrm{CLS}]\}$。第$l$个transformer块的Spatial adaptation可由下列公式表示：
 
-![20230421150350](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421150350.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421150350.png)
 
 接着对来自最后一个transformer块的空间分类token进行平均以获得全局空间表示$y^{sp}$
 
@@ -121,7 +121,7 @@ Parameter-efficient transfer learning (PETL),参数高效迁移学习，在自�
 
 在视频中采样$T$帧后，使用$w$和$h$的因子进行缩放，缩放后的帧大小为$[W/w \times H/h \times 3]$。接着根据时间顺序堆叠$w\times h$个缩放帧，并重构堆叠帧，以与原始帧大小相同的网格形式构造一组帧，从而得到的类网格帧集的总数为$T_G = T/wh$。按同样的方式获得第$g$个帧集的时间token$\mathbf{X}_g^{\text{TP}}$，并与可学习的时间分类token$\mathbf{x}_{g}^{\mathrm{SP}}\{[\mathrm{CLS}]\}$相结合。与Spatial adaptation不同，使用了固定3D位置编码$\mathbf{p}^{TP}$，考虑到patch的绝对时间顺序和空间位置。作者依次将适配器附加到每个变压器块中的MHA和MLP层的顶部，第$l$个transformer块的temporal adaptation可由下列公式表示：
 
-![20230421154936](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421154936.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230421154936.png)
 
 接着对来自最后一个transformer块的时间分类token进行平均以获得全局空间表示$y^{sp}$。对于最后的预测，将全局空间和时间表示连接起来，并将它们输入两个FC层之间具有GeLU激活的分类器。
 
@@ -134,9 +134,9 @@ paper: https://arxiv.org/abs/2302.03024
 
 code: https://github.com/taoyang1122/adapt-image-models
 
-![20230407140936](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230407140936.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230407140936.png)
 
-![20230407151431](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230407151431.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230407151431.png)
 
 ## 空间 Adaptation
 
@@ -151,7 +151,7 @@ Adapter是在NLP上被广泛使用的一种高效微调技术。从图中（b）
 
 联合Adaptation就是在最后的MLP处加上了一个与其并行的Adapter，而这个Adapter的结构与时间Adaptation的一样，最后adapted block可被写为
 $$
-	\begin{aligned}
+\begin{aligned}
     z^T_{l} &= z_{l-1} + \operatorname{Adapter}(\operatorname{T-MSA}(\operatorname{LN}(z_{l-1})))\\
     z^S_{l} &= z^T_{l} + \operatorname{Adapter}(\operatorname{S-MSA}(\operatorname{LN}(z^T_{l})))\\
     z_{l} &= z^S_{l} + \operatorname{MLP}(\operatorname{LN}(z^S_{l})) + s \cdot \operatorname{Adapter}(\operatorname{LN}(z^S_{l}))
