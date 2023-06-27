@@ -28,7 +28,7 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2106.05968 code: https:&#x2F;&#x2F;github.com&#x2F;1adrianb&#x2F;video-transformers 摘要 本文研究的是利用Transformer进行视频识别。最近在这一领域的尝试在识别精度方面已经证明了有希望的结果，但在许多情况下，由于对时间信息的额外建模，它们也被证明会导致显著的计算开销。在这项工作中，我">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-17T02:44:02.000Z">
-<meta property="article:modified_time" content="2023-03-23T14:06:03.298Z">
+<meta property="article:modified_time" content="2023-04-27T02:27:27.135Z">
 <meta property="article:author" content="Yic-gdut">
 <meta property="article:tag" content="Transformer-based">
 <meta property="article:tag" content="代码">
@@ -132,7 +132,7 @@ aggregation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -218,7 +218,7 @@ aggregation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-23 22:06:03" itemprop="dateModified" datetime="2023-03-23T22:06:03+08:00">2023-03-23</time>
+      <time title="Modified: 2023-04-27 10:27:27" itemprop="dateModified" datetime="2023-04-27T10:27:27+08:00">2023-04-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -319,13 +319,12 @@ class="math inline">\(O(TS^2)\)</span>。在仅spatial-only注意力之后，对
 \mathbf{z}^{L-1}_{t,cls}\)</span>以获得一个特征，该特征被馈送到线性分类器。</p>
 而TimeSFormer提出的factorised attention如下： $$
 <span class="math display">\[\begin{split}
-        \tilde{\mathbf{y}}^{l}_{s,t} = \sum_{t&#39;=0}^{T-1}
+        \tilde{\mathbf{y} }^{l}_{s,t} = \sum_{t&#39;=0}^{T-1}
 \textrm{Softmax}\{(\mathbf{q}^{l}_{s,t} \cdot
 \mathbf{k}^{l}_{s,t&#39;})/\sqrt{d_h}\} \mathbf{v}^{l}_{s,t&#39;}, \\
         \mathbf{y}^{l}_{s,t} = \sum_{s&#39;=0}^{S-1}
-\textrm{Softmax}\{\tilde{\mathbf{q}}^{l}_{s,t} \cdot
-\tilde{\mathbf{k}}^{l}_{s&#39;,t})/\sqrt{d_h}\}
-\tilde{\mathbf{v}}^{l}_{s&#39;,t},
+\textrm{Softmax}\{\tilde{\mathbf{q} }^{l}_{s,t} \cdot \tilde{\mathbf{k}
+}^{l}_{s&#39;,t})/\sqrt{d_h}\} \tilde{\mathbf{v} }^{l}_{s&#39;,t},
     \end{split}
     \quad
     \begin{split}
@@ -402,25 +401,36 @@ t_w]\)</span> 被分配 <span class="math inline">\(d_h^{t’}\)</span>
 个来自 <span class="math inline">\(d_h\)</span> 的通道（即 <span
 class="math inline">\(\sum_{t’} d_h^{t’} = d_h\)</span>）。设 <span
 class="math inline">\(\mathbf{k}^{l}_{s’,t’}(d_h^{t’})\in
-\mathbb{R}^{d_h^{t’}}\)</span> 表示索引 <span
+\mathbb{R}^{d_h^{t’} }\)</span> 表示索引 <span
 class="math inline">\(\mathbf{k}^{l}_{s’,t’}\)</span> 中的 <span
 class="math inline">\(d_h^{t’}\)</span>
-个通道的运算符。然后，构造一个新的key向量： $$ ^{l}_{s',-t_w:t_w}
-^{d_h}</p>
-<p>$$ <img
+个通道的运算符。然后，构造一个新的key向量：</p>
+<p><span class="math display">\[
+\tilde{\mathbf{k} }^{l}_{s&#39;,-t_w:t_w} \triangleq
+[\mathbf{k}^{l}_{s&#39;,t-t_w}(d_h^{t-t_w}), \dots,
+\mathbf{k}^{l}_{s&#39;,t+t_w}(d_h^{t+t_w})]\in \mathbb{R}^{d_h}
+\]</span></p>
+<figure>
+<img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230317163928156.png"
-alt="Detailed self-attention computation graph" /></p>
-上图展示了如何构造<span
-class="math inline">\(\tilde{\mathbf{k}}^{l}_{s&#39;,-t_w:t_w}\)</span>，按照同样的方式可以构造一个新的value向量<span
-class="math inline">\(\tilde{\mathbf{v}}^{l}_{s&#39;,-t_w:t_w}\)</span>。最后，提出的对全时空注意力的近似为:
-$$ <sup>{l_s}<em>{s,t} = </em>{s'=0}</sup>{S-1} {(^{l_s}<em>{s,t}
-^{l}</em>{s',-t_w:t_w})/} ^{l}_{s',-t_w:t_w}, ;{
-<span class="math display">\[\begin{smallmatrix}
+alt="Detailed self-attention computation graph" />
+<figcaption aria-hidden="true">Detailed self-attention computation
+graph</figcaption>
+</figure>
+<p>上图展示了如何构造<span class="math inline">\(\tilde{\mathbf{k}
+}^{l}_{s&#39;,-t_w:t_w}\)</span>，按照同样的方式可以构造一个新的value向量<span
+class="math inline">\(\tilde{\mathbf{v}
+}^{l}_{s&#39;,-t_w:t_w}\)</span>。最后，提出的对全时空注意力的近似为:</p>
+<p><span class="math display">\[
+\mathbf{y}^{l_s}_{s,t} = \sum_{s&#39;=0}^{S-1}
+\textrm{Softmax}\{(\mathbf{q}^{l_s}_{s,t} \cdot \tilde{\mathbf{k}
+}^{l}_{s&#39;,-t_w:t_w})/\sqrt{d_h}\} \tilde{\mathbf{v}
+}^{l}_{s&#39;,-t_w:t_w},
+\;\big\{\begin{smallmatrix}
   s=0,\dots,S-1\\
   t=0,\dots,T-1
-\end{smallmatrix}\]</span>
-<p>}.</p>
-<p>$$</p>
+\end{smallmatrix}\big\}.  
+\]</span></p>
 <h3 id="temporal-attention-aggregation">Temporal Attention
 aggregation</h3>
 <p>最后一组cls-token<span
