@@ -1,13 +1,14 @@
 ---
 title: Video Test-Time Adaptation for Action Recognition
 date: 2023-06-26 10:56:29
-tags: [论文笔记,动作识别]
+tags: [论文笔记,动作识别,CVPR2023]
 categories: [视频理解]
 ---
 
 Video Test-Time Adaptation for Action Recognition
 
 paper：http://arxiv.org/abs/2211.15393
+
 code： https://github.com/wlin-at/ViTTA
 
 # 摘要

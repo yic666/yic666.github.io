@@ -1,8 +1,8 @@
 ---
 title: PoseConv3d笔记
 date: 2022-09-22 16:48:46
-tags: [行为识别,论文笔记]
-categories: [视频理解]
+tags: [动作识别,论文笔记,骨架]
+categories: [动作识别]
 ---
 
 Revisiting Skeleton-based Action Recognition
