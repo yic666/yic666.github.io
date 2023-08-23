@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2303.14474 摘要 许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，High">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3Mformer">
+<meta property="og:url" content="http://example.com/2023/07/18/3Mformer/index.html">
+<meta property="og:site_name" content="Yic">
+<meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2303.14474 摘要 许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，High">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-18T04:53:38.000Z">
+<meta property="article:modified_time" content="2023-08-23T07:11:27.383Z">
+<meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="论文笔记">
+<meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="CVPR2023">
+<meta property="article:tag" content="Transformer-based">
+<meta property="article:tag" content="骨架">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/07/18/3Mformer/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/07/18/3Mformer/","path":"2023/07/18/3Mformer/","title":"3Mformer"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>3Mformer | Yic</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yic</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.1.</span> <span class="nav-text">符号表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer"><span class="nav-number">3.2.</span> <span class="nav-text">Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#higher-order-transformer"><span class="nav-number">3.3.</span> <span class="nav-text">Higher-order transformer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%A6%82%E8%A7%88"><span class="nav-number">4.1.</span> <span class="nav-text">模型概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coupled-mode-self-attention"><span class="nav-number">4.2.</span> <span class="nav-text">Coupled-mode Self-Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%A6%E5%90%88%E6%A8%A1%E5%BC%8Ftokenscoupled-mode-tokens"><span class="nav-number">4.2.1.</span> <span class="nav-text">耦合模式tokens(Coupled-mode
+tokens)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-order-multi-mode-transformer"><span class="nav-number">4.3.</span> <span class="nav-text">Multi-order Multi-mode
+Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-order-pooling-mp-module"><span class="nav-number">4.3.1.</span> <span class="nav-text">Multi-order Pooling (MP)
+Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#temporal-block-pooling-tp-module"><span class="nav-number">4.3.2.</span> <span class="nav-text">Temporal block Pooling (TP)
+Module</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic-gdut</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/18/3Mformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="3Mformer | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3Mformer
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-18 12:53:38" itemprop="dateCreated datePublished" datetime="2023-07-18T12:53:38+08:00">2023-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-23 15:11:27" itemprop="dateModified" datetime="2023-08-23T15:11:27+08:00">2023-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>paper: https://arxiv.org/abs/2303.14474</p>
+<h1 id="摘要">摘要</h1>
+<p>许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，Higher-order
+Transformer（HoT）根据（i）身体关节，（ii）身体关节之间的成对连接，以及（iii）骨骼身体关节的高阶超边，生成每个时间块的嵌入。我们通过一种新颖的多阶多模Transformer（3Mformer）结合这些超边的HoT嵌入，该Transformer具有两个模块，可以交换顺序，实现基于“通道-时间块”、“顺序-通道-身体关节”、“通道-超边（任意阶）”和“仅通道”对上的耦合模式注意力。第一个模块称为多阶汇聚（MP），还可以学习沿着超边模式的加权汇聚，而第二个模块称为时间块汇聚（TP），则沿着时间块1模式进行汇聚。我们的端到端可训练网络相对于基于GCN、Transformer和超图的对应方法获得了最先进的结果。</p>
+<h1 id="引言">引言</h1>
+<p>论文背景:
+骨骼动作识别在视频监控、人机交互、体育分析和虚拟现实等领域具有广泛应用。与基于视频的方法不同，骨骼序列通过表示3D身体关节的时空演变，对传感器噪声具有鲁棒性，并且在计算和存储效率上更高效。</p>
+<p>过去方案:
+过去的图形模型主要通过图卷积网络（GCN）或图神经网络（GNN）来处理骨骼数据。然而，这些方法忽略了非连接的关节之间的依赖关系，并且对于捕捉更高阶的运动模式有限。</p>
+<p>论文的Motivation:
+鉴于现有方法的局限性，本研究旨在提出一种新的模型来更好地表示骨骼数据，并捕捉关节之间的高阶动态。通过构建超图来表示骨骼数据，并使用多阶多模态变压器进行耦合模式注意力，以实现对不同模态的关注。</p>
+<p>论文的Contribution：</p>
+<ol type="1">
+<li>将骨骼数据建模为阶数为1到r的超图（集合、图和/或超图），其中人体关节作为节点。这样形成的超边的Higher-order
+Transformer嵌入表示了各种3D身体关节的组合，并捕捉了对于动作识别非常重要的各种高阶动态。</li>
+<li>由于HoT嵌入表示了各个超边的阶数和时间块，引入了一种新颖的Multi-order
+Multi-mode Transformer (3Mformer)。它包含两个模块，即Multi-order
+Pooling和Temporal block
+Pooling，其目标是形成诸如'通道-时间块'、'顺序-通道-身体关节'、'通道-超边（任意阶）'和'仅通道'等耦合模式tokens，并进行加权超边聚合和时间块聚合。</li>
+</ol>
+<h1 id="背景">背景</h1>
+<h2 id="符号表示">符号表示</h2>
+<p><span class="math inline">\(\mathcal{I}_{K}\)</span>代表索引集合<span
+class="math inline">\({1,2,\cdots,K}\)</span>。大写粗体符号表示矩阵（二阶张量）或高阶张量（超过两个模式）。小写粗体符号表示向量，普通字体表示标量。
+<span class="math inline">\(\mathcal{I}_{K}\)</span>代表索引集合<span
+class="math inline">\({1,2,\cdots,K}\)</span>。普通字体表示标量；向量用小写粗体字母表示，例如<span
+class="math inline">\(\textbf{x}\)</span>；矩阵用大写粗体字母表示，例如<span
+class="math inline">\(\textbf{M}\)</span>；张量用花体字母表示，例如<span
+class="math inline">\(\vec{\mathcal{M}}\)</span>。 <span
+class="math inline">\(r\)</span>阶张量表示为<span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{I_1 \times I_2
+\times \cdots \times I_r}\)</span>， <span
+class="math inline">\(\vec{\mathcal{M}}\)</span>的第<span
+class="math inline">\(m\)</span>模式矩阵化表示为<span
+class="math inline">\(\vec{\mathcal{M}}_{(m)}\in \mathbb{R}^{I_m \times
+(I_1 \cdots I_{m-1} I_{m+1} \cdots I_{r})}\)</span>。</p>
+<h2 id="transformer">Transformer</h2>
+<p>Transformer编码器层<span class="math inline">\(f : \mathbb{R}^{J
+\times d} \rightarrow \mathbb{R}^{J \times d}\)</span>包含两个子层：(i)
+自注意力<span class="math inline">\(a : \mathbb{R}^{J \times d}
+\rightarrow \mathbb{R}^{J \times d}\)</span>和(ii) 逐元素的前馈网络<span
+class="math inline">\(\text{MLP} :\mathbb{R}^{J \times d} \rightarrow
+\mathbb{R}^{J \times d}\)</span>。对于具有<span
+class="math inline">\(J\)</span>个节点的集合，其中<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J \times
+d}\)</span>，<span class="math inline">\({\bf x}_i\)</span>是节点<span
+class="math inline">\(i\)</span>的特征向量，一个Transformer层(为简洁起见，省略了<span
+class="math inline">\(a(\cdot)\)</span>和MLP<span
+class="math inline">\((\cdot)\)</span>后的归一化)计算如下： <span
+class="math display">\[
+\begin{align}
+    &amp; a({\bf x}_i) = {\bf x}_i +
+\sum_{h=1}^H\sum_{j=1}^J\alpha_{ij}^h{\bf x}_j{\bf W}_h^V{\bf W}_h^O, \\
+    &amp; f({\bf x}_i) = a({\bf x}_i) + \text{MLP}(a({\bf X}))_i,
+\end{align}
+\]</span> 其中<span class="math inline">\(H\)</span>和<span
+class="math inline">\(d_H\)</span>分别表示注意力头的数量和头的大小，<span
+class="math inline">\({\boldsymbol{\alpha}}^h = \sigma\big({\bf X}{\bf
+W}_h^Q({\bf X}{\bf W}_h^{K})^\top\big)\)</span>是注意力系数，<span
+class="math inline">\({\bf W}_h^O \in \mathbb{R}^{d_H \times
+d}\)</span>，<span class="math inline">\({\bf W}_h^V\)</span>，<span
+class="math inline">\({\bf W}_h^K\)</span>，<span
+class="math inline">\({\bf W}_h^Q \in \mathbb{R}^{d \times
+d_H}\)</span>。</p>
+<h2 id="higher-order-transformer">Higher-order transformer</h2>
+<p>设HoT层为<span class="math inline">\(f_{m\rightarrow n}
+:\mathbb{R}^{J^m \times d} \rightarrow \mathbb{R}^{J^n \times
+d}\)</span>，其中包含两个子层：(i) 高阶自注意力<span
+class="math inline">\(a_{m\rightarrow n} :\mathbb{R}^{J^m \times d}
+\rightarrow \mathbb{R}^{J^n \times d}\)</span>和(ii) 前馈网络<span
+class="math inline">\(\text{MLP}_{n\rightarrow n} :\mathbb{R}^{J^n
+\times d} \rightarrow \mathbb{R}^{J^n \times
+d}\)</span>。此外，引入索引向量<span class="math inline">\({\bf
+i}\in\mathcal{I}_{J}^m\equiv\mathcal{I}_{J} \times \mathcal{I}_{J}
+\times \cdots \times \mathcal{I}_{J}\)</span>（<span
+class="math inline">\(m\)</span>个模式）和<span
+class="math inline">\({\bf j}\in\mathcal{I}_{J}^n\equiv\mathcal{I}_{J}
+\times \mathcal{I}_{J} \times \cdots \times
+\mathcal{I}_{J}\)</span>（<span
+class="math inline">\(n\)</span>个模式）。对于输入张量<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J^m \times
+d}\)</span>，其中超边的阶数为<span
+class="math inline">\(m\)</span>，HoT层的计算如下：</p>
+<p><span class="math display">\[
+\begin{align}
+    &amp; a_{m \rightarrow n}(\mathbf{X})_{j}=\sum_{h=1}^{H} \sum_{\mu}
+\sum_{i} \alpha_{i, j}^{h, \mu} \mathbf{X}_{i} \mathbf{W}_{h, \mu}^{V}
+\mathbf{W}_{h, \mu}^{o} \\
+    &amp; \operatorname{MLP}_{n \rightarrow n}\left(a_{m \rightarrow
+n}(\mathbf{X})\right)=\mathrm{L}_{n \rightarrow
+n}^{2}\left(\operatorname{ReLU}\left(\mathrm{L}_{n \rightarrow
+n}^{1}\left(a_{m \rightarrow n}(\mathbf{X})\right)\right)\right), \\
+    &amp; f_{m \rightarrow n}(\mathbf{X})=a_{m \rightarrow
+n}(\mathbf{X})+\operatorname{MLP}_{n \rightarrow n}\left(a_{m
+\rightarrow n}(\mathbf{X})\right),
+\end{align}
+\]</span> 其中<span class="math inline">\({\boldsymbol \alpha}^{h, \mu}
+\in
+\mathbb{R}^{J^{m+n}}\)</span>是具有多个头部的所谓注意力系数张量，<span
+class="math inline">\({\boldsymbol \alpha}^{h,
+\mu}_{\mathbf{i},\mathbf{j}} \in
+\mathbb{R}^{J}\)</span>是一个向量，<span class="math inline">\({\bf
+W}_{h, \mu}^V \in \mathbb{R}^{d \times d_H}\)</span>和<span
+class="math inline">\({\bf W}_{h, \mu}^O \in \mathbb{R}^{d_H \times
+d}\)</span>是可学习的参数。此外，<span
+class="math inline">\(\mu\)</span>在相同节点分区中的阶-<span
+class="math inline">\((m+n)\)</span>的等价类上进行索引，<span
+class="math inline">\(\text{L}_{n\rightarrow n}^1 :\mathbb{R}^{J^n
+\times d}\rightarrow \mathbb{R}^{J^n \times d_F}\)</span>和<span
+class="math inline">\(\text{L}_{n\rightarrow n}^2 :\mathbb{R}^{J^n
+\times d_F}\rightarrow \mathbb{R}^{J^n \times
+d}\)</span>是等变线性层，<span
+class="math inline">\(d_F\)</span>是隐藏维度。</p>
+<p>为了从阶数为<span class="math inline">\(m\)</span>的输入张量<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J^m \times
+d}\)</span>中计算每个注意力张量<span class="math inline">\({\boldsymbol
+\alpha}^{h,\mu} \in
+\mathbb{R}^{J^{m+n}}\)</span>，根据高阶query和key，我们有： $$ <span
+class="math display">\[\begin{equation}
+  {\boldsymbol{\alpha}_{\boldsymbol i, \boldsymbol j}^{h,\mu}}  =
+    \begin{cases}
+      \frac{\sigma({\bf Q}_{\boldsymbol j}^{h,\mu}, {\bf K}_{\boldsymbol
+i}^{h,\mu})}{Z_{\boldsymbol j}}\;\quad({\boldsymbol i}, {\boldsymbol
+j})  \in  \mu\\
+      \quad\quad 0 \quad\quad\;\text{otherwise},
+    \end{cases}
+    
+\end{equation}\]</span> $$ 其中<span class="math inline">\({\bf Q}^\mu =
+\text{L}_{m\rightarrow n}^\mu({\bf X})\)</span>，<span
+class="math inline">\({\bf K}^\mu = \text{L}_{m\rightarrow m}^\mu({\bf
+X})\)</span>，归一化常数<span class="math inline">\(Z_{\boldsymbol j} =
+\sum_{\boldsymbol i:({\boldsymbol i}, {\boldsymbol j})\in
+\mu}\sigma({\bf Q}_{\boldsymbol j}^\mu, {\bf K}_{\boldsymbol
+i}^\mu)\)</span>。最后，可以将Eq(6)中的核注意力近似为具有RKHS特征映射<span
+class="math inline">\(\psi\in\mathbb{R}_{+}^{d_K}\)</span>以提高效率，其中<span
+class="math inline">\(d_K\ll d_H\)</span>。具体而言，有<span
+class="math inline">\(\sigma({\bf Q}_{\boldsymbol j}^{h,\mu}, {\bf
+K}_{\boldsymbol i}^{h,\mu})\approx{\boldsymbol \psi}({\bf
+Q}_{\boldsymbol j}^{h,\mu})^\top{\boldsymbol \psi}({\bf K}_{\boldsymbol
+i}^{h,\mu})\)</span>。选择了performer核，因为它在理论和实证上都有保证。</p>
+<p>由于query和key张量是使用等变线性层从输入张量<span
+class="math inline">\({\bf
+X}\)</span>计算得到的，因此Transformer编码器层<span
+class="math inline">\(f_{m\rightarrow n}\)</span>满足排列等变性。</p>
+<h1 id="方法">方法</h1>
+<h2 id="模型概览">模型概览</h2>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image.png" /></p>
+<p>如图所示，框架包含一个简单的三层MLP单元（全连接层，ReLU激活函数，全连接层，ReLU激活函数，Dropout层，全连接层），三个针对每种输入类型（即，身体关节特征集、身体关节的图和超图）的HoT块，接着是具有两个模块（i）多阶池化（MP）和（ii）时间块池化（TP）的多阶多模态Transformer（3Mformer）。</p>
+<p>3Mformer的目标是形成耦合模式tokens（稍后会解释其含义），例如“通道-时间块”、“序号-通道-身体关节”、“通道-超边（任意序号）”和“仅通道”，并进行加权超边聚合和时间块聚合。它们的输出进一步连接并传递到一个全连接层进行分类。</p>
+<p><strong>MLP 单元</strong>:MLP单元接受<span
+class="math inline">\(T\)</span>个相邻的帧，每个帧具有<span
+class="math inline">\(J\)</span>个2D/3D骨骼身体关节，形成一个时间块。总共，取决于步长<span
+class="math inline">\(S\)</span>，我们得到一些<span
+class="math inline">\(\tau\)</span>个时间块（一个块捕获短期时间演变）。相比之下，长期时间演变由HoT和3Mformer建模。每个时间块由MLP编码成一个<span
+class="math inline">\(d\times J\)</span>维的特征图。</p>
+<p><strong>HoT 分支</strong>：我们将 HoT（Hypergraph on Transformer） 的
+<span class="math inline">\(r\)</span>
+个分支堆叠在一起，每个分支接收维度为 <span class="math inline">\({\bf
+X}_t\in\mathbb{R}^{d \times J}\)</span> 的嵌入，其中 <span
+class="math inline">\(t\in\mathcal{I}_{\tau}\)</span> 表示时间块。每个
+HoT 分支输出大小为 <span
+class="math inline">\(m\in\mathcal{I}_{r}\)</span> 的超边特征表示，记为
+<span class="math inline">\({\bf\Phi}&#39;_m\in\mathbb{R}^{J^m \times
+d&#39;}\)</span>，其中 <span
+class="math inline">\(m\in\mathcal{I}_{r}\)</span> 表示阶数。</p>
+<p>对于一阶、二阶和更高阶的流输出 <span
+class="math inline">\({\bf\Phi}&#39;_1,\cdots,{\bf\Phi}&#39;_r\)</span>，我们进行以下步骤：(i)
+交换特征通道和超边模式，(ii)
+提取张量的上三角部分，然后在块-时间模式上进行连接，这样我们得到 <span
+class="math inline">\({\bf\Phi}_m\in\mathbb{R}^{d&#39;\times
+N_{E_m}\times\tau}\)</span>，其中 <span class="math inline">\(N_{E_m} =
+\binom{J}{m}\)</span>。随后，我们沿着超边模式连接 <span
+class="math inline">\({\bf\Phi}_1,\cdots,{\bf\Phi}_r\)</span>，得到一个多阶特征张量
+<span class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{d&#39;
+\times N \times \tau}\)</span>，其中所有阶数的超边总数为 <span
+class="math inline">\(N=\sum_{m=1}^r\binom{J}{m}\)</span>。</p>
+<p><strong>3Mformer</strong>：我们使用具有耦合模式自注意力（CmSA）的多阶多模式Transformer（3Mformer）来融合多阶特征张量
+<span class="math inline">\(\vec{\mathcal{M}}\)</span>
+中的信息流，并最终将3Mformer的输出传递给分类器进行分类。</p>
+<h2 id="coupled-mode-self-attention">Coupled-mode Self-Attention</h2>
+<h3 id="耦合模式tokenscoupled-mode-tokens">耦合模式tokens(Coupled-mode
+tokens)</h3>
+<p>我们受到标准Vision
+Transformer（ViT）中单类别tokens的注意区域的启发，这些区域可以用来形成一个与类别无关的本地化映射(参考
+https://zhuanlan.zhihu.com/p/481304916)。研究了Transformer模型是否也能够有效地捕捉耦合模式注意力，用于更具有区分性的分类任务，例如通过学习Transformer内的耦合模式tokens来进行基于张量骨架的动作识别。为此，提出了一个多阶多模式Transformer（3Mformer），它使用耦合模式tokens来共同学习通道模式、块-时间模式、身体关节模式和阶数模式之间的各种高阶运动动态。3Mformer能够成功地从CmSA机制中生成对应于不同tokens的耦合模式关系。接下来，介绍CmSA机制。</p>
+<p>给定阶数为 <span class="math inline">\(r\)</span> 的张量 <span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{I_1 \times I_2
+\times \cdots \times I_r}\)</span>，为了形成耦合模式tokens，我们对 <span
+class="math inline">\(\vec{\mathcal{M}}\)</span> 进行模式-<span
+class="math inline">\(m\)</span>的矩阵化，得到 <span
+class="math inline">\(\textbf{M} \equiv \vec{\mathcal{M}}_{(m)}^\top \in
+\mathbb{R}^{(I_1 \cdots I_{m-1} I_{m+1} \cdots I_{r}) \times
+I_m}\)</span>，然后从 <span class="math inline">\(\textbf{M}\)</span>
+形成耦合tokens。</p>
+<p>举例来说，对于一个给定的三阶张量，它具有特征通道模式、超边模式和时间块模式，我们可以形成以下tokens对：</p>
+<ol type="1">
+<li>`channel-temporal block'：特征通道-时间块对</li>
+<li>`channel-hyper-edge (any order)'：特征通道-超边 (任意阶数)对</li>
+<li>`channel-only'：仅特征通道对</li>
+</ol>
+<p>另外，如果给定的张量被用作输入并输出一个产生新模式（例如，身体关节模式）的新张量，我们可以形成以下tokens：</p>
+<p>`order-channel-body joint'：阶数-特征通道-身体关节对</p>
+<p>在接下来的部分，为了简化起见，使用“reshape”来进行张量的矩阵化，以形成不同类型的联合模式令牌。</p>
+<p>联合模式自注意力（JmSA）定义如下： <span class="math display">\[
+\begin{equation}
+      a(\mathbf{Q}, \mathbf{K},
+\mathbf{V})=\text{SoftMax}\left(\frac{\mathbf{Q
+K}^{\top}}{\sqrt{d_{K}}}\right) \mathbf{V}
+\end{equation}
+\]</span></p>
+<p>其中，<span class="math inline">\(\sqrt{d_{K}}\)</span>
+是缩放因子，<span class="math inline">\({\bf Q} = {\bf W}^q{\bf
+M}\)</span>，<span class="math inline">\({\bf K} = {\bf W}^k{\bf
+M}\)</span> 和 <span class="math inline">\({\bf V} = {\bf W}^v{\bf
+M}\)</span> 分别是查询（query）、键（key）和值（value）向量，而 <span
+class="math inline">\(\textbf{M} \equiv
+\vec{\mathcal{M}}{(m)}^\top\)</span>。此外，<span
+class="math inline">\({\bf Q}\)</span>、<span class="math inline">\({\bf
+K}\)</span>、<span class="math inline">\({\bf V} \in \mathbb{R}^{(I_1
+\cdots I_{m-1} I_{m+1} \cdots I_{r}) \times I_m}\)</span>，<span
+class="math inline">\({\bf W}^q\)</span>、<span
+class="math inline">\({\bf W}^k\)</span>、<span
+class="math inline">\({\bf W}^v \in \mathbb{R}^{(I_1 \cdots I_{m-1}
+I_{m+1} \cdots I_{r}) \times (I_1 \cdots I_{m-1} I_{m+1} \cdots
+I_{r})}\)</span>
+是可学习的权重。我们注意到不同的联合模式标记具有不同的“注意力焦点”机制，并且我们在我们的3Mformer中应用它们来融合多阶特征表示。</p>
+<h2 id="multi-order-multi-mode-transformer">Multi-order Multi-mode
+Transformer</h2>
+<h3 id="multi-order-pooling-mp-module">Multi-order Pooling (MP)
+Module</h3>
+<p><strong>CmSA in MP</strong>：我们将多阶特征表示<span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{d&#39; \times N
+\times \tau}\)</span>重塑为<span class="math inline">\({\bf M} \in
+\mathbb{R}^{d&#39;\tau \times
+N}\)</span>（或者将后面TP中解释的输出重塑为<span
+class="math inline">\({\bf M}&#39; \in \mathbb{R}^{d&#39; \times
+N}\)</span>），从而使模型能够关注不同类型的特征表示。让我们简单地记<span
+class="math inline">\(d&#39;&#39; = d&#39;\tau\)</span>（或者<span
+class="math inline">\(d&#39;&#39; =
+d&#39;\)</span>，具体取决于输入的来源）。我们形成了一个耦合模式的self-attention（如果<span
+class="math inline">\(d&#39;&#39;=d&#39;\tau\)</span>，我们有"channel-temporal
+block"的token；如果<span
+class="math inline">\(d&#39;&#39;=d&#39;\)</span>，我们有"channel-only"的token）。
+<span class="math display">\[
+\begin{equation}
+  a_{\mathrm{MP}}\left(\mathbf{Q}_{\mathrm{MP}},
+\mathbf{K}_{\mathrm{MP}},
+\mathbf{V}_{\mathrm{MP}}\right)=\operatorname{SoftMax}\left(\frac{\mathbf{Q}_{\mathrm{MP}}
+\mathbf{K}_{\mathrm{MP}}^{\top}}{\sqrt{d_{K_{\mathrm{MP}}}}}\right)
+\mathbf{V}_{\mathrm{MP}} \text {, }
+\end{equation}
+\]</span></p>
+<p>其中，<span class="math inline">\(\sqrt{d_{K_\text{MP}}}\)</span>
+是缩放因子，<span class="math inline">\({\bf Q}_\text{MP}\!=\!{\bf
+W}_\text{MP}^q{\bf M}\)</span>，<span class="math inline">\({\bf
+K}_\text{MP}\!=\!{\bf W}_\text{MP}^k{\bf M}\)</span> 和 <span
+class="math inline">\({\bf V}_\text{MP}\!=\!{\bf W}_\text{MP}^v{\bf
+M}\)</span>（我们可以使用 <span class="math inline">\({\bf M}\)</span>
+或者 <span class="math inline">\({\bf
+M}&#39;\)</span>）分别是查询、键和值。此外，<span
+class="math inline">\({\bf Q}_\text{MP}\)</span>，<span
+class="math inline">\({\bf K}_\text{MP}\)</span>，<span
+class="math inline">\({\bf V}_\text{MP}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times N}\)</span> 和 <span
+class="math inline">\({\bf W}_\text{MP}^q\)</span>，<span
+class="math inline">\({\bf W}_\text{MP}^k\)</span>，<span
+class="math inline">\({\bf W}_\text{MP}^v\!\in\!
+\mathbb{R}^{d&#39;&#39;\times d&#39;&#39;}\)</span>
+是可学习的权重。方程式(8)是一种自注意层，它基于所谓的耦合模式令牌的
+<span class="math inline">\({\bf Q}_\text{MP}\)</span> 和 <span
+class="math inline">\({\bf K}_\text{MP}\)</span> 令牌嵌入之间的相关性对
+<span class="math inline">\({\bf V}_\text{MP}\)</span>
+进行重新加权。</p>
+<p><strong>Weighted pooling</strong>:(8)中的注意力层产生特征表示 <span
+class="math inline">\({\bf O}_\text{MP}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times
+N}\)</span>，以增强例如特征通道与身体关节之间的关系。随后，我们通过对多个阶数
+<span class="math inline">\(m\in\mathcal{I}_{r}\)</span>
+的超边进行加权池化来处理多个阶数的超边的影响： $$ <span
+class="math display">\[\begin{align}
+    &amp; {\bf O}_\text{MP}^{*(m)}\!=\!{\bf O}_\text{MP}^{(m)}{\bf
+H}^{(m)}\!\in\!  \mathbb{R}^{d&#39;&#39;\times J}, %~(\text{or}~{\bf
+O}_\text{MP}^{*&#39;(k)}\!=\!{\bf O}_\text{MP}^{&#39;(k)}{\bf
+H}^{(k)}\!\in\! \mathbb{R}^{d&#39;\times J})
+
+\end{align}\]</span> $$</p>
+<p>其中，<span class="math inline">\({\bf O}_\text{MP}^{(m)}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times N_{E_m}}\)</span> 是从 <span
+class="math inline">\({\bf O}_\text{MP}\)</span> 中简单地提取出阶数为
+<span class="math inline">\(m\)</span> 的超边的特征表示，矩阵 <span
+class="math inline">\({\bf H}^{(m)}\!\in\! \mathbb{R}^{N_{E_m}\times
+J}\)</span> 是可学习的权重，用于对阶数为 <span
+class="math inline">\(m\)</span>
+的超边进行加权池化。最后，通过简单地连接 <span
+class="math inline">\({\bf O}_\text{MP}^{*(1)},\cdots,{\bf
+O}_\text{MP}^{*(r)}\)</span>，我们得到 <span class="math inline">\({\bf
+O}_\text{MP}^{*}\!\in\! \mathbb{R}^{r{d&#39;&#39;\times
+J}}\)</span>。如果我们使用了从 TP 到 MP 的输入，则将 MP 的输出表示为
+<span
+class="math inline">\({\mathbf{O}&#39;}_\text{MP}^{*}\)</span>。</p>
+<h3 id="temporal-block-pooling-tp-module">Temporal block Pooling (TP)
+Module</h3>
+<p><strong>CmSA in TP</strong>：首先，我们将多阶特征表示 <span
+class="math inline">\(\vec{\mathcal{M}}\!\in\!
+\mathbb{R}^{d&#39;\!\times\!N\!\times\!\tau}\)</span> 重新整形为 <span
+class="math inline">\({\bf M}\!\in\!
+\mathbb{R}^{d&#39;N\!\times\!\tau}\)</span>（或者将来自 MP
+的输出重新整形为 <span class="math inline">\({\bf M}&#39;&#39;\!\in\!
+\mathbb{R}^{rd&#39;J\!\times\!\tau}\)</span>）。为简单起见，我们在第一种情况下记
+<span
+class="math inline">\(d&#39;&#39;&#39;\!=\!d&#39;N\)</span>，在第二种情况下记
+<span
+class="math inline">\(d&#39;&#39;&#39;\!=\!rd&#39;J\)</span>。在第一种情况下，重新整形后的输入的第一模式用于形成令牌，它们再次是耦合模式令牌，例如“通道-超边”和“阶-通道-身体关节”令牌，分别对应不同的表示意义。
+此外，TP（可能是指某种处理方式或模块）还沿着块-时间模式（沿 <span
+class="math inline">\(\tau\)</span>
+方向）执行池化操作。我们形成一个耦合模式自注意力： <span
+class="math display">\[
+\begin{equation}
+    a_\text{TP}({\bf Q}_\text{TP}, {\bf K}_\text{TP}, {\bf V}_\text{TP})
+=\text{SoftMax}\left(\frac{\mathbf{Q}_\text{TP}\mathbf{K}_\text{TP}^\top}{\sqrt{d_{K_\text{TP}}}}\right)\mathbf{V}_\text{TP},
+\end{equation}
+\]</span> 这里，<span
+class="math inline">\(\sqrt{d_{K_\text{TP}}}\)</span> 是缩放因子，<span
+class="math inline">\({\bf Q}_\text{TP} = {\bf W}_\text{TP}^q{\bf
+M}\)</span>，<span class="math inline">\({\bf K}_\text{TP} = {\bf
+W}_\text{TP}^k{\bf M}\)</span> 和 <span class="math inline">\({\bf
+V}_\text{TP} = {\bf W}_\text{TP}^v{\bf M}\)</span>（我们可以使用 <span
+class="math inline">\({\bf M}\)</span> 或者 <span
+class="math inline">\({\bf
+M}&#39;&#39;\)</span>）分别是查询、键和值。此外，<span
+class="math inline">\({\bf Q}_\text{TP}\)</span>，<span
+class="math inline">\({\bf K}_\text{TP}\)</span>，<span
+class="math inline">\({\bf V}_\text{TP} \in
+\mathbb{R}^{d&#39;&#39;&#39;\times \tau}\)</span> （或者 <span
+class="math inline">\(\mathbb{R}^{3d&#39;J\!\times\!\tau}\)</span>） 和
+<span class="math inline">\({\bf W}_\text{TP}^q\)</span>，<span
+class="math inline">\({\bf W}_\text{TP}^k\)</span>，<span
+class="math inline">\({\bf W}_\text{TP}^v \in
+\mathbb{R}^{d&#39;&#39;&#39;\times d&#39;&#39;&#39;}\)</span> （或者
+<span class="math inline">\(\mathbb{R}^{3d&#39;J\times
+3d&#39;J}\)</span>）是可学习的权重。方程式(10)重新加权 <span
+class="math inline">\({\bf
+V}_\text{TP}\)</span>，其基于联合模式令牌（例如“通道-超边”或“阶-通道-身体关节”）的
+<span class="math inline">\({\bf Q}_\text{TP}\)</span> 和 <span
+class="math inline">\({\bf K}_\text{TP}\)</span>
+令牌嵌入之间的相关性。注意力的输出是时间表示 <span
+class="math inline">\({\bf O}_\text{TP} \in
+\mathbb{R}^{d&#39;&#39;&#39;\times \tau}\)</span>。如果我们使用 <span
+class="math inline">\({\bf M}&#39;&#39;\)</span>
+作为输入，则将输出表示为 <span class="math inline">\({\bf
+O}&#39;&#39;_\text{TP}\)</span>。</p>
+<p><strong>Pooling step</strong>:在给定时间表示 <span
+class="math inline">\({\bf
+O}_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;\!\times\!\tau}\)</span>（或者
+<span class="math inline">\({\bf
+O}&#39;&#39;_\text{TP}\)</span>）后，我们在块-时间模式（即 <span
+class="math inline">\(\tau\)</span>
+方向）上应用池化操作，以获得与骨骼序列长度（块数量 <span
+class="math inline">\(\tau\)</span>）无关的紧凑特征表示。有许多池化操作(我们没有提出池化算子，而是选择了一些流行的算子，以比较它们对
+TP
+的影响)。，包括一阶的（例如平均池化、最大池化、求和池化）、二阶的（如注意力池化）、高阶的（三线性池化）
+和排序池化。</p>
+<p>池化后的输出是 <span class="math inline">\({\bf
+O}^*_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;}\)</span>（或者 $</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
+              <a href="/tags/Transformer-based/" rel="tag"># Transformer-based</a>
+              <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/06/28/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition/" rel="prev" title="SVFormer: Semi-supervised Video Transformer for Action Recognition">
+                  <i class="fa fa-chevron-left"></i> SVFormer: Semi-supervised Video Transformer for Action Recognition
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/22/Hypergraph-Transformer/" rel="next" title="Hypergraph Transformer">
+                  Hypergraph Transformer <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic-gdut</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
