@@ -123,18 +123,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -163,6 +163,941 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/22/Hypergraph-Transformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/08/22/Hypergraph-Transformer/" class="post-title-link" itemprop="url">Hypergraph Transformer</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-08-22 14:05:24" itemprop="dateCreated datePublished" datetime="2023-08-22T14:05:24+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-23 14:57:28" itemprop="dateModified" datetime="2023-08-23T14:57:28+08:00">2023-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>paper: https://arxiv.org/abs/2211.09590</p>
+<p>code: https://github.com/ZhouYuxuanYX/Hyperformer</p>
+<h1 id="摘要">摘要</h1>
+<p>骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN的一个限制，即拓扑结构在训练后是固定的。为了放松这种限制，采用了自注意力(SA)机制使GCN的拓扑结构对输入变得自适应，产生了目前最好的混合模型。同时，也尝试了简单的Transformer，但由于缺乏结构先验，它们仍落后于目前最好的基于GCN的方法。与混合模型不同，我们提出了一种更优雅的方法，通过图距离嵌入将骨连接性结构融入Transformer。我们的嵌入在训练期间保留了骨架结构的信息，而GCN仅将其用于初始化。更重要的是，我们揭示了图模型通常存在的一个潜在问题，即成对聚合从本质上忽略了身体关节之间的高阶运动依赖性。为弥补这一空白，我们在超图上提出了一种新的自注意力(SA)机制，称为超图自注意力(HyperSA)，以融入内在的高阶关系。我们将结果模型称为Hyperformer，它在NTU
+RGB+D、NTU RGB+D
+120和Northwestern-UCLA数据集上都优于目前最好的图模型，在精度和效率方面。</p>
+<h1 id="引言">引言</h1>
+<p>论文背景:
+骨骼动作识别是一项重要的研究领域，通过使用骨骼关节坐标来识别人类动作。过去的研究主要采用图卷积网络（GCNs）来建模关节之间的关联，并取得了较好的性能。然而，GCNs存在拓扑结构固定的限制，无法灵活适应输入数据。为了解决这个问题，本研究引入了自注意机制，使得GCNs的拓扑结构能够根据输入数据自适应调整，从而提高了模型的性能。</p>
+<p>过去方案:
+过去的研究主要采用图卷积网络（GCNs）来建模关节之间的关联，并取得了较好的性能。然而，GCNs存在拓扑结构固定的限制，无法灵活适应输入数据。为了解决这个问题，一些研究尝试使用Transformer模型，但由于缺乏结构先验知识，其性能仍然落后于GCN-based方法。</p>
+<p>论文的Motivation:
+鉴于GCNs和Transformer模型在骨骼动作识别中的局限性，本研究旨在提出一种更优雅的解决方案，将骨骼关联信息引入Transformer模型中。通过引入基于图距离的相对位置嵌入和超图自注意机制，该模型能够更好地捕捉骨骼关节之间的高阶关系，并在准确性和效率方面超越现有的图模型。</p>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/1.png" /></p>
+<p>论文的Contribution： 1.
+提出通过基于图距离的相对位置嵌入将人体骨架的结构信息融入Transformer,利用了Transformer与目前最先进的混合模型之间的差距
+2.
+基于超图表示设计了一种新的自注意力(SA)变体,称为超图自注意力(HyperSA)。据作者所知,他们的工作是第一种将超图表示应用于基于骨架的动作识别的工作,它考虑了成对和高阶关节关系,超越了当前最先进的方法（并不是第一种）
+3.
+根据所提出的相对位置嵌入和HyperSA构建了一个轻量级的Transformer。它在基于骨架的动作识别基准测试中优于目前最好的图模型,无论是效率还是准确率方面。</p>
+<p>在latex源码，作者在引言第三段“This can be attributed to the fact that
+the formulation of the vanilla Transformer ignores the unique
+characteristics of skeleton data, i.e.,”
+注释掉了一部分原有的内容，注释者认为“对应这个问题的改动很小”，注释内容翻译如下：</p>
+<blockquote>
+<p>Transformer假设输入标记是同质的,然而人体关节本质上是异质的,例如,每个物理关节发挥独特的作用,因此与其他关节有不同的关系。这些固有关系在不同的动作中持续存在,与输入的关节坐标或动作类别无关。骨连接性:Transformer依赖排列不变的注意力操作,这会忽略位置信息。普通的注意力操作假设排列不变性,因此破坏了位置信息。为了缓解这个问题,绝对位置嵌入被广泛使用。然而,它们无法表示人体关节之间复杂的骨连接关系。与绝对位置嵌入相比,相对位置嵌入被证明在语言、视觉和图数据等各种任务上的Transformer中更优越,因为它们保留了比前者更多的结构信息。</p>
+</blockquote>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="自注意力">自注意力</h2>
+<p>给定输入序列<span
+class="math inline">\(X=(\vec{x}_1,...,\vec{x}_n)\)</span>,每个标记<span
+class="math inline">\(\vec{x}_i\)</span>先被映射到关键表示 <span
+class="math inline">\(\vec{k}_i\)</span> , 查询表示 <span
+class="math inline">\(\vec{q}_i\)</span> 和值表示 <span
+class="math inline">\(\vec{v}_i\)</span>。然后通过<span
+class="math inline">\(\vec{q}_i\)</span> 和 <span
+class="math inline">\(\vec{k}j\)</span>
+的点乘经softmax函数计算出两个标记间的注意力分数<span
+class="math inline">\(A{ij}\)</span>: <span class="math display">\[
+\begin{equation}
+A_{ij} = \vec{q}_i \cdot \vec{k}_j^\top,
+\end{equation}
+\]</span> 每个位置的最终输出是所有值表示的加权和: <span
+class="math display">\[
+\begin{equation}
+\vec{y}_i = \sum_{j=1}^n A_{ij}\vec{v}_j
+\end{equation}
+\]</span> 多头自注意力(Multi-Head Self-Attention,
+MHSA)是Transformer的常用扩展,分成多个子空间进行自注意力的计算。</p>
+<h2 id="超图表示">超图表示</h2>
+<p>与标准图边不同,超图中的超边连接两个或多个顶点。一个无权超图定义为<span
+class="math inline">\(\mathcal{H} = (\mathcal{V}, \mathcal{E})\)</span>,
+由顶点集<span class="math inline">\(\mathcal{V}\)</span>和超边集<span
+class="math inline">\(\mathcal{E}\)</span>组成。超图<span
+class="math inline">\(\mathcal{H}\)</span>可以用一个<span
+class="math inline">\(|\mathcal{V}| \times |\mathcal{E}|\)</span>
+的关联矩阵<span
+class="math inline">\(H\)</span>表示,其中的元素定义如下:</p>
+<p>$$ <span class="math display">\[\begin{equation}
+
+h_{v, e}=\left\{
+    \begin{aligned}
+    1, \quad if \quad v \in e\\
+    0, \quad if \quad v \notin e\\
+    \end{aligned}\right
+    .
+\end{equation}\]</span> $$</p>
+<p>顶点<span class="math inline">\(v \in
+\mathcal{V}\)</span>的度定义为<span class="math inline">\(d(v) = \sum_{e
+\in \mathcal{E}} h_{v, e}\)</span>, 超边<span class="math inline">\(e
+\in \mathcal{E}\)</span>的度定义为<span class="math inline">\(d(e) =
+\sum_{v \in \mathcal{V}} h_{v, e}\)</span>。度矩阵<span
+class="math inline">\(D_e\)</span>和<span
+class="math inline">\(D_v\)</span>分别将所有超边的度和所有顶点的度设为对角元素。</p>
+<p>在本工作中,考虑所有顶点<span
+class="math inline">\(d(v)=1\)</span>的特殊情况,即身体关节被划分为<span
+class="math inline">\(\vert \mathcal{E}
+\vert\)</span>个不相交的子集,这在实践中很高效。值得注意的是,在这种情况下,关联矩阵<span
+class="math inline">\(H\)</span>等效于一个分割矩阵。每行是一个one
+hot向量,表示每个关节所属的组。</p>
+<h1 id="方法">方法</h1>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/3.png" /></p>
+<h2 id="派生超边特征">派生超边特征</h2>
+<p>给定一个关联矩阵<span
+class="math inline">\(H\)</span>,作者提出了一种有效的方法来获得连接到每个超边的关节子集的特征表示。令<span
+class="math inline">\(C\)</span>表示特征维数,每个关节的特征<span
+class="math inline">\(X \in \mathbb{R}^{\vert \mathcal{V} \vert \times
+C}\)</span> 首先通过以下规则聚合为子集表示<span class="math inline">\(E
+\in \mathbb{R}^{\vert \mathcal{E} \vert \times C}\)</span>: <span
+class="math display">\[
+\begin{equation}
+     E = D_e^{-1}H^\top XW_{e},
+\end{equation}
+\]</span> <!-- % 解释一下HX是求和的含义， -->
+<!-- % D_e-1 代表求平均 --></p>
+<p>其中: 1. 关联矩阵<span class="math inline">\(H\)</span>与输入<span
+class="math inline">\(X\)</span>的乘积本质上是将每个子集中属于该子集的关节特征求和。
+2. 超边的度矩阵的逆用于归一化的目的。 3. 投影矩阵<span
+class="math inline">\(W_{e} \in \mathbb{R}^{C\times
+C}\)</span>进一步转换每个超边的特征以获得它们的最终表示。</p>
+<p>然后我们通过将超边表示分配给每个关联关节的位置,构造增强的超边表示<span
+class="math inline">\(E_{aug} \in \mathbb{R}^{\vert \mathcal{V} \vert
+\times C}\)</span>:</p>
+<p><span class="math display">\[
+\begin{equation}
+    E_{aug} = HD_e^{-1}H^\top XW_{e}.
+\end{equation}
+\]</span></p>
+<h2 id="人体骨骼结构编码">人体骨骼结构编码</h2>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/18/3Mformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/07/18/3Mformer/" class="post-title-link" itemprop="url">3Mformer</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-07-18 12:53:38" itemprop="dateCreated datePublished" datetime="2023-07-18T12:53:38+08:00">2023-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-23 15:11:27" itemprop="dateModified" datetime="2023-08-23T15:11:27+08:00">2023-08-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>paper: https://arxiv.org/abs/2303.14474</p>
+<h1 id="摘要">摘要</h1>
+<p>许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，Higher-order
+Transformer（HoT）根据（i）身体关节，（ii）身体关节之间的成对连接，以及（iii）骨骼身体关节的高阶超边，生成每个时间块的嵌入。我们通过一种新颖的多阶多模Transformer（3Mformer）结合这些超边的HoT嵌入，该Transformer具有两个模块，可以交换顺序，实现基于“通道-时间块”、“顺序-通道-身体关节”、“通道-超边（任意阶）”和“仅通道”对上的耦合模式注意力。第一个模块称为多阶汇聚（MP），还可以学习沿着超边模式的加权汇聚，而第二个模块称为时间块汇聚（TP），则沿着时间块1模式进行汇聚。我们的端到端可训练网络相对于基于GCN、Transformer和超图的对应方法获得了最先进的结果。</p>
+<h1 id="引言">引言</h1>
+<p>论文背景:
+骨骼动作识别在视频监控、人机交互、体育分析和虚拟现实等领域具有广泛应用。与基于视频的方法不同，骨骼序列通过表示3D身体关节的时空演变，对传感器噪声具有鲁棒性，并且在计算和存储效率上更高效。</p>
+<p>过去方案:
+过去的图形模型主要通过图卷积网络（GCN）或图神经网络（GNN）来处理骨骼数据。然而，这些方法忽略了非连接的关节之间的依赖关系，并且对于捕捉更高阶的运动模式有限。</p>
+<p>论文的Motivation:
+鉴于现有方法的局限性，本研究旨在提出一种新的模型来更好地表示骨骼数据，并捕捉关节之间的高阶动态。通过构建超图来表示骨骼数据，并使用多阶多模态变压器进行耦合模式注意力，以实现对不同模态的关注。</p>
+<p>论文的Contribution：</p>
+<ol type="1">
+<li>将骨骼数据建模为阶数为1到r的超图（集合、图和/或超图），其中人体关节作为节点。这样形成的超边的Higher-order
+Transformer嵌入表示了各种3D身体关节的组合，并捕捉了对于动作识别非常重要的各种高阶动态。</li>
+<li>由于HoT嵌入表示了各个超边的阶数和时间块，引入了一种新颖的Multi-order
+Multi-mode Transformer (3Mformer)。它包含两个模块，即Multi-order
+Pooling和Temporal block
+Pooling，其目标是形成诸如'通道-时间块'、'顺序-通道-身体关节'、'通道-超边（任意阶）'和'仅通道'等耦合模式tokens，并进行加权超边聚合和时间块聚合。</li>
+</ol>
+<h1 id="背景">背景</h1>
+<h2 id="符号表示">符号表示</h2>
+<p><span class="math inline">\(\mathcal{I}_{K}\)</span>代表索引集合<span
+class="math inline">\({1,2,\cdots,K}\)</span>。大写粗体符号表示矩阵（二阶张量）或高阶张量（超过两个模式）。小写粗体符号表示向量，普通字体表示标量。
+<span class="math inline">\(\mathcal{I}_{K}\)</span>代表索引集合<span
+class="math inline">\({1,2,\cdots,K}\)</span>。普通字体表示标量；向量用小写粗体字母表示，例如<span
+class="math inline">\(\textbf{x}\)</span>；矩阵用大写粗体字母表示，例如<span
+class="math inline">\(\textbf{M}\)</span>；张量用花体字母表示，例如<span
+class="math inline">\(\vec{\mathcal{M}}\)</span>。 <span
+class="math inline">\(r\)</span>阶张量表示为<span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{I_1 \times I_2
+\times \cdots \times I_r}\)</span>， <span
+class="math inline">\(\vec{\mathcal{M}}\)</span>的第<span
+class="math inline">\(m\)</span>模式矩阵化表示为<span
+class="math inline">\(\vec{\mathcal{M}}_{(m)}\in \mathbb{R}^{I_m \times
+(I_1 \cdots I_{m-1} I_{m+1} \cdots I_{r})}\)</span>。</p>
+<h2 id="transformer">Transformer</h2>
+<p>Transformer编码器层<span class="math inline">\(f : \mathbb{R}^{J
+\times d} \rightarrow \mathbb{R}^{J \times d}\)</span>包含两个子层：(i)
+自注意力<span class="math inline">\(a : \mathbb{R}^{J \times d}
+\rightarrow \mathbb{R}^{J \times d}\)</span>和(ii) 逐元素的前馈网络<span
+class="math inline">\(\text{MLP} :\mathbb{R}^{J \times d} \rightarrow
+\mathbb{R}^{J \times d}\)</span>。对于具有<span
+class="math inline">\(J\)</span>个节点的集合，其中<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J \times
+d}\)</span>，<span class="math inline">\({\bf x}_i\)</span>是节点<span
+class="math inline">\(i\)</span>的特征向量，一个Transformer层(为简洁起见，省略了<span
+class="math inline">\(a(\cdot)\)</span>和MLP<span
+class="math inline">\((\cdot)\)</span>后的归一化)计算如下： <span
+class="math display">\[
+\begin{align}
+    &amp; a({\bf x}_i) = {\bf x}_i +
+\sum_{h=1}^H\sum_{j=1}^J\alpha_{ij}^h{\bf x}_j{\bf W}_h^V{\bf W}_h^O, \\
+    &amp; f({\bf x}_i) = a({\bf x}_i) + \text{MLP}(a({\bf X}))_i,
+\end{align}
+\]</span> 其中<span class="math inline">\(H\)</span>和<span
+class="math inline">\(d_H\)</span>分别表示注意力头的数量和头的大小，<span
+class="math inline">\({\boldsymbol{\alpha}}^h = \sigma\big({\bf X}{\bf
+W}_h^Q({\bf X}{\bf W}_h^{K})^\top\big)\)</span>是注意力系数，<span
+class="math inline">\({\bf W}_h^O \in \mathbb{R}^{d_H \times
+d}\)</span>，<span class="math inline">\({\bf W}_h^V\)</span>，<span
+class="math inline">\({\bf W}_h^K\)</span>，<span
+class="math inline">\({\bf W}_h^Q \in \mathbb{R}^{d \times
+d_H}\)</span>。</p>
+<h2 id="higher-order-transformer">Higher-order transformer</h2>
+<p>设HoT层为<span class="math inline">\(f_{m\rightarrow n}
+:\mathbb{R}^{J^m \times d} \rightarrow \mathbb{R}^{J^n \times
+d}\)</span>，其中包含两个子层：(i) 高阶自注意力<span
+class="math inline">\(a_{m\rightarrow n} :\mathbb{R}^{J^m \times d}
+\rightarrow \mathbb{R}^{J^n \times d}\)</span>和(ii) 前馈网络<span
+class="math inline">\(\text{MLP}_{n\rightarrow n} :\mathbb{R}^{J^n
+\times d} \rightarrow \mathbb{R}^{J^n \times
+d}\)</span>。此外，引入索引向量<span class="math inline">\({\bf
+i}\in\mathcal{I}_{J}^m\equiv\mathcal{I}_{J} \times \mathcal{I}_{J}
+\times \cdots \times \mathcal{I}_{J}\)</span>（<span
+class="math inline">\(m\)</span>个模式）和<span
+class="math inline">\({\bf j}\in\mathcal{I}_{J}^n\equiv\mathcal{I}_{J}
+\times \mathcal{I}_{J} \times \cdots \times
+\mathcal{I}_{J}\)</span>（<span
+class="math inline">\(n\)</span>个模式）。对于输入张量<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J^m \times
+d}\)</span>，其中超边的阶数为<span
+class="math inline">\(m\)</span>，HoT层的计算如下：</p>
+<p><span class="math display">\[
+\begin{align}
+    &amp; a_{m \rightarrow n}(\mathbf{X})_{j}=\sum_{h=1}^{H} \sum_{\mu}
+\sum_{i} \alpha_{i, j}^{h, \mu} \mathbf{X}_{i} \mathbf{W}_{h, \mu}^{V}
+\mathbf{W}_{h, \mu}^{o} \\
+    &amp; \operatorname{MLP}_{n \rightarrow n}\left(a_{m \rightarrow
+n}(\mathbf{X})\right)=\mathrm{L}_{n \rightarrow
+n}^{2}\left(\operatorname{ReLU}\left(\mathrm{L}_{n \rightarrow
+n}^{1}\left(a_{m \rightarrow n}(\mathbf{X})\right)\right)\right), \\
+    &amp; f_{m \rightarrow n}(\mathbf{X})=a_{m \rightarrow
+n}(\mathbf{X})+\operatorname{MLP}_{n \rightarrow n}\left(a_{m
+\rightarrow n}(\mathbf{X})\right),
+\end{align}
+\]</span> 其中<span class="math inline">\({\boldsymbol \alpha}^{h, \mu}
+\in
+\mathbb{R}^{J^{m+n}}\)</span>是具有多个头部的所谓注意力系数张量，<span
+class="math inline">\({\boldsymbol \alpha}^{h,
+\mu}_{\mathbf{i},\mathbf{j}} \in
+\mathbb{R}^{J}\)</span>是一个向量，<span class="math inline">\({\bf
+W}_{h, \mu}^V \in \mathbb{R}^{d \times d_H}\)</span>和<span
+class="math inline">\({\bf W}_{h, \mu}^O \in \mathbb{R}^{d_H \times
+d}\)</span>是可学习的参数。此外，<span
+class="math inline">\(\mu\)</span>在相同节点分区中的阶-<span
+class="math inline">\((m+n)\)</span>的等价类上进行索引，<span
+class="math inline">\(\text{L}_{n\rightarrow n}^1 :\mathbb{R}^{J^n
+\times d}\rightarrow \mathbb{R}^{J^n \times d_F}\)</span>和<span
+class="math inline">\(\text{L}_{n\rightarrow n}^2 :\mathbb{R}^{J^n
+\times d_F}\rightarrow \mathbb{R}^{J^n \times
+d}\)</span>是等变线性层，<span
+class="math inline">\(d_F\)</span>是隐藏维度。</p>
+<p>为了从阶数为<span class="math inline">\(m\)</span>的输入张量<span
+class="math inline">\({\bf X} \in \mathbb{R}^{J^m \times
+d}\)</span>中计算每个注意力张量<span class="math inline">\({\boldsymbol
+\alpha}^{h,\mu} \in
+\mathbb{R}^{J^{m+n}}\)</span>，根据高阶query和key，我们有： $$ <span
+class="math display">\[\begin{equation}
+  {\boldsymbol{\alpha}_{\boldsymbol i, \boldsymbol j}^{h,\mu}}  =
+    \begin{cases}
+      \frac{\sigma({\bf Q}_{\boldsymbol j}^{h,\mu}, {\bf K}_{\boldsymbol
+i}^{h,\mu})}{Z_{\boldsymbol j}}\;\quad({\boldsymbol i}, {\boldsymbol
+j})  \in  \mu\\
+      \quad\quad 0 \quad\quad\;\text{otherwise},
+    \end{cases}
+    
+\end{equation}\]</span> $$ 其中<span class="math inline">\({\bf Q}^\mu =
+\text{L}_{m\rightarrow n}^\mu({\bf X})\)</span>，<span
+class="math inline">\({\bf K}^\mu = \text{L}_{m\rightarrow m}^\mu({\bf
+X})\)</span>，归一化常数<span class="math inline">\(Z_{\boldsymbol j} =
+\sum_{\boldsymbol i:({\boldsymbol i}, {\boldsymbol j})\in
+\mu}\sigma({\bf Q}_{\boldsymbol j}^\mu, {\bf K}_{\boldsymbol
+i}^\mu)\)</span>。最后，可以将Eq(6)中的核注意力近似为具有RKHS特征映射<span
+class="math inline">\(\psi\in\mathbb{R}_{+}^{d_K}\)</span>以提高效率，其中<span
+class="math inline">\(d_K\ll d_H\)</span>。具体而言，有<span
+class="math inline">\(\sigma({\bf Q}_{\boldsymbol j}^{h,\mu}, {\bf
+K}_{\boldsymbol i}^{h,\mu})\approx{\boldsymbol \psi}({\bf
+Q}_{\boldsymbol j}^{h,\mu})^\top{\boldsymbol \psi}({\bf K}_{\boldsymbol
+i}^{h,\mu})\)</span>。选择了performer核，因为它在理论和实证上都有保证。</p>
+<p>由于query和key张量是使用等变线性层从输入张量<span
+class="math inline">\({\bf
+X}\)</span>计算得到的，因此Transformer编码器层<span
+class="math inline">\(f_{m\rightarrow n}\)</span>满足排列等变性。</p>
+<h1 id="方法">方法</h1>
+<h2 id="模型概览">模型概览</h2>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image.png" /></p>
+<p>如图所示，框架包含一个简单的三层MLP单元（全连接层，ReLU激活函数，全连接层，ReLU激活函数，Dropout层，全连接层），三个针对每种输入类型（即，身体关节特征集、身体关节的图和超图）的HoT块，接着是具有两个模块（i）多阶池化（MP）和（ii）时间块池化（TP）的多阶多模态Transformer（3Mformer）。</p>
+<p>3Mformer的目标是形成耦合模式tokens（稍后会解释其含义），例如“通道-时间块”、“序号-通道-身体关节”、“通道-超边（任意序号）”和“仅通道”，并进行加权超边聚合和时间块聚合。它们的输出进一步连接并传递到一个全连接层进行分类。</p>
+<p><strong>MLP 单元</strong>:MLP单元接受<span
+class="math inline">\(T\)</span>个相邻的帧，每个帧具有<span
+class="math inline">\(J\)</span>个2D/3D骨骼身体关节，形成一个时间块。总共，取决于步长<span
+class="math inline">\(S\)</span>，我们得到一些<span
+class="math inline">\(\tau\)</span>个时间块（一个块捕获短期时间演变）。相比之下，长期时间演变由HoT和3Mformer建模。每个时间块由MLP编码成一个<span
+class="math inline">\(d\times J\)</span>维的特征图。</p>
+<p><strong>HoT 分支</strong>：我们将 HoT（Hypergraph on Transformer） 的
+<span class="math inline">\(r\)</span>
+个分支堆叠在一起，每个分支接收维度为 <span class="math inline">\({\bf
+X}_t\in\mathbb{R}^{d \times J}\)</span> 的嵌入，其中 <span
+class="math inline">\(t\in\mathcal{I}_{\tau}\)</span> 表示时间块。每个
+HoT 分支输出大小为 <span
+class="math inline">\(m\in\mathcal{I}_{r}\)</span> 的超边特征表示，记为
+<span class="math inline">\({\bf\Phi}&#39;_m\in\mathbb{R}^{J^m \times
+d&#39;}\)</span>，其中 <span
+class="math inline">\(m\in\mathcal{I}_{r}\)</span> 表示阶数。</p>
+<p>对于一阶、二阶和更高阶的流输出 <span
+class="math inline">\({\bf\Phi}&#39;_1,\cdots,{\bf\Phi}&#39;_r\)</span>，我们进行以下步骤：(i)
+交换特征通道和超边模式，(ii)
+提取张量的上三角部分，然后在块-时间模式上进行连接，这样我们得到 <span
+class="math inline">\({\bf\Phi}_m\in\mathbb{R}^{d&#39;\times
+N_{E_m}\times\tau}\)</span>，其中 <span class="math inline">\(N_{E_m} =
+\binom{J}{m}\)</span>。随后，我们沿着超边模式连接 <span
+class="math inline">\({\bf\Phi}_1,\cdots,{\bf\Phi}_r\)</span>，得到一个多阶特征张量
+<span class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{d&#39;
+\times N \times \tau}\)</span>，其中所有阶数的超边总数为 <span
+class="math inline">\(N=\sum_{m=1}^r\binom{J}{m}\)</span>。</p>
+<p><strong>3Mformer</strong>：我们使用具有耦合模式自注意力（CmSA）的多阶多模式Transformer（3Mformer）来融合多阶特征张量
+<span class="math inline">\(\vec{\mathcal{M}}\)</span>
+中的信息流，并最终将3Mformer的输出传递给分类器进行分类。</p>
+<h2 id="coupled-mode-self-attention">Coupled-mode Self-Attention</h2>
+<h3 id="耦合模式tokenscoupled-mode-tokens">耦合模式tokens(Coupled-mode
+tokens)</h3>
+<p>我们受到标准Vision
+Transformer（ViT）中单类别tokens的注意区域的启发，这些区域可以用来形成一个与类别无关的本地化映射(参考
+https://zhuanlan.zhihu.com/p/481304916)。研究了Transformer模型是否也能够有效地捕捉耦合模式注意力，用于更具有区分性的分类任务，例如通过学习Transformer内的耦合模式tokens来进行基于张量骨架的动作识别。为此，提出了一个多阶多模式Transformer（3Mformer），它使用耦合模式tokens来共同学习通道模式、块-时间模式、身体关节模式和阶数模式之间的各种高阶运动动态。3Mformer能够成功地从CmSA机制中生成对应于不同tokens的耦合模式关系。接下来，介绍CmSA机制。</p>
+<p>给定阶数为 <span class="math inline">\(r\)</span> 的张量 <span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{I_1 \times I_2
+\times \cdots \times I_r}\)</span>，为了形成耦合模式tokens，我们对 <span
+class="math inline">\(\vec{\mathcal{M}}\)</span> 进行模式-<span
+class="math inline">\(m\)</span>的矩阵化，得到 <span
+class="math inline">\(\textbf{M} \equiv \vec{\mathcal{M}}_{(m)}^\top \in
+\mathbb{R}^{(I_1 \cdots I_{m-1} I_{m+1} \cdots I_{r}) \times
+I_m}\)</span>，然后从 <span class="math inline">\(\textbf{M}\)</span>
+形成耦合tokens。</p>
+<p>举例来说，对于一个给定的三阶张量，它具有特征通道模式、超边模式和时间块模式，我们可以形成以下tokens对：</p>
+<ol type="1">
+<li>`channel-temporal block'：特征通道-时间块对</li>
+<li>`channel-hyper-edge (any order)'：特征通道-超边 (任意阶数)对</li>
+<li>`channel-only'：仅特征通道对</li>
+</ol>
+<p>另外，如果给定的张量被用作输入并输出一个产生新模式（例如，身体关节模式）的新张量，我们可以形成以下tokens：</p>
+<p>`order-channel-body joint'：阶数-特征通道-身体关节对</p>
+<p>在接下来的部分，为了简化起见，使用“reshape”来进行张量的矩阵化，以形成不同类型的联合模式令牌。</p>
+<p>联合模式自注意力（JmSA）定义如下： <span class="math display">\[
+\begin{equation}
+      a(\mathbf{Q}, \mathbf{K},
+\mathbf{V})=\text{SoftMax}\left(\frac{\mathbf{Q
+K}^{\top}}{\sqrt{d_{K}}}\right) \mathbf{V}
+\end{equation}
+\]</span></p>
+<p>其中，<span class="math inline">\(\sqrt{d_{K}}\)</span>
+是缩放因子，<span class="math inline">\({\bf Q} = {\bf W}^q{\bf
+M}\)</span>，<span class="math inline">\({\bf K} = {\bf W}^k{\bf
+M}\)</span> 和 <span class="math inline">\({\bf V} = {\bf W}^v{\bf
+M}\)</span> 分别是查询（query）、键（key）和值（value）向量，而 <span
+class="math inline">\(\textbf{M} \equiv
+\vec{\mathcal{M}}{(m)}^\top\)</span>。此外，<span
+class="math inline">\({\bf Q}\)</span>、<span class="math inline">\({\bf
+K}\)</span>、<span class="math inline">\({\bf V} \in \mathbb{R}^{(I_1
+\cdots I_{m-1} I_{m+1} \cdots I_{r}) \times I_m}\)</span>，<span
+class="math inline">\({\bf W}^q\)</span>、<span
+class="math inline">\({\bf W}^k\)</span>、<span
+class="math inline">\({\bf W}^v \in \mathbb{R}^{(I_1 \cdots I_{m-1}
+I_{m+1} \cdots I_{r}) \times (I_1 \cdots I_{m-1} I_{m+1} \cdots
+I_{r})}\)</span>
+是可学习的权重。我们注意到不同的联合模式标记具有不同的“注意力焦点”机制，并且我们在我们的3Mformer中应用它们来融合多阶特征表示。</p>
+<h2 id="multi-order-multi-mode-transformer">Multi-order Multi-mode
+Transformer</h2>
+<h3 id="multi-order-pooling-mp-module">Multi-order Pooling (MP)
+Module</h3>
+<p><strong>CmSA in MP</strong>：我们将多阶特征表示<span
+class="math inline">\(\vec{\mathcal{M}} \in \mathbb{R}^{d&#39; \times N
+\times \tau}\)</span>重塑为<span class="math inline">\({\bf M} \in
+\mathbb{R}^{d&#39;\tau \times
+N}\)</span>（或者将后面TP中解释的输出重塑为<span
+class="math inline">\({\bf M}&#39; \in \mathbb{R}^{d&#39; \times
+N}\)</span>），从而使模型能够关注不同类型的特征表示。让我们简单地记<span
+class="math inline">\(d&#39;&#39; = d&#39;\tau\)</span>（或者<span
+class="math inline">\(d&#39;&#39; =
+d&#39;\)</span>，具体取决于输入的来源）。我们形成了一个耦合模式的self-attention（如果<span
+class="math inline">\(d&#39;&#39;=d&#39;\tau\)</span>，我们有"channel-temporal
+block"的token；如果<span
+class="math inline">\(d&#39;&#39;=d&#39;\)</span>，我们有"channel-only"的token）。
+<span class="math display">\[
+\begin{equation}
+  a_{\mathrm{MP}}\left(\mathbf{Q}_{\mathrm{MP}},
+\mathbf{K}_{\mathrm{MP}},
+\mathbf{V}_{\mathrm{MP}}\right)=\operatorname{SoftMax}\left(\frac{\mathbf{Q}_{\mathrm{MP}}
+\mathbf{K}_{\mathrm{MP}}^{\top}}{\sqrt{d_{K_{\mathrm{MP}}}}}\right)
+\mathbf{V}_{\mathrm{MP}} \text {, }
+\end{equation}
+\]</span></p>
+<p>其中，<span class="math inline">\(\sqrt{d_{K_\text{MP}}}\)</span>
+是缩放因子，<span class="math inline">\({\bf Q}_\text{MP}\!=\!{\bf
+W}_\text{MP}^q{\bf M}\)</span>，<span class="math inline">\({\bf
+K}_\text{MP}\!=\!{\bf W}_\text{MP}^k{\bf M}\)</span> 和 <span
+class="math inline">\({\bf V}_\text{MP}\!=\!{\bf W}_\text{MP}^v{\bf
+M}\)</span>（我们可以使用 <span class="math inline">\({\bf M}\)</span>
+或者 <span class="math inline">\({\bf
+M}&#39;\)</span>）分别是查询、键和值。此外，<span
+class="math inline">\({\bf Q}_\text{MP}\)</span>，<span
+class="math inline">\({\bf K}_\text{MP}\)</span>，<span
+class="math inline">\({\bf V}_\text{MP}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times N}\)</span> 和 <span
+class="math inline">\({\bf W}_\text{MP}^q\)</span>，<span
+class="math inline">\({\bf W}_\text{MP}^k\)</span>，<span
+class="math inline">\({\bf W}_\text{MP}^v\!\in\!
+\mathbb{R}^{d&#39;&#39;\times d&#39;&#39;}\)</span>
+是可学习的权重。方程式(8)是一种自注意层，它基于所谓的耦合模式令牌的
+<span class="math inline">\({\bf Q}_\text{MP}\)</span> 和 <span
+class="math inline">\({\bf K}_\text{MP}\)</span> 令牌嵌入之间的相关性对
+<span class="math inline">\({\bf V}_\text{MP}\)</span>
+进行重新加权。</p>
+<p><strong>Weighted pooling</strong>:(8)中的注意力层产生特征表示 <span
+class="math inline">\({\bf O}_\text{MP}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times
+N}\)</span>，以增强例如特征通道与身体关节之间的关系。随后，我们通过对多个阶数
+<span class="math inline">\(m\in\mathcal{I}_{r}\)</span>
+的超边进行加权池化来处理多个阶数的超边的影响： $$ <span
+class="math display">\[\begin{align}
+    &amp; {\bf O}_\text{MP}^{*(m)}\!=\!{\bf O}_\text{MP}^{(m)}{\bf
+H}^{(m)}\!\in\!  \mathbb{R}^{d&#39;&#39;\times J}, %~(\text{or}~{\bf
+O}_\text{MP}^{*&#39;(k)}\!=\!{\bf O}_\text{MP}^{&#39;(k)}{\bf
+H}^{(k)}\!\in\! \mathbb{R}^{d&#39;\times J})
+
+\end{align}\]</span> $$</p>
+<p>其中，<span class="math inline">\({\bf O}_\text{MP}^{(m)}\!\in\!
+\mathbb{R}^{d&#39;&#39;\times N_{E_m}}\)</span> 是从 <span
+class="math inline">\({\bf O}_\text{MP}\)</span> 中简单地提取出阶数为
+<span class="math inline">\(m\)</span> 的超边的特征表示，矩阵 <span
+class="math inline">\({\bf H}^{(m)}\!\in\! \mathbb{R}^{N_{E_m}\times
+J}\)</span> 是可学习的权重，用于对阶数为 <span
+class="math inline">\(m\)</span>
+的超边进行加权池化。最后，通过简单地连接 <span
+class="math inline">\({\bf O}_\text{MP}^{*(1)},\cdots,{\bf
+O}_\text{MP}^{*(r)}\)</span>，我们得到 <span class="math inline">\({\bf
+O}_\text{MP}^{*}\!\in\! \mathbb{R}^{r{d&#39;&#39;\times
+J}}\)</span>。如果我们使用了从 TP 到 MP 的输入，则将 MP 的输出表示为
+<span
+class="math inline">\({\mathbf{O}&#39;}_\text{MP}^{*}\)</span>。</p>
+<h3 id="temporal-block-pooling-tp-module">Temporal block Pooling (TP)
+Module</h3>
+<p><strong>CmSA in TP</strong>：首先，我们将多阶特征表示 <span
+class="math inline">\(\vec{\mathcal{M}}\!\in\!
+\mathbb{R}^{d&#39;\!\times\!N\!\times\!\tau}\)</span> 重新整形为 <span
+class="math inline">\({\bf M}\!\in\!
+\mathbb{R}^{d&#39;N\!\times\!\tau}\)</span>（或者将来自 MP
+的输出重新整形为 <span class="math inline">\({\bf M}&#39;&#39;\!\in\!
+\mathbb{R}^{rd&#39;J\!\times\!\tau}\)</span>）。为简单起见，我们在第一种情况下记
+<span
+class="math inline">\(d&#39;&#39;&#39;\!=\!d&#39;N\)</span>，在第二种情况下记
+<span
+class="math inline">\(d&#39;&#39;&#39;\!=\!rd&#39;J\)</span>。在第一种情况下，重新整形后的输入的第一模式用于形成令牌，它们再次是耦合模式令牌，例如“通道-超边”和“阶-通道-身体关节”令牌，分别对应不同的表示意义。
+此外，TP（可能是指某种处理方式或模块）还沿着块-时间模式（沿 <span
+class="math inline">\(\tau\)</span>
+方向）执行池化操作。我们形成一个耦合模式自注意力： <span
+class="math display">\[
+\begin{equation}
+    a_\text{TP}({\bf Q}_\text{TP}, {\bf K}_\text{TP}, {\bf V}_\text{TP})
+=\text{SoftMax}\left(\frac{\mathbf{Q}_\text{TP}\mathbf{K}_\text{TP}^\top}{\sqrt{d_{K_\text{TP}}}}\right)\mathbf{V}_\text{TP},
+\end{equation}
+\]</span> 这里，<span
+class="math inline">\(\sqrt{d_{K_\text{TP}}}\)</span> 是缩放因子，<span
+class="math inline">\({\bf Q}_\text{TP} = {\bf W}_\text{TP}^q{\bf
+M}\)</span>，<span class="math inline">\({\bf K}_\text{TP} = {\bf
+W}_\text{TP}^k{\bf M}\)</span> 和 <span class="math inline">\({\bf
+V}_\text{TP} = {\bf W}_\text{TP}^v{\bf M}\)</span>（我们可以使用 <span
+class="math inline">\({\bf M}\)</span> 或者 <span
+class="math inline">\({\bf
+M}&#39;&#39;\)</span>）分别是查询、键和值。此外，<span
+class="math inline">\({\bf Q}_\text{TP}\)</span>，<span
+class="math inline">\({\bf K}_\text{TP}\)</span>，<span
+class="math inline">\({\bf V}_\text{TP} \in
+\mathbb{R}^{d&#39;&#39;&#39;\times \tau}\)</span> （或者 <span
+class="math inline">\(\mathbb{R}^{3d&#39;J\!\times\!\tau}\)</span>） 和
+<span class="math inline">\({\bf W}_\text{TP}^q\)</span>，<span
+class="math inline">\({\bf W}_\text{TP}^k\)</span>，<span
+class="math inline">\({\bf W}_\text{TP}^v \in
+\mathbb{R}^{d&#39;&#39;&#39;\times d&#39;&#39;&#39;}\)</span> （或者
+<span class="math inline">\(\mathbb{R}^{3d&#39;J\times
+3d&#39;J}\)</span>）是可学习的权重。方程式(10)重新加权 <span
+class="math inline">\({\bf
+V}_\text{TP}\)</span>，其基于联合模式令牌（例如“通道-超边”或“阶-通道-身体关节”）的
+<span class="math inline">\({\bf Q}_\text{TP}\)</span> 和 <span
+class="math inline">\({\bf K}_\text{TP}\)</span>
+令牌嵌入之间的相关性。注意力的输出是时间表示 <span
+class="math inline">\({\bf O}_\text{TP} \in
+\mathbb{R}^{d&#39;&#39;&#39;\times \tau}\)</span>。如果我们使用 <span
+class="math inline">\({\bf M}&#39;&#39;\)</span>
+作为输入，则将输出表示为 <span class="math inline">\({\bf
+O}&#39;&#39;_\text{TP}\)</span>。</p>
+<p><strong>Pooling step</strong>:在给定时间表示 <span
+class="math inline">\({\bf
+O}_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;\!\times\!\tau}\)</span>（或者
+<span class="math inline">\({\bf
+O}&#39;&#39;_\text{TP}\)</span>）后，我们在块-时间模式（即 <span
+class="math inline">\(\tau\)</span>
+方向）上应用池化操作，以获得与骨骼序列长度（块数量 <span
+class="math inline">\(\tau\)</span>）无关的紧凑特征表示。有许多池化操作(我们没有提出池化算子，而是选择了一些流行的算子，以比较它们对
+TP
+的影响)。，包括一阶的（例如平均池化、最大池化、求和池化）、二阶的（如注意力池化）、高阶的（三线性池化）
+和排序池化。</p>
+<p>池化后的输出是 <span class="math inline">\({\bf
+O}^*_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;}\)</span>（或者 $</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/28/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/06/28/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition/" class="post-title-link" itemprop="url">SVFormer: Semi-supervised Video Transformer for Action Recognition</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-28 09:24:39" itemprop="dateCreated datePublished" datetime="2023-06-28T09:24:39+08:00">2023-06-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-07-18 13:04:17" itemprop="dateModified" datetime="2023-07-18T13:04:17+08:00">2023-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>SVFormer: Semi-supervised Video Transformer for Action
+Recognition</p>
+<p>paper：http://arxiv.org/abs/2211.13222</p>
+<p>code：https://github.com/ChenHsing/SVFormer</p>
+<h1 id="摘要">摘要</h1>
+<p>半监督动作识别是一项具有挑战性但又至关重要的任务，因为视频注释的成本很高。现有方法主要使用卷积神经网络，然而当前的革命性视觉Transformer模型尚未得到充分探索。在本文中，我们研究了在半监督学习（SSL）设置下使用Transformer模型进行动作识别的方法。为此，我们引入了SVFormer，它采用了稳定的伪标签框架（即EMATeacher）来处理无标签视频样本。虽然广泛的数据增强方法已被证明对于半监督图像分类是有效的，但对于视频识别而言，它们通常产生有限的结果。因此，我们引入了一种针对视频数据的新型增强策略，称为Tube
+Token-Mix，其中视频剪辑通过掩码和一致的遮蔽标记在时间轴上混合。此外，我们提出了一种时域扭曲增强方法，用于覆盖视频中复杂的时域变化，它将选定的帧在剪辑中拉伸到不同的时间长度。对三个数据集Kinetics-400、UCF-101和HMDB-51进行了大量实验证实了SVFormer的优势。特别是，在Kinetics-400的1%标注率下，SVFormer在较少的训练周期内比现有技术提升了31.5%。我们的方法有望作为一个强有力的基准，并鼓励未来在使用Transformer网络进行半监督动作识别方面的研究。</p>
+<h1 id="引言">引言</h1>
+<p>论文背景：目前，视频在互联网上逐渐取代了图像和文字，并以指数级的速度增长。有监督的视频理解已经取得了巨大的成功，但这些工作依赖于大规模手工标注，因此利用现成的无标签视频来更好地理解视频是非常重要的。</p>
+<p>过去方案：半监督方法通常基于伪标签的模式，通常是用已标记数据来预训练网络，然后利用预训练的模型为未标记的数据生成伪标签，最后使用伪标签进一步改进预训练模型。学界通常采用额外模态（比如光流）或者辅助网络的方式提高伪标签的质量，但这类方法会带来额外的训练或推理成本。</p>
+<p>论文的Motivation：鉴于TransFormer架构在视频领域的巨大成功，而原有的SSL方法（如Mixup和CutMix）并不适用于TransFormer架构，本文旨在提出一种基于TransFormer的半监督动作识别方法，并提出一种适用于TransFormer架构的增强方法，能够更好地对token之间的时间相关性进行建模。另外，本文还提出一种时间扭曲增强方法可以覆盖视频中复杂的时间变化。</p>
+<p>论文的Contribution：</p>
+<ol type="1">
+<li>率先探索了半监督视频识别的变压器模型。</li>
+<li>提出了一种token级增强方法Tube
+Token-Mix，它比像素级混合策略更适合视频Transformer。</li>
+<li>在三个基准数据集上进行了广泛的实验，达到了SOTA。</li>
+</ol>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230628113047.png" /></p>
+<h1 id="方法">方法</h1>
+<h2 id="ssl设置">SSL设置</h2>
+<p>假设我们有N个训练视频样本，包括N_L个带有标签的视频样本<span
+class="math inline">\((x_l,y_l) \in \mathcal{D}_L\)</span>和<span
+class="math inline">\(N_U\)</span>个无标签的视频样本<span
+class="math inline">\(x_u \in \mathcal{D}_U\)</span>，其中<span
+class="math inline">\(x_l\)</span>是带有类别标签<span
+class="math inline">\(y_l\)</span>的标记视频样本，<span
+class="math inline">\(x_u\)</span>是无标签的视频样本。通常情况下，<span
+class="math inline">\(N_U \gg N_L\)</span>。半监督学习的目标是利用<span
+class="math inline">\(\mathcal{D}_L\)</span>和<span
+class="math inline">\(\mathcal{D}_U\)</span>来训练模型。</p>
+<h2 id="pipeline">Pipeline</h2>
+<p>SVFormer采用了流行的半监督学习框架FixMatch，该框架利用两个不同增强视图之间的一致性损失。训练范式分为两个部分。</p>
+<p>对于标记集合<span class="math inline">\(\{(x_l,
+y_l)\}_{l=1}^{N_L}\)</span>，模型优化有监督损失<span
+class="math inline">\({\cal{L}}_{s}\)</span>： $$ <span
+class="math display">\[\begin{equation}
+
+{\cal{L}}_{s}=\frac{1}{N_L}\sum_{}^{N_L}{\cal{H}}({\cal{F}}
+({x_l}),y_l),
+\end{equation}\]</span> $$ 其中<span
+class="math inline">\({\cal{F}}(\cdot)\)</span>表示模型产生的预测，<span
+class="math inline">\({\cal{H}}\)</span>是标准的交叉熵损失函数。</p>
+<p>对于无标签样本<span
+class="math inline">\(x_u\)</span>，我们首先使用弱增强（例如，随机水平翻转、随机缩放和随机裁剪）和强增强（例如，AutoAugment或Dropout）分别生成两个视图，<span
+class="math inline">\(x_w={\cal{A}}_{weak}(x_u)\)</span>，<span
+class="math inline">\(x_s={\cal{A}}_{strong}(x_u)\)</span>。然后，利用模型生成的弱视图的伪标签<span
+class="math inline">\({\hat{y}_w}=\arg\max({\cal{F}}(x_w))\)</span>来监督强视图，使用以下无监督损失：
+<span class="math display">\[
+\begin{equation}
+{\cal{L}}_{un}=\frac{1}{N_U}\sum^{N_U}{\mathbb{I}} (\max({\cal{F}}(x_w))
+&gt; \delta){\cal{H}}({\cal{F}}({x_s}),\hat{y}_w),
+\end{equation}
+\]</span> 其中<span
+class="math inline">\(\delta\)</span>是预定义的阈值，<span
+class="math inline">\({\mathbb{I}}\)</span>是指示函数，当最大类别概率超过<span
+class="math inline">\(\delta\)</span>时，它的值为1，否则为0。置信度指标用于过滤嘈杂的伪标签。</p>
+<p>在FixMatch中，两个增强的输入共享同一个模型，这容易导致模型容易崩溃
+。因此，论文采用了指数移动平均（EMA）-Teacher，这是FixMatch的改进版本。
+伪标签是由EMA-Teacher模型生成的，该模型的参数通过对学生参数进行指数移动平均来更新，具体表示为：
+<span class="math display">\[
+\begin{equation}
+{\theta}_t \gets m {\theta}_t +(1- m) {\theta}_s,
+\end{equation}
+\]</span> 其中<span
+class="math inline">\(m\)</span>是一个动量系数，<span
+class="math inline">\(\theta_{t}\)</span>和<span
+class="math inline">\(\theta_{s}\)</span>分别是教师模型和学生模型的参数。</p>
+<h2 id="tube-tokenmix">Tube TokenMix</h2>
+<p>在半监督框架中，一个核心问题是如何使用高质量的伪标签丰富数据集。
+Mixup
+是一种广泛采用的数据增强策略，它通过以下方式在样本和标签之间执行凸组合：
+<span class="math display">\[
+\begin{equation}
+  \hat{x} = \lambda \cdot x_1 + (1-\lambda) \cdot x_2,
+\end{equation}
+\]</span> <span class="math display">\[
+\begin{equation}
+  \hat{y} = \lambda \cdot y_1 + (1-\lambda) \cdot y_2,
+\end{equation}
+\]</span> 其中比例 <span class="math inline">\(\lambda\)</span>
+是一个符合贝塔分布的标量。Mixup及其变种（例如CutMix）在低数据情况下的许多任务中取得了成功，例如长尾分类、域自适应、少样本学习等等。对于半监督学习，Mixup
+通过在图像分类中混合无标签样本的伪标签也表现良好。</p>
+<h3 id="视频mixing">视频Mixing</h3>
+<p>对于基于TransFormer的方法，原本像素级的mixing增强方法（Mixup
+或CutMix）并不适用于token级的模型。因此论文提出三种用于视频数据的mixing增强方法：Rand
+TokenMix、Frame TokenMix和Tube TokenMix。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230629104912.png"
+alt="Tube TokenMix训练框架" />
+<figcaption aria-hidden="true">Tube TokenMix训练框架</figcaption>
+</figure>
+<p>给定未标记的视频片段<span class="math inline">\(x_a, x_b\in
+\mathbb{R}^{H\times W\times T}\)</span>，使用一个基于标记的掩码<span
+class="math inline">\(\textbf{M}\in\{0,1\}^{H\times W\times
+T}\)</span>来执行样本混合。这里<span
+class="math inline">\(H\)</span>和<span
+class="math inline">\(W\)</span>分别表示经过分块标记化后的帧的高度和宽度，<span
+class="math inline">\(T\)</span>表示片段长度。为了生成一个新的样本<span
+class="math inline">\(x_{mix}\)</span>，在进行强数据增强<span
+class="math inline">\({\cal{A}}_{strong}\)</span>后，按照以下方式混合<span
+class="math inline">\(x_a\)</span>和<span
+class="math inline">\(x_b\)</span>： <span class="math display">\[
+\begin{equation}
+    x_{mix} = {\cal{A}}_{strong}(x_a) \odot \textbf{M} +
+{\cal{A}}_{strong}(x_b) \odot (\textbf{1}-\textbf{M}),
+\end{equation}
+\]</span> 其中<span
+class="math inline">\(\odot\)</span>表示逐元素相乘，<span
+class="math inline">\(\textbf{1}\)</span>是一个全为1的二值掩码。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230706152632.png"
+alt="Masks增强例子" />
+<figcaption aria-hidden="true">Masks增强例子</figcaption>
+</figure>
+<p>在三种增强方法中，掩码<span
+class="math inline">\(\textbf{M}\)</span>的处理方式不同，如图所示。
+对于Rand TokenMix，被掩盖的标记是从整个视频剪辑中（<span
+class="math inline">\(H\times W\times T\)</span>个标记）随机选择的。
+对于Frame TokenMix，从<span
+class="math inline">\(T\)</span>个帧中随机选择一些帧，并将这些帧中的所有标记进行掩盖。
+对于Tube
+TokenMix，采用了管道式的掩盖策略，即不同帧共享相同的空间掩码矩阵。在这种情况下，掩码<span
+class="math inline">\(\textbf{M}\)</span>在时间轴上具有一致的掩盖标记。</p>
+<p>利用上述的增强方法可以掩码混合两个片段并合成一个新的混合数据样本，然后，混合样本<span
+class="math inline">\(x_{mix}\)</span>被馈送到学生模型<span
+class="math inline">\({\cal{F}}_{s}\)</span>，得到模型预测<span
+class="math inline">\(y_{mix} = {\cal{F}}_{s}(x_{mix})\)</span>。
+此外，通过将弱增强样本<span
+class="math inline">\({\cal{A}}_{weak}(x_a)\)</span>和<span
+class="math inline">\({\cal{A}}_{weak}(x_b)\)</span>输入到教师模型<span
+class="math inline">\({\cal{F}}_{t}\)</span>中，产生<span
+class="math inline">\(x_a\)</span>和<span
+class="math inline">\(x_b\)</span>的伪标签<span
+class="math inline">\(\hat{y}_a,\hat{y}_b\)</span>： <span
+class="math display">\[
+\begin{equation}
+    \hat{y}_a = \arg\max({\cal{F}}_{t}({\cal{A}}_{weak}(x_a))),
+\end{equation}
+\]</span> <span class="math display">\[
+\begin{equation}
+    \hat{y}_b = \arg\max({\cal{F}}_{t}({\cal{A}}_{weak}(x_b))).   
+\end{equation}
+\]</span> 注意，如果<span
+class="math inline">\(\max({\cal{F}}_{t}({\cal{A}}_{weak}(x)))&lt;\delta\)</span>，则伪标签<span
+class="math inline">\(\hat{y}\)</span>保持软标签<span
+class="math inline">\({\cal{F}}_{t}({\cal{A}}_{weak}(x))\)</span>不变。
+对于<span class="math inline">\(x_{mix}\)</span>，伪标签<span
+class="math inline">\(\hat{y}_{mix}\)</span>通过使用掩码比例<span
+class="math inline">\(\lambda\)</span>混合<span
+class="math inline">\(\hat{y}_a\)</span>和<span
+class="math inline">\(\hat{y}_b\)</span>生成： <span
+class="math display">\[
+\begin{equation}
+    \hat{y}_{mix} = \lambda \cdot \hat{y}_a + (1-\lambda) \cdot
+\hat{y}_b.
+\end{equation}
+\]</span> 最后，学生模型通过以下一致性损失进行优化： $$ <span
+class="math display">\[\begin{equation}
+
+    {\cal{L}}_{mix}= \frac{1}{N_{m}} \sum^{N_{m}}(\hat{y}_{mix} -
+y_{mix})^2,
+\end{equation}\]</span> $$ 其中<span
+class="math inline">\(N_{m}\)</span>是混合样本的数量。
+TTMix的一致性损失算法显示在算法:Consistency loss for Tube
+TokenMix中。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230706153406.png"
+alt="Consistency loss for Tube TokenMix" />
+<figcaption aria-hidden="true">Consistency loss for Tube
+TokenMix</figcaption>
+</figure>
+<h3 id="时间扭曲增强-temporal-warping-augmentation">时间扭曲增强
+Temporal Warping Augmentation</h3>
+<p>作者提出扭曲每个帧的时间持续性，从而将更高的随机性引入数据中。时间扭曲增强（TWAug）可以将一个帧的时间长度拉伸到各种不同的值。
+给定一个包含<span
+class="math inline">\(T\)</span>帧（例如，8帧）的提取视频片段，随机决定保留所有帧，或者选择一小部分帧（例如，2或4帧），并遮盖其他帧。
+然后，被遮盖的帧会用随机的相邻可见（未遮盖）帧进行填充。
+请注意，在进行时间填充后，帧的顺序仍然保持不变。
+下图分别显示了选择2、4和8帧的三个示例。
+提出的TWAug可以帮助模型在训练过程中学习灵活的时间动态。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230706160835.png"
+alt="时间扭曲增强" />
+<figcaption aria-hidden="true">时间扭曲增强</figcaption>
+</figure>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230706161103.png"
+alt="TTMix中使用时间扭曲增强和空间增强示例" />
+<figcaption
+aria-hidden="true">TTMix中使用时间扭曲增强和空间增强示例</figcaption>
+</figure>
+<h2 id="训练模式">训练模式</h2>
+<p>SVFormer的训练由三个部分组成：由式（1）给出的有监督损失、由式（2）给出的无监督伪标签一致性损失以及由式（10）给出的TTMix一致性损失。最终的损失函数如下所示：
+<span class="math display">\[
+\begin{equation}
+{\cal{L}}_{all}= {\cal{L}}_{s} + {\gamma}_1  {\cal{L}}_{un} +
+{\gamma}_2  {\cal{L}}_{mix},
+\end{equation}
+\]</span> 其中<span class="math inline">\({\gamma}_1\)</span>和<span
+class="math inline">\({\gamma}_2\)</span>是平衡损失项的超参数。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -208,7 +1143,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-27 15:23:51" itemprop="dateModified" datetime="2023-06-27T15:23:51+08:00">2023-06-27</time>
+      <time title="Modified: 2023-06-28 10:13:19" itemprop="dateModified" datetime="2023-06-28T10:13:19+08:00">2023-06-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -231,8 +1166,8 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>Video Test-Time Adaptation for Action Recognition</p>
-<p>paper：http://arxiv.org/abs/2211.15393 code：
-https://github.com/wlin-at/ViTTA</p>
+<p>paper：http://arxiv.org/abs/2211.15393</p>
+<p>code： https://github.com/wlin-at/ViTTA</p>
 <h1 id="摘要">摘要</h1>
 <p>尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未展示视频动作识别模型的测试时间自适应能力。我们提出了一种针对时空模型的方法，可以在单个视频样本的每一步上进行自适应。该方法通过一种特征分布对齐技术，将在线估计的测试集统计数据与训练统计数据进行对齐。我们进一步通过对同一测试视频样本进行时间增强视图的预测一致性来强化。在三个基准动作识别数据集上的评估结果表明，我们提出的技术不依赖于具体的架构，能够显著提高最先进的卷积架构TANet和Video
 Swin
@@ -401,8 +1336,7 @@ class="math inline">\(i\)</span>次对齐迭代中，论文通过以下梯度更
 \end{equation}
 \]</span> 其中<span
 class="math inline">\(\lambda\)</span>是系数，论文将其设置为0.1。在消融研究中，论文展示了将<span
-class="math inline">\(M=2\)</span>设定为足以显著提升性能的方法（第~<span
-class="math inline">\(\ref{sec:num_views_pred_consis}\)</span>节），以及均匀等距重新采样输入视频可以获得最佳结果。</p>
+class="math inline">\(M=2\)</span>设定为足以显著提升性能的方法，以及均匀等距重新采样输入视频可以获得最佳结果。</p>
 
       
     </div>
@@ -1952,7 +2886,7 @@ class="math display">\[
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/19/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/" class="post-title-link" itemprop="url">《Temporal Query Networks for Fine-grained Video Understanding》阅读笔记</a>
+          <a href="/2023/02/19/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/" class="post-title-link" itemprop="url">Temporal Query Networks for Fine-grained Video Understanding</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1970,7 +2904,7 @@ class="math display">\[
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:27:35" itemprop="dateModified" datetime="2023-03-13T12:27:35+08:00">2023-03-13</time>
+      <time title="Modified: 2023-06-28 09:26:48" itemprop="dateModified" datetime="2023-06-28T09:26:48+08:00">2023-06-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2094,872 +3028,6 @@ src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.p
 alt="image-20230219150729217" />
 <figcaption aria-hidden="true">image-20230219150729217</figcaption>
 </figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/08/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yic-gdut">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yic">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Yic">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/08/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/" class="post-title-link" itemprop="url">《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2023-01-08 10:00:59" itemprop="dateCreated datePublished" datetime="2023-01-08T10:00:59+08:00">2023-01-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:28:00" itemprop="dateModified" datetime="2023-03-13T12:28:00+08:00">2023-03-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>2022 tpami</p>
-<h2 id="摘要">摘要</h2>
-<p>自廉价深度传感器问世以来，RGB-D视频中的人体动作识别(HAR)得到了广泛研究。目前，单模态方法(如基于骨架和基于RGB视频)已经在越来越大的数据集上实现了实质性的改进。然而，很少研究具有模型级融合的多模态方法。本文提出一种基于模型的多模态网络(MMNet)，通过一种基于模型的方法融合骨架和RGB模态。该方法的目标是通过有效地利用不同数据模态的互补信息来提高集成识别的精度。对于基于模型的融合方案，我们对骨架模态使用时空图卷积网络来学习注意力权重，并将其迁移到RGB模态的网络中。在5个基准数据集上进行了广泛的实验:NTU
-RGB+D 60、NTU RGB+D 120、PKU-MMD、Northwestern-UCLA Multiview和Toyota
-smarhome。在聚合多个模态的结果后，发现所提出方法在五个数据集的六个评估协议上优于最先进的方法;因此，MMNet能够有效地捕获不同RGB-D视频模态中相互补充的特征，为HAR提供更具判别力的特征。在包含更多户外动作的RGB视频数据集Kinetics
-400上测试了MMNet，结果与RGB- d视频数据集的结果一致。</p>
-<h2 id="序言">序言</h2>
-<p>使用骨架或RGB模态的单模态方法存在障碍:</p>
-<ol type="1">
-<li><p>基于RGB的方法的主要限制是缺乏3D结构；</p></li>
-<li><p>基于骨骼的方法也受到缺乏纹理和外观特征的限制。</p></li>
-</ol>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png"
-alt="image-20230105201002470" />
-<figcaption aria-hidden="true">image-20230105201002470</figcaption>
-</figure>
-<p>多模态HAR方法的核心任务是数据融合，可进一步分为数据级融合、特征级融合和决策级融合</p>
-<p>除了这三种之外还有一种融合方法，称为协同学习</p>
-<p>为了推进之前围绕协作学习的工作，本文提出了一种新的基于模型的多模态网络(MMNet)，在融合骨架和RGB模态时建模有效的知识转换，以提高RGB-
-D视频中的人体动作识别</p>
-<p>通过构建感兴趣的时空区域(STROI)特征图来关注整个RGB视频帧的不同外观特征，这种策略减轻了与大量视频数据相关的挑战。</p>
-<p>从所提出的MMNet的骨架关节流Skeleton
-Joints中衍生出一个注意力掩码，以关注提供互补特征的ST-ROI区域，可以提高RGB-D视频中人体动作的识别。</p>
-<p>贡献：</p>
-<ol type="1">
-<li>首先，引入了一种多模态深度学习架构，在模型层次上用注意力机制融合不同的数据模态，并使用骨架骨流Skeleton
-Bones。</li>
-<li>其次，通过三个基准数据集证明，所提出方法大大提高了最先进的性能</li>
-<li>通过对MMNet的两个关键参数进行分析，进一步验证了该方法的有效性。</li>
-</ol>
-<h2 id="网络架构">网络架构</h2>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106140433610.png"
-alt="image-20230106140433610" />
-<figcaption aria-hidden="true">image-20230106140433610</figcaption>
-</figure>
-<p><span class="math inline">\(B^{(i)}\)</span>,<span
-class="math inline">\(J^{(i)}\)</span>和<span
-class="math inline">\(V^{(i)}\)</span>分别代表骨骼、骨骼关节和RGB视频的输入;</p>
-<p><span
-class="math inline">\(w^{(i)}\)</span>是来自骨骼关节图表示的空间注意力权重<span
-class="math inline">\(\hat{J}^{(i)}\)</span>，它指导从RGB视频输入<span
-class="math inline">\(V^{(i)}\)</span>转换为ST-ROI的焦点;</p>
-<p>在这种基于模型的数据融合之后,以骨架为中心的ST-ROI<span
-class="math inline">\(R^{\prime(i)}\)</span>将被馈送到ResNet以生成特定模式的预测;</p>
-<p><span class="math inline">\(\hat{y}_{c}^{J^{(i)}}\)</span>和<span
-class="math inline">\(\hat{y}_{c}^{B^{(i)}}\)</span>分别表示来自skeleton
-joint 和 bone流的预测,这些预测通过RGB模态的特定预测<span
-class="math inline">\(\hat{y}_{c}^{V^{(i)}}\)</span>进行聚合，以提供集成识别结果。</p>
-<h3 id="从rgb模态构建st-roi">从RGB模态构建ST-ROI</h3>
-<p>基于视频的模比如I3D和S3D等需要大量的RAM和GPU显存的计算资源，并且需要很长时间才能收敛,而较早的模型如C3D在NTU
-RGB+D上则受限于数据量并不能有好的表现.因此,作者建议从RGB模态构建ST-ROI，并使用通用CNN模型从中检索有效特征。</p>
-<p>以符号<span class="math inline">\(V=\left\{V^{(i)} \mid i=1, \ldots,
-N\right\}\)</span>表示为有N个视频样本进行训练的RGB模态,那么可以表示出<span
-class="math inline">\(V^{(i)}=\left(f_{1}^{(i)}, \ldots, f_{t}^{(i)},
-\ldots, f_{T}^{(i)}\right)\)</span></p>
-<p>其中<span class="math inline">\(f_{t}^{(i)}\)</span>是<span
-class="math inline">\(t\)</span>帧。给定一个RGB帧<span
-class="math inline">\(f_{t}^{(i)}\)</span>，作者定义了一个函数<span
-class="math inline">\(g\)</span>来构建空间ROI<span
-class="math inline">\(R_{t j}^{(i)}\)</span>为 <span
-class="math display">\[
-R_{t j}^{(i)}=g\left(f_{t}^{(i)}, o_{t j}^{(i)}\right), j
-\in\left(m_{1}, \ldots, m_{M_{O}^{\prime}}\right), M_{O}^{\prime} \leq
-M_{O}
-\]</span> 其中<span class="math inline">\(O_{t
-j}^{(i)}\)</span>为时刻t时OpenPose骨架的第j个关节。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106193800339.png"
-alt="image-20230106193800339" />
-<figcaption aria-hidden="true">image-20230106193800339</figcaption>
-</figure>
-<p>如上图，在<span
-class="math inline">\(V^{(i)}\)</span>进行时间采样，选择L个代表帧，将它们拼接成一个方形ST-ROI，如上图中的单受试者案例所示。对于有两个主体的动作，我们裁剪每个主体的ST-ROI，如上图中两个主体的情况所示。ST-ROI显著减少了RGB视频输入的数据量，同时保留了物体的外观和动作的运动信息。在<span
-class="math inline">\(τ\)</span>时刻的时域子ROI将具有<span
-class="math inline">\(M′\)</span>个空间子ROI,可以垂直连接并表示为<span
-class="math inline">\(R_{\tau}^{(i)}\)</span>;相反，第<span
-class="math inline">\(j\)</span>个关节的空间子ROI将具有<span
-class="math inline">\(L\)</span>个时间子ROI，可以水平级联并表示为<span
-class="math inline">\(R^{(i)}_ j\)</span>;最后对于<span
-class="math inline">\(V^{(i)}\)</span>的ST-ROI可用<span
-class="math inline">\(R_{(i)}\)</span>表示,包含<span
-class="math inline">\(M&#39;\times L\)</span>个子ST-ROI<span
-class="math inline">\(R_{\tau j}^{(i)}\)</span></p>
-<h3 id="从骨架模态中学习关节权重">从骨架模态中学习关节权重</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106204310906.png"
-alt="image-20230106204310906" />
-<figcaption aria-hidden="true">image-20230106204310906</figcaption>
-</figure>
-<p>(a)时空骨架图结构。(b)图卷积网络的空间采样策略。不同的颜色表示不同的子集:绿色星形表示顶点本身;黄色三角形表示离心力较远的子集;蓝色方块表示更接近的向心子集。</p>
-<p>符号表示:</p>
-<p><span class="math inline">\(J^{(i)}=\left(J_{1}^{(i)}, \ldots,
-J_{t}^{(i)}, \ldots, J_{T}^{(i)}\right)\)</span>表示从时间<span
-class="math inline">\(t=1\)</span>开始到时间<span
-class="math inline">\(T\)</span>结束的第<span
-class="math inline">\(i\)</span>个训练样本对应的<span
-class="math inline">\(T\)</span>个骨架帧序列；</p>
-<p><span class="math inline">\(B^{(i)}=\left(B_{1}^{(i)}, \ldots,
-B_{t}^{(i)}, \ldots,
-B_{T}^{(i)}\right)\)</span>表示由骨骼关节转化而来的骨骼的相应序列；</p>
-<p><span class="math inline">\(J_{t}^{(i)}=\left(J_{t 1}^{(i)}, \ldots,
-J_{t j}^{(i)}, \ldots, J_{t
-M}^{(i)}\right)\)</span>表示给定一组t时刻观察到的骨架中的M个关节得到的骨架数据;</p>
-<p>构造一个时空图来表示<span
-class="math inline">\(J^{(i)}\)</span>的时空结构,即上图(a),其中单个骨架框架的关节和骨骼分别由图顶点([a]中的橙色圆圈)及其自然连接([a]中的紫色线)表示。两个相邻的骨架通过关节之间的边连接起来([a]中的黑线虚线)。图顶点的属性可以是每个关节对应的三维坐标。骨架输入<span
-class="math inline">\(J^{(i)}\)</span>的骨架图可以符号化为<span
-class="math inline">\(\mathcal{G}=(\mathcal{V},
-\mathcal{E})\)</span>，其中<span
-class="math inline">\(\mathcal{V}\)</span>和<span
-class="math inline">\(\mathcal{E}\)</span>分别表示关节和骨骼。</p>
-<h4 id="图卷积运算">图卷积运算</h4>
-<p>为表示卷积操作的采样区域，一个节点<span
-class="math inline">\(v_{ti}\)</span>的邻居集被定义为<span
-class="math inline">\(N\left(v_{t i}\right)=\left\{v_{t j} \mid
-d\left(v_{t i}, v_{t j}\right) \leq D\right\}\)</span>,其中D是<span
-class="math inline">\(d\left(v_{t i}, v_{t
-j}\right)\)</span>的最大路径长度.该策略如图4(b)所示，其中×表示骨架的重心,采样面积<span
-class="math inline">\(N\left(v_{t i}\right)\)</span>被曲线包围.</p>
-<p>假设在邻居集中有固定数量的K个子集,它们将被映射为数字标记<span
-class="math inline">\(l_{t i}: N\left(v_{t i}\right) \rightarrow\{0,
-\ldots, K-1\}\)</span>;在时间上，邻域概念扩展到时间连接的关节，如<span
-class="math inline">\(N\left(v_{t i}\right)=\left\{v_{q
-j}\left|d\left(v_{t j}, v_{t i}\right) \leq K,\right| q-t \mid \leq
-\Gamma / 2\right\}\)</span>,其中<span
-class="math inline">\(\Gamma\)</span>是控制邻居集的时间范围的时间内核大小。这样图卷积就可以计算为
-<span class="math display">\[
-\hat{v}_{t i}=\sum_{v_{t j} \in N\left(v_{t i}\right)} \frac{1}{Z_{t
-i}\left(v_{t j}\right)} f_{i n}\left(v_{t j}\right)
-\mathbf{w}\left(l\left(v_{t j}\right)\right)
-\]</span> 其中<span class="math inline">\(f_{i n}\left(v_{t
-j}\right)\)</span>为获取<span
-class="math inline">\(v_{tj}\)</span>的属性向量的特征映射，<span
-class="math inline">\(\mathbf{w}\left(l\left(v_{t
-j}\right)\right)\)</span>是权重函数<span
-class="math inline">\(\mathbf{w}\left(v_{t i}, v_{t
-j}\right)\)</span>:<span class="math inline">\(N\left(v_{t i}\right)
-\rightarrow \mathbb{R}^{C}\)</span>可以用<span
-class="math inline">\((C,K)\)</span>维张量实现;<span
-class="math inline">\(Z_{t i}\left(v_{t j}\right)=\left|v_{t k}\right|
-l_{t i}\left(v_{t k}\right)=l_{t i}\left(v_{t j}\right)
-\mid\)</span>等于相应子集的基数，这是一个归一化项。</p>
-<h4 id="关节权重">关节权重</h4>
-<p>对骨架模态应用图卷积后，图上每个顶点的输出可以用来推断相应骨架节点的重要性。骨架序列的特征映射可以用(C,
-T,
-M)维的张量表示，其中C表示关节顶点的属性个数，T表示时间长度，M表示顶点个数。这种划分策略可以用一个邻接矩阵A来表示，矩阵A中的元素表示一个顶点<span
-class="math inline">\(v_{ti}\)</span>是否属于<span
-class="math inline">\(N(v_{ti})\)</span>的子集。因此，图卷积可以使用<span
-class="math inline">\(1 \times
-\Gamma\)</span>经典二维卷积，并通过在二维上将所得张量乘以归一化邻接矩阵<span
-class="math inline">\(\boldsymbol{\Lambda}^{-\frac{1}{2}} \mathbf{A}
-\boldsymbol{\Lambda}^{-\frac{1}{2}}\)</span>来实现。若采用K种分区策略<span
-class="math inline">\(\sum_{k=1}^{K}
-\mathbf{A}_{k}\)</span>，图卷积的公式可被转换为 <span
-class="math display">\[
-\hat{J}^{(i)}=\sum_{k=1}^{K} \boldsymbol{\Lambda}^{-\frac{1}{2}}
-\mathbf{A} \boldsymbol{\Lambda}^{-\frac{1}{2}} f_{i
-n}\left(J^{(i)}\right) \mathbf{W}_{k} \odot \mathbf{M}_{k}
-\]</span></p>
-<p>其中<span class="math inline">\(\boldsymbol{\Lambda}_{k}^{i
-i}=\sum_{j}\left(\mathbf{A}_{k}^{i
-j}\right)+\alpha\)</span>为对角矩阵且<span
-class="math inline">\(\alpha\)</span>被设为0.001以避免空行；<span
-class="math inline">\(\mathbf{W}_{k}\)</span>是一个具有<span
-class="math inline">\((C_in, C_out, 1,1)\)</span>维的1 x
-1卷积运算的权重张量，它表示方程3的权重函数；<span
-class="math inline">\(\mathbf{M}_{k}\)</span>是与<span
-class="math inline">\(A_k\)</span>相同大小的注意力图，表明了每个顶点的重要性;<span
-class="math inline">\(\odot\)</span>表示两个矩阵的元素乘积；<span
-class="math inline">\(\hat{J}^{(i)}\)</span>是一个大小为<span
-class="math inline">\((c, t, M)\)</span>的张量，其中<span
-class="math inline">\(c\)</span>是输出通道数，<span
-class="math inline">\(t\)</span>是输出时间长度，<span
-class="math inline">\(M\)</span>是顶点数。该张量可用于推断动作类别，并可转换为关节权重，为RGB模态提供注意力知识。代表其相应身体面积重要性的关节权重可以计算为
-<span class="math display">\[
-w^{(i)}=\frac{1}{c t} \sum_{1}^{c} \sum_{1}^{t} \sqrt{\left(\hat{J}_{c
-t}^{(i)}\right)^{2}}
-\]</span>
-其中t和c分别为卷积图的输出维数，分别表示时间长度和输出通道。<span
-class="math inline">\(w^{(i)}\)</span>是包含M个不同骨架关节权重的向量。</p>
-<h3 id="基于模型的融合">基于模型的融合</h3>
-<p>本文提出一种RGB帧的空间权重机制，使机器能够关注将提供判别式信息的RGB特征，更明确的是，机器将更有能力，因为它直观地模仿了人眼的动作识别。本文选择使用来自骨架模态的关节权重，并将其乘以ST-ROI来正则化RGB模态。可以将第i个训练样本的骨架聚焦的ST-ROI(记为<span
-class="math inline">\(R^{&#39;(i)}\)</span>)从<span
-class="math inline">\(R^{(i)}\)</span>映射出来，函数<span
-class="math inline">\(h\)</span>定义为 <span class="math display">\[
-R^{\prime(i)}=h\left(R_{j}^{(i)}, w_{j}^{(i)}\right), j=m_{1}^{\prime},
-\ldots, m_{M^{\prime}}^{\prime}, M^{\prime}&lt;M
-\]</span> 其中<span class="math inline">\(w_{j}\)</span>为第<span
-class="math inline">\(j\)</span>个关节的权重，<span
-class="math inline">\(R_{j}^{(i)}\)</span>为对应身体区域的子空间ROI。而<span
-class="math inline">\(m_{1}^{\prime}, \ldots,
-m_{M^{\prime}}^{\prime}\)</span>是<span
-class="math inline">\(M’\)</span>个不同骨骼关节对应于建议关注的身体区域的指数。<span
-class="math inline">\(M &#39;\)</span>的值等于公式2中<span
-class="math inline">\(M &#39;
-_O\)</span>的值。公式6的数据融合过程如下图所示。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107180156852.png"
-alt="image-20230107180156852" />
-<figcaption aria-hidden="true">image-20230107180156852</figcaption>
-</figure>
-<h3 id="目标函数">目标函数</h3>
-<p>用动作标签监督的损失项集合的和构建了MMNet的端到端格式，表示为 <span
-class="math display">\[
-\mathcal{L}=\mathcal{L}_{J}\left(\hat{y}^{J},
-y\right)+\mathcal{L}_{B}\left(\hat{y}^{B},
-y\right)+\mathcal{L}_{V}\left(\hat{y}^{V}, y\right)
-\]</span> 其中<span
-class="math inline">\(\mathcal{L}_{J},\mathcal{L}_{B},\mathcal{L}_{V}\)</span>分别为骨架关节、骨架骨骼、RGB视频输入的损失项。</p>
-<p>将骨架关节输入输入到公式4中引入的图卷积模型中。因此，骨骼关节的预测可以定义为
-<span class="math display">\[
-\hat{y}^{J^{(i)}}=\sigma\left(G_{J}\left(\Theta_{J},
-J^{(i)}\right)\right)
-\]</span> 其中<span
-class="math inline">\(G_J\)</span>表示式4定义的图卷积运算；<span
-class="math inline">\(Θ_J\)</span>为GCN子模型的可学习参数；<span
-class="math inline">\(J^{(i)}\)</span>是骨骼关节输入的数据样本。而<span
-class="math inline">\(σ\)</span>表示一个线性层，将子模型输出的形状转换为one
-- hot表示</p>
-<p>骨骼输入基本上是骨骼关节输入的转换。将同样的图卷积运算方法应用于骨骼输入，可以表示为
-<span class="math display">\[
-\hat{y}^{B^{(i)}}=\sigma\left(G_{B}\left(\Theta_{B},
-B^{(i)}\right)\right)
-\]</span>
-本文提出了ST-ROI作为RGB视频输入的转换形式，它可以大幅减少数据量，并保持HAR的核心判别信息。由于ST-ROI本质上是一个二维特征图，便采用ResNet如下
-<span class="math display">\[
-\hat{y}^{V^{(i)}}=\sigma\left(G_{V}\left(R^{\prime(i)},
-\Theta_{V}\right)+R^{\prime(i)}\right)
-\]</span> 其中<span class="math inline">\(G_{V}\left(R^{\prime(i)},
-\Theta_{V}\right)\)</span>表示待学习的残差映射，ΘV表示基于ResNet层数的可学习参数</p>
-<p>给定上述子模型预测的定义，根据以下目标制定优化问题: <span
-class="math display">\[
-\begin{array}{c}
-\underset{\Theta_{B}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{B^{(i)}}\right)}_{\mathcal{L}_{B}} \\
-\underset{\Theta_{J}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{J^{(i)}}\right)}_{\mathcal{L}_{J}} \\
-\underset{\Theta_{V}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{V^{(i)}}\right)}_{\mathcal{L}_{V}}
-\end{array}
-\]</span> 其中<span
-class="math inline">\(\mathcal{L}\)</span>是交叉熵损失函数，<span
-class="math inline">\(N_c\)</span>是特定数据集中动作类的数量，<span
-class="math inline">\(N\)</span>表示训练集中的样本个数。</p>
-<h3 id="训练与优化">训练与优化</h3>
-<p>为了追求更高的识别精度，还可以采用其他几个损失项作为关节权重。但本文依旧采用了关节权重的普通实现，作为RGB模态的空间注意力，以验证新颖的基于模型的数据融合机制的有效性。给定目标函数，使用随机梯度下降(SGD)求解方程11、12和13。网络<span
-class="math inline">\(G_J\)</span>可以预训练，也可以与<span
-class="math inline">\(G_V\)</span>同时训练，以获得空间注意力权重以进行特征融合。子模型<span
-class="math inline">\(G_J\)</span>和<span
-class="math inline">\(G_V\)</span>可以通过将<span
-class="math inline">\(Θ_J\)</span>和<span
-class="math inline">\(Θ_V\)</span>一起调优来进行端到端训练，或者简单地通过修改<span
-class="math inline">\(Θ_J\)</span>来更新<span
-class="math inline">\(Θ_V\)</span>。同时，对骨骼的网络<span
-class="math inline">\(G_B\)</span>进行单独训练，并将其聚合到<span
-class="math inline">\(G_J\)</span>和<span
-class="math inline">\(G_V\)</span>的结果中，从而实现集成预测。具体训练步骤如算法1所示。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107205547516.png"
-alt="image-20230107205547516" />
-<figcaption aria-hidden="true">image-20230107205547516</figcaption>
-</figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yic-gdut">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yic">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Yic">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action Recognition》阅读笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-10-18 10:48:59" itemprop="dateCreated datePublished" datetime="2022-10-18T10:48:59+08:00">2022-10-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:27:12" itemprop="dateModified" datetime="2023-03-13T12:27:12+08:00">2023-03-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="摘要引言结论">摘要、引言、结论</h1>
-<p>本文设计了一个新型动态时空专业化模块（Dynamic Spatio-Temporal
-Specialization，简称DSTS），该模块由只会被高度相似的样本子集所激活的专门神经元组成。为了在相似样本的特定子集中进行区分，损失将促使专门神经元专注于细粒度差异。</p>
-<p>本文设计了一种时空专门化方法，为专门化神经元提供空间或时间专门化，使其每次只关注输入特征映射的每个通道的一个单一方面(空间或时间)。</p>
-<p>而在端到端的训练中，需要训练两种类型的参数：upstream
-参数（如评分核和门参数）用于做动态决策和downstream参数（如时空算子）用于处理输入。由于上流参数的训练也会影响到下流参数，因此本文设计了一种上游-下游学习的算法（UDL），学习如何做出对下游参数训练有积极影响的决策，提高DSTS模块的性能。</p>
-<p>解决的问题：成功地区分具有细微差别的操作类别（细粒度设置中较高的类间相似性）</p>
-<h1 id="提出的方法">提出的方法</h1>
-<h2 id="概述">概述</h2>
-<p>对于每个输入样本，每层中只有一个专门神经元被激活——这种动态激活发生在论文所说的突触机制，而且这种突出机制使得每个专门的神经元旨在相似的样本子集上被激活。由于训练过程中，每个专门神经元只在包含相似样本的子集上训练，因此训练loss会促使专门的神经元去学习处理与这些样本相关的细粒度信息，而不是学到更多常见的辨别性线索。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png"
-alt="image-20221019154610958" />
-<figcaption aria-hidden="true">image-20221019154610958</figcaption>
-</figure>
-<p>DSTS的图示如上，DSTS处理从backbone传过来的特征。DSTS模块内有L层，每一层都由N个专门化神经元组成。当特征映射X被输入到第j个DSTS层时，首先计算每个专门化神经元<span
-class="math inline">\(n_{ij}\)</span>的脉冲值<span
-class="math inline">\(v_{ij}\)</span>，接着该层中具有最高脉冲值的神经元被Gumbel-
-Softmax激活。在被送入分类器之前，一个从backbone到输出的跳过连接被加到生成的特征。</p>
-<p>为简单起见，将batchsize设置为1，假设预训练的backbone输出的特征图为<span
-class="math inline">\(X \in \mathbb{R}^{N_{i n} \times N_{t} \times
-N_{h} \times N_{w}}\)</span>，其中<span class="math inline">\(N_{i n},
-N_{t}, N_{h},
-N_{w}\)</span>代表特征图的通道、时间、高度和宽度的维度。DSTS模块由L层组成，每层由N个专门的神经元组成。定义第j层的第i个专门神经元为<span
-class="math inline">\(n_{ij}\)</span>，每个专门的神经元<span
-class="math inline">\(n_{ij}\)</span>都有一个评分核<span
-class="math inline">\(m_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{i n} \times 1 \times 1 \times
-1}\)</span>(大小为1×1×1，用于高效编码特征图X的所有通道的信息)，一个由卷积核组成的空间算子<span
-class="math inline">\(S_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{\text {in }} \times 1 \times 3 \times
-3}\)</span>，一个由卷积核组成的时间算子<span class="math inline">\(T_{i
-j} \in \mathbb{R}^{N_{\text {out }} \times N_{i n} \times 3 \times 1
-\times 1}\)</span>，以及门<span class="math inline">\(g_{i j} \in
-\mathbb{R}^{N_{i n}}\)</span></p>
-<h2 id="dsts层">DSTS层</h2>
-<h3 id="突触机制"><strong>突触机制</strong></h3>
-<p>为了专业化效应的突触机制，每一个专门神经元上都包含一个用于在scoring
-convolution的输入特征图X的评分核。输出的结果会被求和以得到反映输入特征映射X与专门化神经元<span
-class="math inline">\(n_i\)</span>的细粒度专门化能力之间的相关性得分，称之为脉冲<span
-class="math inline">\(v_i\)</span>。专门化神经元产生的脉冲越高，专门化神经元的知识与输入特征的相关性越高，就越有可能被激活。</p>
-<ol type="1">
-<li>首先在X上应用一个评分核为<span
-class="math inline">\(m_i\)</span>的卷积</li>
-</ol>
-<p><span class="math display">\[
-q_{i}=m_{i}(X)
-\]</span></p>
-<p>其中，<span
-class="math inline">\(m_{i}(·)\)</span>是评分卷积的简略表示，<span
-class="math inline">\(q_{i} \in \mathbb{R}^{N_{\text {out }} \times
-Q_{t} \times Q_{h} \times Q_{w}}\)</span> 。</p>
-<ol start="2" type="1">
-<li>把<span
-class="math inline">\(q_i\)</span>中的所有元素相加，就得到了特殊神经元<span
-class="math inline">\(n_i\)</span>的脉冲<span
-class="math inline">\(v_i\)</span>。</li>
-</ol>
-<p><span class="math display">\[
-v_{i}=\sum_{u_{c}=1}^{N_{\text {out }}} \sum_{u_{t}=1}^{Q_{t}}
-\sum_{u_{h}=1}^{Q_{h}} \sum_{u_{w}=1}^{Q_{w}} q_{i, u_{c}, u_{t}, u_{h},
-u_{w}}\\
-\mathcal{V}=\left\{v_{i}\right\}_{i=1}^{N}
-\]</span></p>
-<ol start="3" type="1">
-<li><p>在<span
-class="math inline">\(\mathcal{V}\)</span>上应用Gumbel-Softmax技术来选择一个特定的神经元进行激活。</p>
-<p>激活特定神经元<span
-class="math inline">\(n_a\)</span>的选择是通过在所选指标a处产生一个具有1的one-hot向量来实现的。在训练过程中，Gumbel-Softmax允许梯度通过这种选择机制反向传播。在测试过程中，被激活的神经元<span
-class="math inline">\(n_a\)</span>是在<span
-class="math inline">\(\mathcal{V}\)</span>里具有最高脉冲的，以及具有最相关的专门化来区分与输入X相似的样本。</p></li>
-</ol>
-<p>作者认为，突触机制对于专门神经元的专门化是至关重要的。卷积滤波器会对相似的特征图输入产生相似的想要，因此<span
-class="math inline">\(q_i\)</span>和<span
-class="math inline">\(v_i\)</span>对于相似的特征图会趋于相似。于是，在训练过程中，相似的特征图极有可能为相同的专门化神经元产生高脉冲得分(并激活);而这个神经元将只在相似样本的子集上被更新，这样就能使得这个神经元专门研究细粒度的差异来区分它们。</p>
-<blockquote>
-<p><a
-target="_blank" rel="noopener" href="https://wmathor.com/index.php/archives/1595/">Gumbel-Softmax完全解析
-- mathor (wmathor.com)</a></p>
-</blockquote>
-<h3 id="时空专门化"><strong>时空专门化</strong></h3>
-<p>直观地说，在<span
-class="math inline">\(n_a\)</span>被激活后，可以简单地在X上应用一个三维卷积核(对应于<span
-class="math inline">\(n_a\)</span>)来提取时空信息。但在细粒度动作识别，动作之间的细粒度差异会存在与动作的更多时空方面，因此还优化了专门化神经元的结构，以专门关注更多空间或更多时间的细粒度信息。</p>
-<p>更具体地说，时空专门化方法适应专门化神经元的体系结构，为每个输入通道选择空间算子或时间算子。空间算符使用二维卷积集中在特征映射的空间方面，而时间算子使用关注时间方面的一维卷积。在训练过程中，这种架构设计使得每个专门神经元利用所选方面的相似样本之间每个通道的细粒度差异，这样能具有更好的敏感度。通过让模型调整架构来选择每个通道的操作子从而实现更大的识别能力，而这种架构决策是通过门参数来学习的，当专门神经元专注于某个方面是有益的，门参数将学会使用相应的运算子。</p>
-<ol type="1">
-<li>Spatio-temporal Architectural Decisions using Gates</li>
-</ol>
-<p>专门化神经元的门参数<span class="math inline">\(g_a\)</span>由<span
-class="math inline">\(N_{in}\)</span>个元素组成，每个元素对应一个输入通道。每个门参数决定了对应的通道是用空间还是时间算子处理的。</p>
-<p>在正向传递过程中，使用改进的Semhash方法从门参数<span
-class="math inline">\(g_a\)</span>中采样二进制决策，获得二进制向量<span
-class="math inline">\(\mathbf{b} \in\{0,1\}^{N_{i
-n}}\)</span>。改进的Semhash方法使得我们可以以端对端的方式训练门参数<span
-class="math inline">\(g_a\)</span>。我们把b的第l个元素表示为<span
-class="math inline">\(b_l\)</span>。如果<span
-class="math inline">\(b_l\)</span>为0则对应的输入通道<span
-class="math inline">\(l\)</span>将使用空间算子，如果<span
-class="math inline">\(b_l\)</span>为1则使用时间算子。</p>
-<ol start="2" type="1">
-<li>Specialized Spatio-Temporal Processing</li>
-</ol>
-<p>在获得通道型架构决策b后，可以从通道型输入特征映射X的选择开始，得到如下的特征<span
-class="math inline">\(X_S\)</span>和<span
-class="math inline">\(X_T\)</span>，分别用于学习细粒度的空间和时间信息
-<span class="math display">\[
-\begin{array}{r}
-X_{S}=(\mathbf{1}-\mathbf{b}) \cdot X, \\
-X_{T}=\mathbf{b} \cdot X,
-\end{array}
-\]</span> 其中<span
-class="math inline">\(\mathbf{1}\)</span>是一个长度为<span
-class="math inline">\(N_{in}\)</span>的向量，大小为1，而<span
-class="math inline">\(\cdot\)</span>指的是沿通道维度的乘法，同时将<span
-class="math inline">\(b\)</span>和<span class="math inline">\((1 -
-b)\)</span>的每个元素视为一个通道。 <span class="math display">\[
-\begin{array}{l}
-Z_{S}=S_{a}\left(X_{S}\right) \\
-Z_{T}=T_{a}\left(X_{T}\right)
-\end{array}
-\]</span> 其中<span
-class="math inline">\(Z_S\)</span>表示捕获输入特征图空间信息的特征<span
-class="math inline">\(X\)</span>，而<span
-class="math inline">\(Z_T\)</span>表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为<span
-class="math inline">\(Z&#39;_S\)</span>和<span
-class="math inline">\(Z&#39;_t\)</span>
-，输出特征图为两者之和。最后，对Z进行1 × 1 ×
-1卷积，融合空间和时间特征。而融合的特征<span
-class="math inline">\(Z&#39;\)</span>将作为下一层DSTS或分类器的输入。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png"
-alt="image-20221123205910863" />
-<figcaption aria-hidden="true">image-20221123205910863</figcaption>
-</figure>
-<h2 id="上下游学习">上下游学习</h2>
-<p>为了进一步提高DSTS模块的性能，论文设计了一个UDL算法，该算法可以更好地优化与动态决策相关的模型参数，称之为上游参数。动态决策相关的上游参数（例如评分核<span
-class="math inline">\(m\)</span>和门参数<span
-class="math inline">\(g\)</span>）和处理输入的下游参数（例如时空算子<span
-class="math inline">\(S\)</span>和<span
-class="math inline">\(T\)</span>）会在端到端的训练中联合训练，而这的挑战主要是上游参数也会影响到下游参数的训练。因此，作者使用元学习（meta-learning）优化上游参数，同时考虑下游参数的影响，从而提高下游参数的学习能力，提高整体性能。</p>
-<blockquote>
-<p>元学习算法由三步骤组成。第一步，通过更新下游参数的同时冻结上游参数从而模拟使用当前上游参数集进行动态决策时，下游参数的训练过程。第二步，在验证集上评估模型在held-out样本的性能。来自该评估的二阶梯度(相对于上游参数)提供了如何更新上游参数的反馈，以便它们在训练期间的动态决策可以改进下游参数的学习过程，从而在held-out样本上获得更好的性能。最后一步，使用元优化的上游参数对下游参数进行优化，这些参数现在在模型中做出动态决策，以便下游参数能够从训练中获得更多好处，并提高(测试)性能。</p>
-</blockquote>
-<p>具体地说，在每一次迭代中，在训练数据中采样两个mini-batch：训练样本<span
-class="math inline">\(D_{train}\)</span>和验证样本<span
-class="math inline">\(D_{val}\)</span>。</p>
-<ul>
-<li><p>Simulated Update Step：在<span
-class="math inline">\(D_{train}\)</span>上使用监督loss更新下游参数<span
-class="math inline">\(d\)</span> <span class="math display">\[
-\hat{d}=d-\alpha \nabla_{d} \ell\left(u, d ; D_{\text {train }}\right)
-\]</span> 其中，<span
-class="math inline">\(\alpha\)</span>为学习率超参数，<span
-class="math inline">\(u\)</span>和<span
-class="math inline">\(d\)</span>分别表示上游和下游参数。在这个步骤中<span
-class="math inline">\(u\)</span>保持固定。</p></li>
-<li><p>Meta-Update Step：在<span
-class="math inline">\(D_{val}\)</span>中验证更新后的模型，当上游参数<span
-class="math inline">\(u\)</span>在第一个模拟更新步骤中用于决策时，使用关于<span
-class="math inline">\(u\)</span>的二阶梯度更新上游参数<span
-class="math inline">\(u\)</span> <span class="math display">\[
-u^{\prime}=u-\alpha \nabla_{u} \ell\left(\hat{u}, \hat{d} ; D_{v a
-l}\right)
-\]</span> 其中<span class="math inline">\(\hat{u}\)</span>是<span
-class="math inline">\(u\)</span>的副本，但不计算关于<span
-class="math inline">\(\hat{u}\)</span>的梯度。这里需要计算的梯度指的是<span
-class="math inline">\(u^{\prime}\)</span>关于<span
-class="math inline">\(\hat{d}\)</span>中<span
-class="math inline">\(u\)</span>的梯度，即二阶梯度。这些二阶梯度为如何调节<span
-class="math inline">\(u\)</span>提供反馈以更好地训练下游参数，从而提高在不可见样本的性能。在这个步骤中<span
-class="math inline">\(d\)</span>保持固定。</p></li>
-<li><p>Actual Update Step：保持<span
-class="math inline">\(u^{\prime}\)</span>冻结的情况下更新<span
-class="math inline">\(d\)</span> <span class="math display">\[
-d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train
-}}\right)
-\]</span></p></li>
-</ul>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png"
-alt="image-20221124161756656" />
-<figcaption aria-hidden="true">image-20221124161756656</figcaption>
-</figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/22/PoseConv3d%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yic-gdut">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yic">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Yic">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/09/22/PoseConv3d%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">PoseConv3d笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2022-09-22 16:48:46" itemprop="dateCreated datePublished" datetime="2022-09-22T16:48:46+08:00">2022-09-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:27:49" itemprop="dateModified" datetime="2023-03-13T12:27:49+08:00">2023-03-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Revisiting Skeleton-based Action Recognition</p>
-<p>论文：https://arxiv.org/abs/2104.13586</p>
-<p>代码：https://github.com/kennymckormick/pyskl</p>
-<h1 id="摘要与结论">摘要与结论</h1>
-<ul>
-<li>尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。</li>
-<li>提出了PoseConv3D：一种以3D热图体积作为输入的基于3D-CNN的骨骼动作识别方法，与GCN的方法相比
-<ul>
-<li>在学习时空特征方面更加有效</li>
-<li>对姿态估计的噪声更具有鲁棒性</li>
-<li>在交叉数据集中更具有泛化性</li>
-<li>在处理多人场景方面无需额外计算成本</li>
-</ul></li>
-<li>另外，更容易与其他模态结合，在八个多模态识别基准达到了SOTA</li>
-</ul>
-<h1 id="引言">引言</h1>
-<p>基于人体骨架的动作识别其动作聚焦性和紧凑性，近年来受到越来越多的关注。在实践中，视频中的人体骨架主要表示为一系列的关节坐标列表，其中的坐标由姿态估计器提取。GCN是最受欢迎的方法之一，具体地说，GCN将每个时间步长的每个人体关节视为一个节点，空间和时间维度上的相邻节点通过边连接起来，然后将图卷积层应用于所构建的图，以发现跨空间和时间的动作模式。</p>
-<p>基于GCN的方法在以下方面有局限性:</p>
-<ul>
-<li>鲁棒性：由于GCN直接处理关节坐标，坐标上的微小扰动通常导致完全不同的预测。</li>
-<li>互操作性：由于GCN是在骨架图上操作的，因此难以与其他模态结合。</li>
-<li>可扩展性：由于GCN将每个人体关节视为节点，因此涉及多人的场景中复杂性线性上升。</li>
-</ul>
-<p>本文提出了PoseConv3D，解决了GCN方法的局限性：</p>
-<ul>
-<li>使用3D热图表示骨架对姿态估计更具有鲁棒性，对不同方法获得的输入挂架具有很好的泛化能力</li>
-<li>依赖于热图表示，更容易与其他模态集成到多流网络</li>
-<li>热图表示的复杂度与人数无关，处理多人场景不会增加计算开销</li>
-</ul>
-<h1 id="网络结构">网络结构</h1>
-<h2 id="姿态提取的良好实践">姿态提取的良好实践</h2>
-<p>人体骨骼或姿态提取是基于骨骼的动作识别的重要预处理步骤，对最终的识别精度有很大影响。</p>
-<p>一般来说2D姿势比3D姿势效果更好，如下图。与自底向上的方法相比，自顶向下的方法在标准基准(如coco
--关键点)上获得了优越的性能。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png"
-alt="image-20220923200807607" />
-<figcaption aria-hidden="true">image-20220923200807607</figcaption>
-</figure>
-<h3 id="消融实验">消融实验</h3>
-<p>作者设计了一系列采用的不同的替代方法的姿态提取的消融实验。以下的3D-CNN实验的输入均为<span
-class="math inline">\(T*H*W=48*56*56\)</span></p>
-<h4 id="d-v.s.-3d-骨架">2D v.s. 3D 骨架</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923201902224.png"
-alt="image-20220923201902224" />
-<figcaption aria-hidden="true">image-20220923201902224</figcaption>
-</figure>
-<p>使用MS-G3D（用于基于骨骼的动作识别的当前最先进的GCN），对2D和3D关键点具有相同的配置和训练计划，结果如上表。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923204038409.png"
-alt="image-20220923204038409" />
-<figcaption aria-hidden="true">image-20220923204038409</figcaption>
-</figure>
-<p>除了基于rgb的3d位姿估计方法，还考虑了“提升”方法，直接“提升”2d姿势(序列)到3d姿势(序列)，基于HRNet提取的2D姿态对3D姿态进行回归，利用提升后的3D姿态进行动作识别。上表的结果表明，这种被提升的3D姿势没有提供任何额外的信息，在动作识别方面的表现甚至比原始的2D姿势更差。</p>
-<h4 id="bottom-up-v.s.-top-down.">Bottom-Up v.s. Top-Down.</h4>
-<p><img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210128369.png" /></p>
-<p>作者用相同的主干实例化这两种方法(HRNet-w32)。此外，作者还用MobileNet-v2骨干网实例化自顶向下方法进行比较，它在coco验证方面的性能与HRNet(自底向上)相似。上表的结果显示，HRNet(自下而上)在COCO-val上的性能远低于HRNet(自顶向下)，接近于MobileNet(自顶向下)。</p>
-<h4 id="interested-person-v.s.-all-persons.">Interested Person v.s. All
-Persons.</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210416469.png"
-alt="image-20220923210416469" />
-<figcaption aria-hidden="true">image-20220923210416469</figcaption>
-</figure>
-<p>很多人可能存在于一个视频中，但并不是所有人都与感兴趣的动作有关。作者使用3种人物边界框进行姿态提取：Detection，Tracking（使用Siamese-RPN)和GT(对运动员的关注增加)。从上表的结果可以得到当事人的先验是极其重要的，即使是较弱的先验知识(每个视频1
-个GT box)也能大大提高性能。</p>
-<h4 id="coordinates-v.s.-heatmaps">Coordinates v.s. Heatmaps</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923211126851.png"
-alt="image-20220923211126851" />
-<figcaption aria-hidden="true">image-20220923211126851</figcaption>
-</figure>
-<p>存储3D热图可能会占用大量磁盘空间。为提升效率，将每个 2D
-关键点存储为坐标 (x, y, score)，其中 score 为预测的置信度。在 FineGYM
-上进行了实验，以估计这种热图 →
-坐标的压缩会带来多大信息损失。作者发现，在使用高质量特征提取器的情况下，使用坐标作为输入，动作识别的精度仅有少量下降
-(0.4%)。因此在后续工作中，作者以坐标的格式来存储提取出的 2D 姿态。</p>
-<h2 id="从2d姿势生成3d热图">从2D姿势生成3D热图</h2>
-<p>论文用大小为<span
-class="math inline">\(K*H*W\)</span>的热图来表示二维姿势,其中K是关节点的数量，H和W是框架的高度和宽度。如果只有coordinate-triplets<span
-class="math inline">\((x_k; y_k;
-c_k)\)</span>,可以通过组合以每个关节为中心的K个高斯映射来得到一个关节热图J:</p>
-<p><span class="math inline">\(\boldsymbol{J}_{k i
-j}=e^{-\frac{\left(i-x_{k}\right)^{2}+\left(j-y_{k}\right)^{2}}{2 *
-\sigma^{2}}} * c_{k}\)</span></p>
-<p>其中<span
-class="math inline">\(\sigma\)</span>控制高斯映射的方差，<span
-class="math inline">\((x_k, y_k)\)</span>和<span
-class="math inline">\(c_k\)</span>分别是第k个关节的位置和置信度分数，还可以创建limb热图：</p>
-<p><span class="math inline">\(\boldsymbol{L}_{k i
-j}=e^{-\frac{\mathcal{D}\left((i, j), s e g\left[a_{k},
-b_{k}\right]\right)^{2}}{2 * \sigma^{2}}} * \min \left(c_{a_{k}},
-c_{b_{k}}\right)\)</span></p>
-<p>第k个limb是在两个关节<span class="math inline">\(a_k\)</span>和<span
-class="math inline">\(b_k\)</span>之间。函数D计算从点<span
-class="math inline">\((i,J)\)</span>到段<span
-class="math inline">\(\left[\left(x_{a_{k}},
-y_{a_{k}}\right),\left(x_{b_{k}},
-y_{b_{k}}\right)\right]\)</span>的距离。值得注意的是，尽管上述过程假设每一帧中都有一个人，但可以很容易地将其扩展到多人的情况，在这里直接累积所有人的第k个高斯映射，而无需放大热图。最后，一个3D热图堆叠是通过将所有热图(<span
-class="math inline">\(J\)</span>或<span
-class="math inline">\(L\)</span>)沿时间维度堆叠而得到的，因此形状会是<span
-class="math inline">\(K \times T \times H \times W\)</span></p>
-<p>实际应用中，作者使用了两种方法来尽可能减少 3D
-热图堆叠中的冗余，使其更紧凑</p>
-<ol type="1">
-<li>Subjects-Centered Cropping</li>
-</ol>
-<p>使热图与帧一样大是低效的，特别是当相关人员只在一个小区域活动时。在这种情况，先找到能够囊括了所有的2D姿势的边界框，然后根据找到的框裁剪所有帧，并将它们调整为目标大小。这样的话，2D姿势以及它们的移动能被保存，且使得三维热图体积的大小可以在空间上缩小。</p>
-<ol start="2" type="1">
-<li>Uniform Sampling.</li>
-</ol>
-<p>通过对帧的子集进行采样，还可以沿时间维减小3D热图的体积。具体来说，为从视频中采样n帧，将视频分成n个等长的片段，并从每个片段中随机选择一帧。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924200056400.png"
-alt="image-20220924200056400" />
-<figcaption aria-hidden="true">image-20220924200056400</figcaption>
-</figure>
-<h2
-id="用于基于骨架的动作识别的3d-cnn">用于基于骨架的动作识别的3D-CNN</h2>
-<h3 id="poseconv3d">PoseConv3D</h3>
-<p>PoseConv3D以3D热图堆叠作为输入，可以用各种3D-
-cnn的backbone实例化。与一般的3D-CNN网络相比，需要添加两个修改：（1）由于3D热图体积的空间分辨率不需要像RGB剪辑那么大，因此在3D-
-cnn中删除了早期阶段的下采样操作；（2）由于采用的3D热图已经是中级特征，因此一个更浅(更少层)和更薄(更少通道)的网络对于PoseConv3D已经足够了。基于这些改动，作者采用了三种著名的3D-CNN：C3D，SlowOnly和X3D</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924164508040.png"
-alt="image-20220924164508040" />
-<figcaption aria-hidden="true">image-20220924164508040</figcaption>
-</figure>
-<p>如下表所示，采用轻量级版本的3d -
-cnn可以显著降低计算复杂度，但识别性能略有下降。而SlowOnly直接从Resnet膨胀而来而且具有良好的识别性能，作者将其作为Backbone。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924183705271.png"
-alt="image-20220924183705271" />
-<figcaption aria-hidden="true">image-20220924183705271</figcaption>
-</figure>
-<h3 id="rgbpose-conv3d">RGBPose-Conv3D</h3>
-<p>作者提出RGBPose-Conv3D用于早期的人体骨骼和RGB帧的融合，有两条通路分别处理RGB模态和Pose模态。总的来说，RGBPose-Conv3D的架构遵循几个原则：（1）相比于RGB流，Pose流具有较小的通道宽度和较小的深度，以及更小的输入空间分辨率；（2）加了Early
-Fusion，增加了两个通路之间的双向横向连接，促进两种模式之间的早期特征融合。RGBPose-
-Conv3D分别使用每个通路的两个单独损失进行训练，因为联合从两种模态学习的单个损失会导致严重的过拟合。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924195658960.png"
-alt="image-20220924195658960" />
-<figcaption aria-hidden="true">image-20220924195658960</figcaption>
-</figure>
-<h1 id="实验">实验</h1>
 
       
     </div>
