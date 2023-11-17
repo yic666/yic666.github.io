@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -163,6 +163,438 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/13/TimesFormer%E4%B8%8EViViT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/13/TimesFormer%E4%B8%8EViViT/" class="post-title-link" itemprop="url">TimeSFormer与ViViT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-03-13 12:24:22" itemprop="dateCreated datePublished" datetime="2023-03-13T12:24:22+08:00">2023-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-03-22 13:09:57" itemprop="dateModified" datetime="2023-03-22T13:09:57+08:00">2023-03-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="timesformer">TimeSFormer</h1>
+<p>paper: https://arxiv.org/abs/2102.05095</p>
+<p>code: https://github.com/facebookresearch/TimeSformer</p>
+<h2 id="摘要">摘要</h2>
+<p>我们提出了一种基于空间和时间上的自注意力机制的无卷积视频分类方法。我们的方法，命名为“TimeSformer”，通过从一系列帧级别的图像块直接进行时空特征学习，将标准的Transformer架构适应到视频上。我们的实验研究比较了不同的自注意力方案，并发现“分割注意力”架构，在每个网络块中分别应用时间注意力和空间注意力，能够在我们考虑的设计选择中获得最佳的视频分类准确率。尽管设计完全不同，TimeSformer在几个动作识别基准上都达到了最先进的结果，包括在Kinetics-400和Kinetics-600上获得了最佳的准确率。最后，与3D卷积网络相比，我们的模型训练速度更快，可以实现更高的测试效率（以较小的准确率损失为代价），并且可以应用于更长的视频片段（超过一分钟）。</p>
+<h2 id="整体架构">整体架构</h2>
+<p><strong>输入视频</strong>：TimeSformer的输入为<span
+class="math inline">\(X \in \mathbb{R}^{H \times W \times 3 \times
+F}\)</span>，表示<span class="math inline">\(F\)</span>个size为$HW
+$的RGB帧。</p>
+<p><strong>转换为Patch</strong>：与ViT一样，将每一帧分解为N个不重叠的Patch，每一个patch的大小都为<span
+class="math inline">\(P \times P\)</span>，因此<span
+class="math inline">\(N = HW/P^2\)</span>。把patch展开为向量<span
+class="math inline">\(\mathbf{x}_{(p, t)} \in \mathbb{R}^{3
+P^{2}}\)</span>，其中<span class="math inline">\(p = 1, \dots ,
+N\)</span>表示空间位置，<span class="math inline">\(t = 1, \dots
+,F\)</span>为时间帧的索引。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PatchEmbed</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Image to Patch Embedding</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, img_size=<span class="number">224</span>, patch_size=<span class="number">16</span>, in_chans=<span class="number">3</span>, embed_dim=<span class="number">768</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        img_size = to_2tuple(img_size)</span><br><span class="line">        patch_size = to_2tuple(patch_size)</span><br><span class="line">        num_patches = (img_size[<span class="number">1</span>] // patch_size[<span class="number">1</span>]) * (img_size[<span class="number">0</span>] // patch_size[<span class="number">0</span>])</span><br><span class="line">        self.img_size = img_size</span><br><span class="line">        self.patch_size = patch_size</span><br><span class="line">        self.num_patches = num_patches</span><br><span class="line"></span><br><span class="line">        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">            B, C, T, H, W = x.shape</span><br><span class="line">            x = rearrange(x, <span class="string">&#x27;b c t h w -&gt; (b t) c h w&#x27;</span>)</span><br><span class="line">            x = self.proj(x) <span class="comment"># ((bt), dim, h//p, w//p)</span></span><br><span class="line">            W = x.size(-<span class="number">1</span>)</span><br><span class="line">            x = x.flatten(<span class="number">2</span>).transpose(<span class="number">1</span>, <span class="number">2</span>)<span class="comment"># ((bt), (hw)//(p^2), dim)</span></span><br><span class="line">            <span class="keyword">return</span> x, T, W</span><br></pre></td></tr></table></figure>
+<p><strong>Linear embedding</strong>：将<span
+class="math inline">\(\mathbf{x}_{(p, t)} \in \mathbb{R}^{3
+P^{2}}\)</span>线性映射到<span class="math inline">\(\mathbf{z}_{(p,
+t)}^{(0)} \in \mathbb{R}^{D}\)</span>： <span class="math display">\[
+\mathbf{z}_{(p, t)}^{(0)}=E \mathbf{x}_{(p, t)}+\mathbf{e}_{(p, t)}^{p o
+s}
+\]</span> 其中，<span class="math inline">\(E \in \mathbb{R}^{D \times 3
+P^{2}}\)</span>为可学习的线性映射系数矩阵，<span
+class="math inline">\(\mathbf{e}^{pos}_{(p,t)} \in \mathbb{R} ^
+D\)</span>为可学习的空间位置编码，<span
+class="math inline">\(\mathbf{z}_{(p, t)}\)</span>
+序列是Transformer的输入。与ViT一样，在序列的第一个位置加入一个可学习的向量<span
+class="math inline">\(\mathbf{z}_{(0, 0)}\)</span>作为cls-token。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">B = x.shape[<span class="number">0</span>]</span><br><span class="line">x, T, W = self.patch_embed(x)</span><br><span class="line">cls_tokens = self.cls_token.expand(x.size(<span class="number">0</span>), -<span class="number">1</span>, -<span class="number">1</span>)</span><br><span class="line">x = torch.cat((cls_tokens, x), dim=<span class="number">1</span>)</span><br><span class="line">x = x + self.pos_embed <span class="comment"># pose embeding</span></span><br></pre></td></tr></table></figure>
+<p><strong>QKV计算</strong>：Transformer包含<span
+class="math inline">\(L\)</span>层encoding
+blocks，每个block的query、key、value表达为 <span class="math display">\[
+\begin{array}{l}
+\mathbf{q}_{(p, t)}^{(\ell, a)}=W_{Q}^{(\ell, a)}
+\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
+\mathbb{R}^{D_{h}} \\
+\mathbf{k}_{(p, t)}^{(\ell, a)}=W_{K}^{(\ell, a)}
+\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
+\mathbb{R}^{D_{h}} \\
+\mathbf{v}_{(p, t)}^{(\ell, a)}=W_{V}^{(\ell, a)}
+\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
+\mathbb{R}^{D_{h}}
+\end{array}
+\]</span> 其中，<span class="math inline">\(a = 1 ,
+\dots,A\)</span>代表注意力头的数量，<span
+class="math inline">\(D_h\)</span>代表每个head的维度</p>
+<p><strong>自注意力计算</strong>：对于自注意力计算部分，论文给出了五种不同的方式，将在下一节详细介绍。对于query
+patch<span class="math inline">\((p,t)\)</span>的自注意力权重<span
+class="math inline">\(\boldsymbol{\alpha}_{(p, t)}^{(\ell, a)} \in
+\mathbb{R}^{N F+1}\)</span>通用的给出如下： <span
+class="math display">\[
+\boldsymbol{\alpha}_{(p, t)}^{(\ell,
+a)}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
+a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
+a)}\left\{\mathbf{k}_{\left(p^{\prime}, t^{\prime}\right)}^{(\ell,
+a)}\right\}_{\substack{p^{\prime}=1, \ldots, N \\ t^{\prime}=1, \ldots,
+F}}\right]\right)
+\]</span> <strong>编码</strong>：第<span
+class="math inline">\(\ell\)</span>个编码<span
+class="math inline">\(\mathbf{z}_{(p,
+t)}^{(\ell)}\)</span>是利用每个注意头的自注意系数计算值向量的加权和得到：
+<span class="math display">\[
+\mathbf{s}_{(p, t)}^{(\ell, a)}=\alpha_{(p, t),(0,0)}^{(\ell, a)}
+\mathbf{v}_{(0,0)}^{(\ell, a)}+\sum_{p^{\prime}=1}^{N}
+\sum_{t^{\prime}=1}^{F} \alpha_{(p, t),\left(p^{\prime},
+t^{\prime}\right)}^{(\ell, a)} \mathbf{v}_{\left(p^{\prime},
+t^{\prime}\right)}^{(\ell, a)}
+\]</span>
+然后，将来自所有head的这些向量的拼接映射并通过MLP，这两个操作都具有残差连接：
+<span class="math display">\[
+\begin{array}{l}
+\mathbf{z}_{(p, t)}^{\prime(\ell)}=W_{O}\left[\begin{array}{c}
+\mathbf{s}_{(p, t)}^{(\ell, 1)} \\
+\vdots \\
+\mathbf{s}_{(p, t)}^{(\ell, \mathcal{A})}
+\end{array}\right]+\mathbf{z}_{(p, t)}^{(\ell-1)} \\
+\mathbf{z}_{(p,
+t)}^{(\ell)}=\operatorname{MLP}\left(\operatorname{LN}\left(\mathbf{z}_{(p,
+t)}^{\prime(\ell)}\right)\right)+\mathbf{z}_{(p, t)}^{\prime(\ell)} .
+\end{array}
+\]</span> <strong>分类 embedding</strong> 取出cls-token用作最终的分类：
+<span class="math display">\[
+y = MLP(LN(\mathbf{z}^{(L)}_{(0, 0)}))
+\]</span></p>
+<h2 id="自注意力机制">自注意力机制</h2>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230313191932395.png"
+alt="论文研究的视频自注意力块" />
+<figcaption aria-hidden="true">论文研究的视频自注意力块</figcaption>
+</figure>
+<p>通过对输入图像进行分块，论文中一共研究了五种不同的注意力机制：</p>
+<ol type="1">
+<li>空间注意力机制（S)：只取同一帧内的图像块进行自注意力机制</li>
+<li>时空共同注意力机制（ST）：取所有帧中的所有图像块进行注意力机制</li>
+<li>分开的时空注意力机制（T+S）：先对同一帧中的所有图像块进行自注意力机制，然后对不同帧中<strong>对应位置</strong>的图像块进行注意力机制</li>
+<li>稀疏局部全局注意力机制（L+G）：先利用所有帧中，相邻的 H/2 和 W/2
+的图像块计算局部的注意力，然后在空间上，使用2个图像块的步长，在整个序列中计算自注意力机制，这个可以看做全局的时空注意力更快的近似</li>
+<li>轴向的注意力机制（T+W+H）：先在时间维度上进行自注意力机制，然后在纵坐标相同的图像块上进行自注意力机制，最后在横坐标相同的图像块上进行自注意力机制</li>
+</ol>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230313192113759.png"
+alt="论文研究的五种时空自注意力机制方案的可视化" />
+<figcaption
+aria-hidden="true">论文研究的五种时空自注意力机制方案的可视化</figcaption>
+</figure>
+<h3 id="space-attention">Space Attention</h3>
+<p>Space
+Attention就是标准的Transformer结构，只计算空间注意力，跟ViT一样，只有<span
+class="math inline">\(N+1\)</span>个query-key对。 <span
+class="math display">\[
+\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { space
+}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
+a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
+a)}\left\{\mathbf{k}_{\left(p^{\prime}, t\right)}^{(\ell,
+a)}\right\}_{p^{\prime}=1, \ldots, N}\right]\right)
+\]</span> 代码部分，向量加上空间位置编码后，就可以输入到Attention
+blocks，而由于在转换patch的时候batchsize和t是并在一起的，所以需要转换回去，并多帧取平均。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Attention blocks</span></span><br><span class="line"><span class="keyword">for</span> blk <span class="keyword">in</span> self.blocks:</span><br><span class="line">    x = blk(x, B, T, W)</span><br><span class="line"></span><br><span class="line"><span class="comment">### Predictions for space-only baseline</span></span><br><span class="line"><span class="keyword">if</span> self.attention_type == <span class="string">&#x27;space_only&#x27;</span>:</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b t) n m -&gt; b t n m&#x27;</span>,b=B,t=T)</span><br><span class="line">    x = torch.mean(x, <span class="number">1</span>) <span class="comment"># averaging predictions for every frame</span></span><br></pre></td></tr></table></figure>
+<p>self.blocks如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">num_spatial_tokens = (x.size(<span class="number">1</span>) - <span class="number">1</span>) // T</span><br><span class="line">H = num_spatial_tokens // W</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> self.attention_type <span class="keyword">in</span> [<span class="string">&#x27;space_only&#x27;</span>, <span class="string">&#x27;joint_space_time&#x27;</span>]:</span><br><span class="line">    x = x + self.drop_path(self.attn(self.norm1(x)))</span><br><span class="line">    x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h3 id="joint-space-time-attention">Joint Space-Time Attention</h3>
+<p><span class="math display">\[
+\boldsymbol{\alpha}_{(p, t)}^{(\ell,
+a)}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
+a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
+a)}\left\{\mathbf{k}_{\left(p^{\prime}, t^{\prime}\right)}^{(\ell,
+a)}\right\}_{\substack{p^{\prime}=1, \ldots, N \\ t^{\prime}=1, \ldots,
+F}}\right]\right)
+\]</span></p>
+<p>Joint Space-Time
+Attention需要在输入Transformer前先加上TimeEmbeeding，相关代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Time Embeddings</span></span><br><span class="line"><span class="keyword">if</span> self.attention_type != <span class="string">&#x27;space_only&#x27;</span>:</span><br><span class="line">    cls_tokens = x[:B, <span class="number">0</span>, :].unsqueeze(<span class="number">1</span>)</span><br><span class="line">    x = x[:,<span class="number">1</span>:]</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b t) n m -&gt; (b n) t m&#x27;</span>,b=B,t=T)</span><br><span class="line">	x = x + self.time_embed</span><br><span class="line">    x = self.time_drop(x)</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b n) t m -&gt; b (n t) m&#x27;</span>,b=B,t=T)</span><br><span class="line">    x = torch.cat((cls_tokens, x), dim=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="divided-space-time-attention">Divided Space-Time Attention</h3>
+<p>对于Divided Space-Time Attention，先计算时间自注意力如下： <span
+class="math display">\[
+\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { time
+}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
+a)^{\top}}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
+a)}\left\{\mathbf{k}_{\left(p, t^{\prime}\right)}^{(\ell,
+a)}\right\}_{t^{\prime}=1, \ldots, F}\right]\right)
+\]</span>
+得到时间注意力权重后，同样经过编码的操作，但不通过MLP，得到时间编码<span
+class="math inline">\(z&#39;^{(\ell )time}_{(p,t)}\)</span>。</p>
+<p>通过时间编码可计算出响应的Q、K、V，计算空间自注意力如下： <span
+class="math display">\[
+\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { space
+}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
+a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
+a)}\left\{\mathbf{k}_{\left(p^{\prime}, t\right)}^{(\ell,
+a)}\right\}_{p^{\prime}=1, \ldots, N}\right]\right)
+\]</span> 这样得到的自注意力权重就会包含时空信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elif</span> self.attention_type == <span class="string">&#x27;divided_space_time&#x27;</span>:</span><br><span class="line">    <span class="comment">## Temporal</span></span><br><span class="line">    xt = x[:,<span class="number">1</span>:,:]</span><br><span class="line">    xt = rearrange(xt, <span class="string">&#x27;b (h w t) m -&gt; (b h w) t m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res_temporal = self.drop_path(self.temporal_attn(self.temporal_norm1(xt)))</span><br><span class="line">    res_temporal = rearrange(res_temporal, <span class="string">&#x27;(b h w) t m -&gt; b (h w t) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res_temporal = self.temporal_fc(res_temporal)</span><br><span class="line">    xt = x[:,<span class="number">1</span>:,:] + res_temporal</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Spatial</span></span><br><span class="line">    init_cls_token = x[:,<span class="number">0</span>,:].unsqueeze(<span class="number">1</span>)</span><br><span class="line">    cls_token = init_cls_token.repeat(<span class="number">1</span>, T, <span class="number">1</span>)</span><br><span class="line">    cls_token = rearrange(cls_token, <span class="string">&#x27;b t m -&gt; (b t) m&#x27;</span>,b=B,t=T).unsqueeze(<span class="number">1</span>)</span><br><span class="line">    xs = xt</span><br><span class="line">    xs = rearrange(xs, <span class="string">&#x27;b (h w t) m -&gt; (b t) (h w) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    xs = torch.cat((cls_token, xs), <span class="number">1</span>)</span><br><span class="line">    res_spatial = self.drop_path(self.attn(self.norm1(xs)))</span><br><span class="line"></span><br><span class="line">    <span class="comment">### Taking care of CLS token</span></span><br><span class="line">    cls_token = res_spatial[:,<span class="number">0</span>,:]</span><br><span class="line">    cls_token = rearrange(cls_token, <span class="string">&#x27;(b t) m -&gt; b t m&#x27;</span>,b=B,t=T)</span><br><span class="line">    cls_token = torch.mean(cls_token,<span class="number">1</span>,<span class="literal">True</span>) <span class="comment">## averaging for every frame</span></span><br><span class="line">    res_spatial = res_spatial[:,<span class="number">1</span>:,:]</span><br><span class="line">    res_spatial = rearrange(res_spatial, <span class="string">&#x27;(b t) (h w) m -&gt; b (h w t) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res = res_spatial</span><br><span class="line">    x = xt</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Mlp</span></span><br><span class="line">    x = torch.cat((init_cls_token, x), <span class="number">1</span>) + torch.cat((cls_token, res), <span class="number">1</span>)</span><br><span class="line">    x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h1 id="vivit">ViViT</h1>
+<p>paper: https://arxiv.org/abs/2103.15691</p>
+<p>code:
+https://github.com/google-research/scenic/tree/main/scenic/projects/vivit</p>
+<h2 id="摘要-1">摘要</h2>
+<p>这篇文章介绍了一种基于纯变换器的视频分类模型，该模型受到图像分类中此类模型的最近成功的启发。为了有效处理视频中可能遇到的大量时空token，我们提出了几种沿着空间和时间维度分解我们模型的方法，以提高效率和可扩展性。此外，为了在较小的数据集上有效地训练我们的模型，我们展示了如何在训练过程中对模型进行正则化并利用预训练的图像模型。我们进行了彻底的消融研究，并在多个视频分类基准测试中取得了最先进的结果，包括
+Kinetics 400 和 600、Epic Kitchens、Something-Something v2 和 Moments in
+Time，优于基于深度 3D 卷积网络的先前方法。</p>
+<h2 id="vit概述">ViT概述</h2>
+<p>视觉变换器 (ViT) 适应了变换器架构，以最小的改动来处理2D图像。
+具体来说，ViT 提取 <span class="math inline">\(N\)</span>
+个不重叠的图像块，<span class="math inline">\(x_i \in \mathbb{R}^{h
+\times w}\)</span>，执行线性投影，然后将它们栅格化为1Dtoken <span
+class="math inline">\(z_i \in
+\mathbb{R}^d\)</span>。输入到下面的变换器编码器的token序列为 <span
+class="math display">\[
+\mathbf{z} = [z_{cls}, \mathbf{E}x_1, \mathbf{E}x_2, \ldots ,
+\mathbf{E}x_N] + \mathbf{p}
+\]</span> 其中，<span class="math inline">\(\mathbf{E}\)</span>
+的投影相当于2D卷积。一个可选的学习分类token <span
+class="math inline">\(z_{cls}\)</span>
+被添加到这个序列的前面，它在编码器的最后一层的表示作为分类层使用的最终表示。
+此外，一个学习位置嵌入，<span class="math inline">\(\mathbf{p} \in
+\mathbb{R}^{N \times
+d}\)</span>，被添加到token中以保留位置信息，因为变换器中后续的自注意力操作是排列不变的。
+然后将token传递到由 <span class="math inline">\(L\)</span>
+个变换器层组成的编码器中。 每一层 <span
+class="math inline">\(\ell\)</span> 都包括多头自注意力、层归一化 (LN) 和
+MLP 块，如下所示： <span class="math display">\[
+\mathbf{y}^{\ell} = \text{MSA}(\text{LN}(\mathbf{z}^\ell))
++\mathbf{z}^\ell  \\
+\mathbf{z}^{\ell + 1} = \text{MLP}(\text{LN}(\mathbf{y}^\ell)) +
+\mathbf{y}^\ell
+\]</span> MLP 由两个线性投影组成，它们之间由 GELU 非线性分隔，token维度
+<span class="math inline">\(d\)</span> 在所有层中保持不变。
+最后，使用线性分类器根据 <span class="math inline">\(z_{cls}^L \in
+\mathbb{R}^d\)</span>
+对编码输入进行分类，如果它被添加到输入的前面，或者对所有token进行全局平均池化
+<span class="math inline">\(\mathbf{z}^{L}\)</span>。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314154425261.png"
+alt="ViViT架构" />
+<figcaption aria-hidden="true">ViViT架构</figcaption>
+</figure>
+<h2 id="视频片段-embeeding">视频片段 Embeeding</h2>
+<p>论文给出了两种方法把视频<span class="math inline">\(\mathbf{V} \in
+\mathbb{R}^{T \times H \times W \times
+C}\)</span>映射到一个token序列<span
+class="math inline">\(\mathbf{\tilde{z}} \in \mathbb{R}^{n_t \times n_h
+\times n_w \times d}\)</span>，接着加上位置embedding并reshape为<span
+class="math inline">\(\mathbb{R}^{N \times
+d}\)</span>以得到transformer的输入<span
+class="math inline">\(\mathbf{z}\)</span>。</p>
+<h3 id="uniform-frame-sampling">Uniform frame sampling</h3>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314162311574.png"
+alt="Uniform frame sampling" />
+<figcaption aria-hidden="true">Uniform frame sampling</figcaption>
+</figure>
+<p>如图所示，标记输入视频的一种简单方法是从输入视频剪辑中均匀采样 <span
+class="math inline">\(n_t\)</span> 帧，使用与 ViT 相同的方法独立嵌入每个
+2D 帧，并将所有这些token连接在一起。 具体地，如果从每个帧中提取 <span
+class="math inline">\(n_h \cdot n_w\)</span> 个不重叠的图像块，则总共有
+<span class="math inline">\(n_t \cdot n_h \cdot n_w\)</span>
+个token将通过变换器编码器转发。
+直观地，这个过程可以看作是简单地构造一个大的 2D 图像来按照 ViT
+进行标记。 这种方法跟TimeSformer的一样。</p>
+<h3 id="tubelet-embedding">Tubelet embedding</h3>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314162920579.png"
+alt="Tubelet embedding" />
+<figcaption aria-hidden="true">Tubelet embedding</figcaption>
+</figure>
+<p>另一种方法，如图所示，是从输入体积中提取不重叠的时空“tubes”，并将其线性投影到
+<span class="math inline">\(\mathbb{R}^d\)</span>。 这种方法是 ViT
+embedding的 3D 扩展，类似于 3D 卷积。 对于一个维度为 <span
+class="math inline">\(t \times h \times w\)</span> 的tubelet，<span
+class="math inline">\(n_t =
+\left\lfloor\frac{T}{t}\right\rfloor\)</span>，<span
+class="math inline">\(n_h =
+\left\lfloor\frac{H}{h}\right\rfloor\)</span> 和 <span
+class="math inline">\(n_w =
+\left\lfloor\frac{W}{w}\right\rfloor\)</span>，分别从时间、高度和宽度维度提取token。
+较小的tubelet尺寸因此会导致更多的token，增加了计算量。直观地说，这种方法在标记过程中融合了时空信息，而与“均匀帧采样”不同，在那里来自不同帧的时间信息由变换器融合。</p>
+<h2 id="视频transformer-模型">视频Transformer 模型</h2>
+<h3 id="model-1-spatio-temporal-attention">Model 1: Spatio-temporal
+attention</h3>
+<p>这个模型跟TimeSformer中的Joint Space-Time
+Attention基本一致，简单地将所有的时空token<span
+class="math inline">\(\mathbf{z}^{0}\)</span>输入到Transformer的编码器。而由于token的数量会随着采样帧的变多而变多，这样就会带来更大的计算复杂度。</p>
+<h3 id="model-2-factorised-encoder">Model 2: Factorised encoder</h3>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314170832424.png"
+alt="Model 2: Factorised encoder" />
+<figcaption aria-hidden="true">Model 2: Factorised encoder</figcaption>
+</figure>
+<p>如图所示，该模型由两个独立的Transformer编码器组成。首先是空间编码器，仅以同一帧中提取的token为输入在<span
+class="math inline">\(L_s\)</span>层后获得每帧的表示。<span
+class="math inline">\(z_{cls}^{L_s}\)</span>是空间编码的cls-token，用于表达的空间特征。将每帧的特征cat以得到<span
+class="math inline">\(\mathbf{H} \in \mathbb{R}^{n_t \times
+d}\)</span>输入到<span
+class="math inline">\(L_t\)</span>个Transformer组成的时间编码器，以建模来自不同帧的token之间的特征交互，最后该编码器的cls-token用于分类。相比于模型1，计算复杂度从<span
+class="math inline">\(\mathcal{O}((n_t \cdot n_h \cdot
+n_w)^2)\)</span>减低到<span class="math inline">\(\mathcal{O}({(n_h
+\cdot n_w)^2 + n_t^2)}\)</span> 。</p>
+<p>代码来自https://github.com/rishikksh20/ViViT-pytorch/blob/master/vivit.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.to_patch_embedding(x)</span><br><span class="line">    b, t, n, _ = x.shape</span><br><span class="line">    cls_space_tokens = repeat(self.space_token, <span class="string">&#x27;() n d -&gt; b t n d&#x27;</span>, b = b, t=t) <span class="comment"># 按维度扩展</span></span><br><span class="line">    x = torch.cat((cls_space_tokens, x), dim=<span class="number">2</span>)</span><br><span class="line">    x += self.pos_embedding[:, :, :(n + <span class="number">1</span>)]</span><br><span class="line">    x = self.dropout(x)</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b t n d -&gt; (b t) n d&#x27;</span>)</span><br><span class="line">    x = self.space_transformer(x)</span><br><span class="line">    x = rearrange(x[:, <span class="number">0</span>], <span class="string">&#x27;(b t) ... -&gt; b t ...&#x27;</span>, b=b) <span class="comment">#提取每帧计算得到的cls-token</span></span><br><span class="line">    cls_temporal_tokens = repeat(self.temporal_token, <span class="string">&#x27;() n d -&gt; b n d&#x27;</span>, b=b)</span><br><span class="line">    x = torch.cat((cls_temporal_tokens, x), dim=<span class="number">1</span>)</span><br><span class="line">    x = self.temporal_transformer(x)        </span><br><span class="line">    x = x.mean(dim = <span class="number">1</span>) <span class="keyword">if</span> self.pool == <span class="string">&#x27;mean&#x27;</span> <span class="keyword">else</span> x[:, <span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> self.mlp_head(x)</span><br></pre></td></tr></table></figure>
+<h3 id="model-3-factorised-self-attention">Model 3: Factorised
+self-attention</h3>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314203922539.png"
+alt="Model 3: Factorised self-attention" />
+<figcaption aria-hidden="true">Model 3: Factorised
+self-attention</figcaption>
+</figure>
+<p>模型3与TimeSFormer的Divided
+Space-Time基本一致，不同的是没有使用cls-token，以避免在空间和时间维度之间重新构造输入token时产生歧义，而且他们的方法验证出无论是先空间自注意力还是时间自注意力结果是一样的。</p>
+<h3 id="model-4-factorised-dot-product-attention">Model 4: Factorised
+dot-product attention</h3>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314204755483.png"
+alt="Model 4: Factorised dot-product attention" />
+<figcaption aria-hidden="true">Model 4: Factorised dot-product
+attention</figcaption>
+</figure>
+<p>模型4一个与模型2和模型3具有相同计算复杂度的模型，同时保留了与未分解的模型1相同的参数数量。具体而言，模型4采用了不同的注意力头分别在空间和时间维度上计算每个token的注意权重，自注意操作被定义为
+<span class="math display">\[
+Attention(\mathbf{Q}, \mathbf{K}, \mathbf{V}) =
+Softmax\left(\frac{\mathbf{Q} \mathbf{K}^\top}{\sqrt{d_k}} \right)
+\mathbf{V}. \label{eq:selfattn}
+\]</span> 在自注意力中，查询<span class="math inline">\(\mathbf{Q} =
+\mathbf{X} \mathbf{W}_q\)</span>，键<span
+class="math inline">\(\mathbf{K} = \mathbf{X}
+\mathbf{W}_k\)</span>和值<span class="math inline">\(\mathbf{V}=
+\mathbf{X} \mathbf{W}_v\)</span>是输入<span
+class="math inline">\(\mathbf{X}\)</span>的线性投影，其中<span
+class="math inline">\(\mathbf{X}, \mathbf{Q}, \mathbf{K}, \mathbf{V} \in
+\mathbb{R}^{N \times d}\)</span>。
+注意，在未分解的情况下（模型1），空间和时间维度合并为<span
+class="math inline">\(N = n_t \cdot n_h \cdot n_w\)</span>。</p>
+<p>这里的主要思想是通过构造<span class="math inline">\(\mathbf{K}_s,
+\mathbf{V}_s \in \mathbb{R}^{n_h \cdot n_w \times d}\)</span>和<span
+class="math inline">\(\mathbf{K}_t, \mathbf{V}_t \in \mathbb{R}^{n_t
+\times
+d}\)</span>，即与这些维度对应的键和值，修改每个查询的键和值，以仅关注来自相同空间和时间索引的令牌。然后，对于一半的注意力头，通过计算<span
+class="math inline">\(\mathbf{Y}_s = Attention(\mathbf{Q}, \mathbf{K}_s,
+\mathbf{V}_s)\)</span>来关注来自空间维度的token，对于其余部分，通过计算<span
+class="math inline">\(\mathbf{Y}_t = Attention(\mathbf{Q}, \mathbf{K}_t,
+\mathbf{V}_t)\)</span>来关注时间维度。</p>
+<p>鉴于只是为每个查询更改注意力邻域，注意力操作与未分解情况下具有相同的维度，即<span
+class="math inline">\(\mathbf{Y}_s, \mathbf{Y}_t \in\mathbb {R}^{N\times
+d}\)</span>。 然后通过连接它们并使用线性投影来组合多个头的输出， $
+=Concat（ _s, _t） _O $。</p>
+<p>代码来自：https://github.com/noureldien/vivit_pytorch/blob/master/modules/vivit.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward_space</span>(<span class="params">self, x</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    x: (b, t, n, d)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># hide time dimension into batch dimension</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b t n d -&gt; (b t) n d&#x27;</span>)  <span class="comment"># (bt, n, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># apply self-attention</span></span><br><span class="line">    out = self.forward_attention(x)  <span class="comment"># (bt, n, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># recover time dimension and merge it into space</span></span><br><span class="line">    out = rearrange(out, <span class="string">&#x27;(b t) n d -&gt; b (t n) d&#x27;</span>, t=t, n=n)  <span class="comment"># (b, tn, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward_time</span>(<span class="params">self, x</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    x: (b, t, n, d)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># hide time dimension into batch dimension</span></span><br><span class="line">    x = x.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>)  <span class="comment"># (b, n, t, d)</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b n t d -&gt; (b n) t d&#x27;</span>)  <span class="comment"># (bn, t, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># apply self-attention</span></span><br><span class="line">    out = self.forward_attention(x)  <span class="comment"># (bn, t, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># recover time dimension and merge it into space</span></span><br><span class="line">    out = rearrange(out, <span class="string">&#x27;(b n) t d -&gt; b (t n) d&#x27;</span>, t=t, n=n)  <span class="comment"># (b, tn, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># reshape to reveal dimensions of space and time</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b (t n) d -&gt; b t n d&#x27;</span>, t=t, n=n)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.attn_type == <span class="string">&#x27;space&#x27;</span>:</span><br><span class="line">        out = self.forward_space(x) <span class="comment"># (b, tn, d)</span></span><br><span class="line">    <span class="keyword">elif</span> self.attn_type == <span class="string">&#x27;time&#x27;</span>:</span><br><span class="line">        out = self.forward_time(x) <span class="comment"># (b, tn, d)</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Unknown attention type: %s&#x27;</span> % (self.attn_type))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="利用预训练模型进行初始化">利用预训练模型进行初始化</h2>
+<p>由于Transformer缺乏CNN那样的归纳偏置，因此往往需要大规模的数据集作为训练集。为了规避这个问题，类似于3D-CNN的方法用ImageNet上预训练的2D-CNN网络（如Resnet等），使用了在大规模图片数据集上预训练的ViT迁移到ViViT的方法。</p>
+<h3 id="positional-embeddings">Positional embeddings</h3>
+<p>位置嵌入<span
+class="math inline">\(\mathbf{p}\)</span>被添加到每个输入token。
+但是，视频模型比预训练的图像模型多<span
+class="math inline">\(n_t\)</span>倍的token。因此，通过将它们从<span
+class="math inline">\(\mathbb{R}^{n_w \cdot n_h \times
+d}\)</span>临时“重复”到<span class="math inline">\(\mathbb{R}^{n_t \cdot
+n_h \cdot n_w \times d}\)</span>来初始化位置嵌入。
+在初始化时，具有相同空间索引的所有token都具有相同的嵌入，然后进行微调。</p>
+<h3 id="embedding-weights-e">Embedding weights, E</h3>
+<p>当使用“tubelet embedding”token化方法时，<span
+class="math inline">\(\mathbf{E}\)</span>是一个3D张量，与预训练模型中的2D张量<span
+class="math inline">\(\mathbf{E}_{\text{image}}\)</span>相比。用于视频分类的从2D滤波器初始化3D卷积滤波器的常用方法是通过沿时间维度复制滤波器并对它们进行平均来“膨胀”它们，如I3D。
+<span class="math display">\[
+\mathbf{E} = \frac{1}{t}[\mathbf{E}_{\text{image}}, \ldots,
+\mathbf{E}_{\text{image}}, \ldots, \mathbf{E}_{\text{image}}].
+\]</span> 论文也提出了一种不一样的方式，称为“central frame
+initialisation”：除了中间帧，<span
+class="math inline">\(\mathbf{E}\)</span>的其他帧都使用0来初始化， <span
+class="math display">\[
+\mathbf{E} = [\mathbf{0}, \ldots,  \mathbf{E}_{\text{image}}, \ldots,
+\mathbf{0}].
+\]</span></p>
+<h3 id="transformer-weights-for-model-3">Transformer weights for Model
+3</h3>
+<p>模型3的结构设计，是独立的空间attention和时序attention，空间attention可以直接使用图像模型的pretrain，时序attention初始化为0。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
