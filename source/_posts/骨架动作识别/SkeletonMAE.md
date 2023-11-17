@@ -62,7 +62,7 @@ SkeletonMAE是一种不对称的编码器-解码器架构，包括一个编码�
 
 具体来说，我们将所有骨架关节及其拓扑结构嵌入到一个结构$\mathcal{G}$中，骨架结构和关节特征融合，得到关节序列矩阵$\mathbf{S}\in \mathbb{R}^{N\times T \times2}$。然后，将$\mathbf{S}$线性变换为$\mathbf{S}\in \mathbb{R}^{N\times T\times D}$，其中$D$是可学习的参数，我们经验性地将$T$和$D$设置为64。
 
-对于每个来自$\mathbf{S}$的骨架帧$\mathbf{X}\in \mathbb{R}^{N\times D}$，我们用$\mathcal{G} = (\mathcal{V},\mathbf{A},\mathbf{X})$表示一个骨架，其中\mathcal{V}=\left\{v_{1}, v_{2}, \ldots \ldots, v_{N}\right\}是包含所有骨架关节的节点集合，$N=|\mathcal{V}|$是关节的数量，这里$N=17$。$\mathbf{A} \in \left\{0,1\right \}^{N \times N}$是一个邻接矩阵，其中$\mathbf{A}_{i,j}=1$表示关节$i$和$j$在物理上相连接，否则为0。节点${v}_{i}$的特征表示为$\mathbf{x}{i}\in \mathbb{R}^{1 \times D}$。$\mathit{G}_{E}$和$\mathit{G}_{D}$分别表示GIN编码器和GIN解码器。
+对于每个来自$\mathbf{S}$的骨架帧$\mathbf{X}\in \mathbb{R}^{N\times D}$，我们用$\mathcal{G} = (\mathcal{V},\mathbf{A},\mathbf{X})$表示一个骨架，其中$\mathcal{V}=\left\{v_{1}, v_{2}, \ldots \ldots, v_{N}\right\}$是包含所有骨架关节的节点集合，$N=|\mathcal{V}|$是关节的数量，这里$N=17$。$\mathbf{A} \in \left\{0,1\right \}^{N \times N}$是一个邻接矩阵，其中$\mathbf{A}_{i,j}=1$表示关节$i$和$j$在物理上相连接，否则为0。节点${v}_{i}$的特征表示为$\mathbf{x}{i}\in \mathbb{R}^{1 \times D}$。$\mathit{G}_{E}$和$\mathit{G}_{D}$分别表示GIN编码器和GIN解码器。
 
 ### 骨骼关节掩蔽和重建
 
