@@ -28,10 +28,10 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;pdf&#x2F;10.1145&#x2F;3581783.3611900 code: https:&#x2F;&#x2F;github.com&#x2F;ElricXin&#x2F;Skeleton-MixFormer Skeleton-MixFormer: Multivariate Topology Representation for Skeleton-based Action Rec">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-11-04T11:35:47.000Z">
-<meta property="article:modified_time" content="2023-11-07T00:56:54.106Z">
+<meta property="article:modified_time" content="2023-11-17T06:39:43.960Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta name="twitter:card" content="summary">
 
 
@@ -141,7 +141,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -216,7 +216,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-07 08:56:54" itemprop="dateModified" datetime="2023-11-07T08:56:54+08:00">2023-11-07</time>
+      <time title="Modified: 2023-11-17 14:39:43" itemprop="dateModified" datetime="2023-11-17T14:39:43+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -224,7 +224,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
         </span>
     </span>
 
@@ -247,6 +247,7 @@ Skeleton-based Action Recognition</p>
 Transformer在各种视觉任务中表现出色，但在基于骨架的动作识别中遇到了瓶颈，并且不及先进的基于图卷积网络（GCN）的方法。其根本原因在于当前的骨架变换器依赖于完整通道的全局关节的自注意机制，忽略了通道内高度区分性的差异相关性，因此难以动态学习多变拓扑的表达。为解决这一问题，我们提出了Skeleton
 MixFormer，这是一种创新的时空架构，能够有效表示紧凑的骨架数据的物理相关性和时间交互性。该提议框架由两个基本组成部分组成：1）空间MixFormer。利用通道分组和混合注意力计算动态的多变拓扑关系。与全通道自注意方法相比，空间MixFormer更好地突出了通道组之间的区别以及关节邻接的可解释学习。2）时间MixFormer，包括多尺度卷积、时间变换器和顺序保持模块。多变时间模型确保了全局差异表达的丰富性，并实现了序列中关键间隔的区分，从而更有效地学习动作中的长期和短期依赖关系。我们的Skeleton
 MixFormer在四个标准数据集（NTU-60、NTU-120、NW-UCLA和UAV-Human）的七种不同设置上展现出最先进（SOTA）的性能。</p>
+<span id="more"></span>
 <h1 id="引言">引言</h1>
 <p>论文背景:
 人体动作识别是计算机多媒体处理领域中的一个基础且重要的课题，对于自动驾驶、视频监控、人机交互和端到端系统等领域提供可靠的以人为中心的动作分析结果。近年来，基于骨架的动作识别受到了广泛关注和发展。紧凑的骨架数据提供了人体关节的详细位置和运动信息，有助于构建时空运动并更加关注动作的基本特征。</p>
@@ -438,8 +439,8 @@ X_{T}^{M3}=X_{T}^{\prime}\cdot A_{T}^{m3}.
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
           </div>
 
         

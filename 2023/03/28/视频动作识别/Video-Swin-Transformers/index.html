@@ -28,7 +28,7 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2106.13230 code: https:&#x2F;&#x2F;github.com&#x2F;SwinTransformer&#x2F;Video-Swin-Transformer 摘要 视觉社区正在见证从CNN到Transformer的建模转变，其中纯Transformer架构在主要视频识别基准上获得了最高准确性。这些视频模型都建立在Transformer层上，它">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-28T11:49:09.000Z">
-<meta property="article:modified_time" content="2023-04-27T02:20:20.869Z">
+<meta property="article:modified_time" content="2023-11-17T06:57:34.022Z">
 <meta property="article:author" content="Yic-gdut">
 <meta property="article:tag" content="Transformer-based">
 <meta name="twitter:card" content="summary">
@@ -140,7 +140,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -215,7 +215,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-04-27 10:20:20" itemprop="dateModified" datetime="2023-04-27T10:20:20+08:00">2023-04-27</time>
+      <time title="Modified: 2023-11-17 14:57:34" itemprop="dateModified" datetime="2023-11-17T14:57:34+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -223,7 +223,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -243,6 +243,7 @@
 <p>视觉社区正在见证从CNN到Transformer的建模转变，其中纯Transformer架构在主要视频识别基准上获得了最高准确性。这些视频模型都建立在Transformer层上，它们在空间和时间维度上全局连接补丁。在本文中，我们反而提倡在视频变换器中引入局部性的归纳偏差，与先前计算全局自我关注甚至具有空间-时间因子分解的方法相比，这导致了更好的速度-准确性折衷。所提出的视频架构的局部性是通过适应为图像域设计的Swin
 Transformer实现的，同时继续利用预训练图像模型的能力。我们的方法在广泛的视频识别基准上实现了最先进的准确性，包括动作识别（Kinetics-400上84.9的top-1准确性和Kinetics-600上85.9的top-1准确性，预训练数据约少20倍，模型大小约小3倍）和时间建模（Something-Something
 v2上69.6的top-1准确性）。</p>
+<span id="more"></span>
 <h1 id="方法">方法</h1>
 <h2 id="总体架构">总体架构</h2>
 <p>Video Swin
@@ -265,15 +266,15 @@ Transformer块，该块是通过将标准Transformer层中的多头自注意(MSA
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329134824.png"
-alt="20230329134824" />
-<figcaption aria-hidden="true">20230329134824</figcaption>
+alt="Video Swin Transfromer" />
+<figcaption aria-hidden="true">Video Swin Transfromer</figcaption>
 </figure>
 <h2 id="基于3d移位窗口的msa模块">基于3D移位窗口的MSA模块</h2>
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329145740.png"
-alt="20230329145740" />
-<figcaption aria-hidden="true">20230329145740</figcaption>
+alt="3D移位窗口" />
+<figcaption aria-hidden="true">3D移位窗口</figcaption>
 </figure>
 <p><strong>非重叠3D窗口的多头注意力机制</strong>：直接扩展2D的方法去处理视频输入。给定一个由<span
 class="math inline">\(T’\)</span><span

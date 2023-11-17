@@ -28,12 +28,12 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2303.14474 摘要 许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，High">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-18T04:53:38.000Z">
-<meta property="article:modified_time" content="2023-08-23T07:48:02.404Z">
+<meta property="article:modified_time" content="2023-11-17T06:39:43.852Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
-<meta property="article:tag" content="CVPR2023">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="Transformer-based">
+<meta property="article:tag" content="CVPR2023">
 <meta property="article:tag" content="骨架">
 <meta name="twitter:card" content="summary">
 
@@ -148,7 +148,7 @@ Module</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -223,7 +223,7 @@ Module</span></a></li></ol></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-08-23 15:48:02" itemprop="dateModified" datetime="2023-08-23T15:48:02+08:00">2023-08-23</time>
+      <time title="Modified: 2023-11-17 14:39:43" itemprop="dateModified" datetime="2023-11-17T14:39:43+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -231,7 +231,7 @@ Module</span></a></li></ol></li></ol></li></ol></div>
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
         </span>
     </span>
 
@@ -249,6 +249,7 @@ Module</span></a></li></ol></li></ol></li></ol></div>
 <h1 id="摘要">摘要</h1>
 <p>许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，Higher-order
 Transformer（HoT）根据（i）身体关节，（ii）身体关节之间的成对连接，以及（iii）骨骼身体关节的高阶超边，生成每个时间块的嵌入。我们通过一种新颖的多阶多模Transformer（3Mformer）结合这些超边的HoT嵌入，该Transformer具有两个模块，可以交换顺序，实现基于“通道-时间块”、“顺序-通道-身体关节”、“通道-超边（任意阶）”和“仅通道”对上的耦合模式注意力。第一个模块称为多阶汇聚（MP），还可以学习沿着超边模式的加权汇聚，而第二个模块称为时间块汇聚（TP），则沿着时间块1模式进行汇聚。我们的端到端可训练网络相对于基于GCN、Transformer和超图的对应方法获得了最先进的结果。</p>
+<span id="more"></span>
 <h1 id="引言">引言</h1>
 <p>论文背景:
 骨骼动作识别在视频监控、人机交互、体育分析和虚拟现实等领域具有广泛应用。与基于视频的方法不同，骨骼序列通过表示3D身体关节的时空演变，对传感器噪声具有鲁棒性，并且在计算和存储效率上更高效。</p>
@@ -619,10 +620,10 @@ O}^*_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;}\)</span>（或者 $</p>
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
-              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/Transformer-based/" rel="tag"># Transformer-based</a>
+              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
               <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
           </div>
 

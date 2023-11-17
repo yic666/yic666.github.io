@@ -28,10 +28,10 @@
 <meta property="og:description" content="CVPR 2021 摘要 本文的目标是对未裁剪视频中的动作进行细粒度分类，其中动作可以在时间上扩展，也可以只跨越视频的几帧。将其转换为查询-响应机制，其中每个查询处理特定的问题，并拥有自己的响应标签集。 贡献：  提出了一个新的模型—时态查询网络（TQN)—它支持查询-响应功能，以及对细粒度操作的结构理解 提出了一种新的方法-随机特征库更新-在不同长度的视频上训练网络，并使用响应细粒度">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-02-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-28T01:26:48.211Z">
+<meta property="article:modified_time" content="2023-11-17T06:58:15.490Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="Fine-Grained Action Recognition">
 <meta name="twitter:card" content="summary">
 
@@ -143,7 +143,7 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +218,7 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-28 09:26:48" itemprop="dateModified" datetime="2023-06-28T09:26:48+08:00">2023-06-28</time>
+      <time title="Modified: 2023-11-17 14:58:15" itemprop="dateModified" datetime="2023-11-17T14:58:15+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +226,7 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -250,6 +250,7 @@ Stochastically Updated Feature Bank</span></a></li><li class="nav-item nav-level
 <li>将TQN与其他体系结构和文本监督方法进行比较，分析其优缺点</li>
 <li>在FineGym和Diving48基准上广泛评估细粒度动作分类的方法并仅使用RGB特征超越最先进的方法</li>
 </ol>
+<span id="more"></span>
 <h1 id="temporal-query-networks">Temporal Query Networks</h1>
 <figure>
 <img
@@ -326,22 +327,13 @@ class="math inline">\(\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2},
 \Phi_{t}\right)\)</span>可以被相互独立提取。缓存库是由预训练的3D卷积网络中提取的所有训练视频的片段特征初始化的。然后在每次训练迭代中，固定数量的<span
 class="math inline">\(n_{online}\)</span>个随机采样clip通过视觉编码器计算得到，而剩下的<span
 class="math inline">\((r-n_{online})\)</span>个clip特征则从缓存库中获得。然后将两组视觉特征组合并输入TQN解码器进行最终预测和反向传播以更新模型参数。最后，将在线计算得到的记忆库中的clip特征替换为在线特征。在推理过程中，所有的特征都是在没有缓存库的情况下在线计算的。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png"
-alt="image-20230219134722818" />
-<figcaption aria-hidden="true">image-20230219134722818</figcaption>
-</figure>
+<p>![随机更新特征库(https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png)</p>
 <h1 id="将类别分解为属性查询">将类别分解为属性查询</h1>
 <p>在本节中，作者演示了通常与细粒度视频识别数据集相关的预定义的N个类别<span
 class="math inline">\(\mathcal{C}=\left\{c_{1}, c_{2}, \ldots,
 c_{N}\right\}\)</span>集合如何被分解为属性查询。在这些数据集中，类别在微妙的细节上有所不同，例如特定类型、持续时间或特定事件序列的数量。这些事件可能是快速发生(持续时间短)，但时间位置和持续时间未知。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png"
-alt="image-20230219150729217" />
-<figcaption aria-hidden="true">image-20230219150729217</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png" /></p>
 
     </div>
 
@@ -351,8 +343,8 @@ alt="image-20230219150729217" />
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/Fine-Grained-Action-Recognition/" rel="tag"># Fine-Grained Action Recognition</a>
           </div>
 

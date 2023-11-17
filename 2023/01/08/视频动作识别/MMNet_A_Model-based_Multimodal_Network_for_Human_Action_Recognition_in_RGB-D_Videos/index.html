@@ -28,10 +28,10 @@
 <meta property="og:description" content="2022 tpami 摘要 自廉价深度传感器问世以来，RGB-D视频中的人体动作识别(HAR)得到了广泛研究。目前，单模态方法(如基于骨架和基于RGB视频)已经在越来越大的数据集上实现了实质性的改进。然而，很少研究具有模型级融合的多模态方法。本文提出一种基于模型的多模态网络(MMNet)，通过一种基于模型的方法融合骨架和RGB模态。该方法的目标是通过有效地利用不同数据模态的互补信息来提高集成识">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-01-08T02:00:59.000Z">
-<meta property="article:modified_time" content="2023-03-13T04:28:00.038Z">
+<meta property="article:modified_time" content="2023-11-17T06:51:47.673Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="RGB-D Action Recognition">
 <meta name="twitter:card" content="summary">
 
@@ -142,7 +142,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -217,7 +217,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:28:00" itemprop="dateModified" datetime="2023-03-13T12:28:00+08:00">2023-03-13</time>
+      <time title="Modified: 2023-11-17 14:51:47" itemprop="dateModified" datetime="2023-11-17T14:51:47+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -225,7 +225,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -245,18 +245,15 @@
 RGB+D 60、NTU RGB+D 120、PKU-MMD、Northwestern-UCLA Multiview和Toyota
 smarhome。在聚合多个模态的结果后，发现所提出方法在五个数据集的六个评估协议上优于最先进的方法;因此，MMNet能够有效地捕获不同RGB-D视频模态中相互补充的特征，为HAR提供更具判别力的特征。在包含更多户外动作的RGB视频数据集Kinetics
 400上测试了MMNet，结果与RGB- d视频数据集的结果一致。</p>
+<span id="more"></span>
 <h2 id="序言">序言</h2>
 <p>使用骨架或RGB模态的单模态方法存在障碍:</p>
 <ol type="1">
 <li><p>基于RGB的方法的主要限制是缺乏3D结构；</p></li>
 <li><p>基于骨骼的方法也受到缺乏纹理和外观特征的限制。</p></li>
 </ol>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png"
-alt="image-20230105201002470" />
-<figcaption aria-hidden="true">image-20230105201002470</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png" /></p>
 <p>多模态HAR方法的核心任务是数据融合，可进一步分为数据级融合、特征级融合和决策级融合</p>
 <p>除了这三种之外还有一种融合方法，称为协同学习</p>
 <p>为了推进之前围绕协作学习的工作，本文提出了一种新的基于模型的多模态网络(MMNet)，在融合骨架和RGB模态时建模有效的知识转换，以提高RGB-
@@ -275,8 +272,8 @@ Bones。</li>
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106140433610.png"
-alt="image-20230106140433610" />
-<figcaption aria-hidden="true">image-20230106140433610</figcaption>
+alt="网络架构" />
+<figcaption aria-hidden="true">网络架构</figcaption>
 </figure>
 <p><span class="math inline">\(B^{(i)}\)</span>,<span
 class="math inline">\(J^{(i)}\)</span>和<span
@@ -312,8 +309,8 @@ j}^{(i)}\)</span>为时刻t时OpenPose骨架的第j个关节。</p>
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106193800339.png"
-alt="image-20230106193800339" />
-<figcaption aria-hidden="true">image-20230106193800339</figcaption>
+alt="构建ST-ROI" />
+<figcaption aria-hidden="true">构建ST-ROI</figcaption>
 </figure>
 <p>如上图，在<span
 class="math inline">\(V^{(i)}\)</span>进行时间采样，选择L个代表帧，将它们拼接成一个方形ST-ROI，如上图中的单受试者案例所示。对于有两个主体的动作，我们裁剪每个主体的ST-ROI，如上图中两个主体的情况所示。ST-ROI显著减少了RGB视频输入的数据量，同时保留了物体的外观和动作的运动信息。在<span
@@ -331,8 +328,9 @@ class="math inline">\(R_{\tau j}^{(i)}\)</span></p>
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106204310906.png"
-alt="image-20230106204310906" />
-<figcaption aria-hidden="true">image-20230106204310906</figcaption>
+alt="时空骨架图结构和图卷积网络的空间采样策略" />
+<figcaption
+aria-hidden="true">时空骨架图结构和图卷积网络的空间采样策略</figcaption>
 </figure>
 <p>(a)时空骨架图结构。(b)图卷积网络的空间采样策略。不同的颜色表示不同的子集:绿色星形表示顶点本身;黄色三角形表示离心力较远的子集;蓝色方块表示更接近的向心子集。</p>
 <p>符号表示:</p>
@@ -443,8 +441,8 @@ _O\)</span>的值。公式6的数据融合过程如下图所示。</p>
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107180156852.png"
-alt="image-20230107180156852" />
-<figcaption aria-hidden="true">image-20230107180156852</figcaption>
+alt="Model-based fusion scheme" />
+<figcaption aria-hidden="true">Model-based fusion scheme</figcaption>
 </figure>
 <h3 id="目标函数">目标函数</h3>
 <p>用动作标签监督的损失项集合的和构建了MMNet的端到端格式，表示为 <span
@@ -508,8 +506,8 @@ class="math inline">\(G_V\)</span>的结果中，从而实现集成预测。具�
 <figure>
 <img
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107205547516.png"
-alt="image-20230107205547516" />
-<figcaption aria-hidden="true">image-20230107205547516</figcaption>
+alt="算法1" />
+<figcaption aria-hidden="true">算法1</figcaption>
 </figure>
 
     </div>
@@ -520,8 +518,8 @@ alt="image-20230107205547516" />
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/RGB-D-Action-Recognition/" rel="tag"># RGB-D Action Recognition</a>
           </div>
 

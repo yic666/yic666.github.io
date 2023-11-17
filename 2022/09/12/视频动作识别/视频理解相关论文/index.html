@@ -20,20 +20,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="这篇博文参考李沐读论文系列中视频理解的相关内容 # 双流网络 前言 视频本身是一个很好的数据来源，比2D的单个图像包含更多信息，比如物体移动的信息，以及长期的时序信息，包括音频信息。   image-20220913100303892  这篇论文是第一篇利用深度学习进行视频理解效果与之前的手工特征方法效果相当的方法。 双流网络顾名思义就是使用了两个卷积神经网络，如下图所示：">
+    <meta name="description" content="这篇博文参考李沐读论文系列中视频理解的相关内容">
 <meta property="og:type" content="article">
 <meta property="og:title" content="视频理解相关论文">
 <meta property="og:url" content="http://example.com/2022/09/12/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="这篇博文参考李沐读论文系列中视频理解的相关内容 # 双流网络 前言 视频本身是一个很好的数据来源，比2D的单个图像包含更多信息，比如物体移动的信息，以及长期的时序信息，包括音频信息。   image-20220913100303892  这篇论文是第一篇利用深度学习进行视频理解效果与之前的手工特征方法效果相当的方法。 双流网络顾名思义就是使用了两个卷积神经网络，如下图所示：">
+<meta property="og:description" content="这篇博文参考李沐读论文系列中视频理解的相关内容">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="f:/Master/研究生课程/模式识别/image-20221115104452852.png">
 <meta property="article:published_time" content="2022-09-12T14:20:46.000Z">
-<meta property="article:modified_time" content="2023-08-28T14:21:41.869Z">
+<meta property="article:modified_time" content="2023-11-17T06:49:01.911Z">
 <meta property="article:author" content="Yic-gdut">
 <meta property="article:tag" content="动作识别">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="f:/Master/研究生课程/模式识别/image-20221115104452852.png">
 
 
 <link rel="canonical" href="http://example.com/2022/09/12/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/">
@@ -118,8 +116,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E5%92%8C%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">摘要和引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E6%B5%81%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">双流网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E6%B5%81"><span class="nav-number">3.1.</span> <span class="nav-text">空间流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%B5%81"><span class="nav-number">3.2.</span> <span class="nav-text">时间流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8F%A0%E5%8A%A0%E5%85%89%E6%B5%81%E5%9B%BE"><span class="nav-number">3.3.</span> <span class="nav-text">如何叠加光流图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">3.4.</span> <span class="nav-text">实现细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%92%8C%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">结论和总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#i3d"><span class="nav-number"></span> <span class="nav-text">I3D</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82-1"><span class="nav-number">2.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95inflated"><span class="nav-number">2.1.</span> <span class="nav-text">如何Inflated</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bootstrapping"><span class="nav-number">2.2.</span> <span class="nav-text">Bootstrapping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#deep-video"><span class="nav-number"></span> <span class="nav-text">Deep Video</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#beyond-short-snippets"><span class="nav-number">3.</span> <span class="nav-text">Beyond Short Snippets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#convolutional-two-stream-network-fusion-for-video-action-recognition"><span class="nav-number">4.</span> <span class="nav-text">Convolutional
-Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spatial-fusion"><span class="nav-number">4.1.</span> <span class="nav-text">Spatial Fusion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%93%AA%E5%90%88%E5%B9%B6"><span class="nav-number">4.2.</span> <span class="nav-text">在哪合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#temporal-fusion"><span class="nav-number">4.3.</span> <span class="nav-text">Temporal fusion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tsn"><span class="nav-number">5.</span> <span class="nav-text">TSN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#temporal-segment"><span class="nav-number">5.1.</span> <span class="nav-text">Temporal Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%BD%E7%94%A8%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">5.2.</span> <span class="nav-text">好用的技巧</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#d%E7%BD%91%E7%BB%9C%E7%B3%BB%E5%88%97"><span class="nav-number"></span> <span class="nav-text">3D网络系列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#c3d"><span class="nav-number">1.</span> <span class="nav-text">C3D</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#non-local"><span class="nav-number">2.</span> <span class="nav-text">Non-local</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#r21d"><span class="nav-number">3.</span> <span class="nav-text">R(2+1)D</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slowfast"><span class="nav-number">4.</span> <span class="nav-text">SlowFast</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8C%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">双流网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E5%92%8C%E5%BC%95%E8%A8%80"><span class="nav-number">1.2.</span> <span class="nav-text">摘要和引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E6%B5%81%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">双流网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E6%B5%81"><span class="nav-number">1.3.1.</span> <span class="nav-text">空间流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%B5%81"><span class="nav-number">1.3.2.</span> <span class="nav-text">时间流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8F%A0%E5%8A%A0%E5%85%89%E6%B5%81%E5%9B%BE"><span class="nav-number">1.3.3.</span> <span class="nav-text">如何叠加光流图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">1.3.4.</span> <span class="nav-text">实现细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E5%92%8C%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">结论和总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#i3d"><span class="nav-number">2.</span> <span class="nav-text">I3D</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82-1"><span class="nav-number">2.2.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95inflated"><span class="nav-number">2.2.1.</span> <span class="nav-text">如何Inflated</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bootstrapping"><span class="nav-number">2.2.2.</span> <span class="nav-text">Bootstrapping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#deep-video"><span class="nav-number">3.</span> <span class="nav-text">Deep Video</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.2.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#beyond-short-snippets"><span class="nav-number">3.3.</span> <span class="nav-text">Beyond Short Snippets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#convolutional-two-stream-network-fusion-for-video-action-recognition"><span class="nav-number">3.4.</span> <span class="nav-text">Convolutional
+Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spatial-fusion"><span class="nav-number">3.4.1.</span> <span class="nav-text">Spatial Fusion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%93%AA%E5%90%88%E5%B9%B6"><span class="nav-number">3.4.2.</span> <span class="nav-text">在哪合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#temporal-fusion"><span class="nav-number">3.4.3.</span> <span class="nav-text">Temporal fusion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tsn"><span class="nav-number">3.5.</span> <span class="nav-text">TSN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#temporal-segment"><span class="nav-number">3.5.1.</span> <span class="nav-text">Temporal Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%BD%E7%94%A8%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">3.5.2.</span> <span class="nav-text">好用的技巧</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#d%E7%BD%91%E7%BB%9C%E7%B3%BB%E5%88%97"><span class="nav-number">4.</span> <span class="nav-text">3D网络系列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#c3d"><span class="nav-number">4.1.</span> <span class="nav-text">C3D</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#non-local"><span class="nav-number">4.2.</span> <span class="nav-text">Non-local</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#r21d"><span class="nav-number">4.3.</span> <span class="nav-text">R(2+1)D</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slowfast"><span class="nav-number">4.4.</span> <span class="nav-text">SlowFast</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -143,7 +141,7 @@ Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +216,7 @@ Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-08-28 22:21:41" itemprop="dateModified" datetime="2023-08-28T22:21:41+08:00">2023-08-28</time>
+      <time title="Modified: 2023-11-17 14:49:01" itemprop="dateModified" datetime="2023-11-17T14:49:01+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +224,7 @@ Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -240,23 +238,17 @@ Two-Stream Network Fusion for Video Action Recognition</span></a><ol class="nav-
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>这篇博文参考李沐读论文系列中视频理解的相关内容 # 双流网络</p>
+        <p>这篇博文参考李沐读论文系列中视频理解的相关内容</p>
+<span id="more"></span>
+<h1 id="双流网络">双流网络</h1>
 <h2 id="前言">前言</h2>
 <p>视频本身是一个很好的数据来源，比2D的单个图像包含更多信息，比如物体移动的信息，以及长期的时序信息，包括音频信息。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913100303892.png"
-alt="image-20220913100303892" />
-<figcaption aria-hidden="true">image-20220913100303892</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913100303892.png" /></p>
 <p>这篇论文是第一篇利用深度学习进行视频理解效果与之前的手工特征方法效果相当的方法。</p>
 <p>双流网络顾名思义就是使用了两个卷积神经网络，如下图所示：</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913101016813.png"
-alt="image-20220913101016813" />
-<figcaption aria-hidden="true">image-20220913101016813</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913101016813.png" /></p>
 <p>视频相当于连续的多张图片，因此早期的工作将视频的关键帧抽取出来，一个个输入卷积网络，最后以Early
 Fasion或者Late
 Fasion的方式合并结果，达到一种时空学习的效果，但效果不如手工设置特征。因此，双流网络的作者认为卷积网络适合学习局部特征，而不适合学习物体的移动信息（Motion-information)，于是作者使用了光流法来获取物体的移动信息，以学习光流和动作分类的映射。作者把双流网络分为空间流神经网络和时间流神经网络，空间流的输入为单帧图像，而时间流的输入为一系列光流图片。</p>
@@ -270,23 +262,15 @@ fusion合并结果。可以通过简单的加权平均，也可以训练一个�
 <h3 id="空间流">空间流</h3>
 <p>空间流神经网络的输入就是一帧帧的图像，其实就是个图像分类的任务。静止的信息本身就是个有用的信息，因为很多动作与识别出的物体是紧密相关的。因此单独空间流网络已经能达到很好的效果了，而且还能使用Imagenet去预训练。</p>
 <h3 id="时间流">时间流</h3>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913104904429.png"
-alt="image-20220913104904429" />
-<figcaption aria-hidden="true">image-20220913104904429</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913104904429.png" /></p>
 <p>（a）和（b）为视频中的前后两帧，从这两帧可以得到如（c）的光流，在数学上光流实际上就是一个在平面上的向量，因此得到分为（d）水平方向和（e）垂直方向两个方向的可视化结果。从维度上看，假如输入为<span
 class="math inline">\(w*h\)</span>的RGB图像也就是输入维度是<span
 class="math inline">\(w*h*3\)</span>，而得到的光流图维度则为<span
 class="math inline">\(w*h*2\)</span>，2代表两个方向。</p>
 <h3 id="如何叠加光流图">如何叠加光流图</h3>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913110726700.png"
-alt="image-20220913110726700" />
-<figcaption aria-hidden="true">image-20220913110726700</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913110726700.png" /></p>
 <p>第一种方式就是简单直接地将得到的光流图堆叠在一起，每次叠加的都是同样位置的光流特征，这种方式不需要更多的预处理，但没有充分利用光流的信息。第二种则是根据光流的轨迹，在轨迹上进行数值的叠加。另外，作者也使用了双向光流的方法。</p>
 <h3 id="实现细节">实现细节</h3>
 <p>事实上，两个流网络都可以看作是Alexnet的变体都是五层卷积加两层全连接，训练部分都是标准的操作。</p>
@@ -309,12 +293,8 @@ ConvNet）、Kinetics数据集。I3D直译为扩散的3D卷积神经网络，扩
 Temporal 的时空特征 。</p>
 <p>而这篇论文提出的I3D（Two-Stream Inflated 3D
 ConvNets），有两个关键词：双流和inflated。由于3D网络的参数量过于巨大，而且也没有合适足够的数据去训练，因此网络不能太深（C3D）。作者在使用了其提出来的inflated操作直接就能使用例如Inception、VGG、Resnet这样的网络，而且能使用这些网络预训练的参数作为初始化。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913140943884.png"
-alt="image-20220913140943884" />
-<figcaption aria-hidden="true">image-20220913140943884</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913140943884.png" /></p>
 <p>图a的方法就是卷积神经网络跟一个LSTM，把这个视频问题当作是一个图像分类问题，一张一张图片输入到卷积神经网络去做特征提取，接着把这些特征输入到LSTM网络。</p>
 <p>图b的方法就是非常暴力的3D卷积网络，直接将视频段当成一个Valume，输入到网络之中。这样的网络能进行时空学习，而且卷积核是三维的，因此参数量变得很大。</p>
 <p>图c的方法就是上文介绍过的双流网络。</p>
@@ -335,12 +315,8 @@ CNN的输出一致，就能保证初始化是正确的。具体的做法就是�
 filters在时间维度上复制了n次，
 得到一个n帧的视频，为了保持输出的一致，除了 2D
 参数复制n次之外，还需将参数除以n。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913151055074.png"
-alt="image-20220913151055074" />
-<figcaption aria-hidden="true">image-20220913151055074</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913151055074.png" /></p>
 <h2 id="总结">总结</h2>
 <p>这篇论文通过一系列的实验证明了在大规模数据集作预训练后，再做迁移学习能得到很好的效果。另外，在网络结构的设计上，作者也认为本文并没有进行全面的探索，像
 action tubes、attention mechanism
@@ -350,24 +326,16 @@ action tubes、attention mechanism
 <h1 id="deep-video">Deep Video</h1>
 <p>CVPR 2014</p>
 <h2 id="方法">方法</h2>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917200215637.png"
-alt="image-20220917200215637" />
-<figcaption aria-hidden="true">image-20220917200215637</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917200215637.png" /></p>
 <ol type="1">
 <li>Single Frame
 其实就是一个图片分类的任务，单帧输入到卷积神经网络，不包含时间信息和视频信息</li>
 <li>Late Fusion 和 Early Fusion 上文介绍过</li>
 <li>Slow Fusion 在网络的过程中，对特征进行合并</li>
 </ol>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917201204252.png"
-alt="image-20220917201204252" />
-<figcaption aria-hidden="true">image-20220917201204252</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917201204252.png" /></p>
 <p>由于效果不好，作者尝试了图像领域的多分辨率卷积，将输入分成两部分（原图和正中间的抠图）。这种网络可以理解成一种双流网络，但双流的权值是共享的；也可以理解说是一种早期的注意力机制，这样的操作使得网络更关注图片中心的区域。</p>
 <h2 id="总结-1">总结</h2>
 <p>本文的主要贡献并不是在于任务性能的提升（实际也并没有提升），而是在于进行了深度
@@ -385,23 +353,15 @@ Net、ResNet等更好的backbone是否会得到更好的效果，如何在小数
 </ol>
 <h2 id="beyond-short-snippets">Beyond Short Snippets</h2>
 <p>CVPR 2015</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918150440864.png"
-alt="image-20220918150440864" />
-<figcaption aria-hidden="true">image-20220918150440864</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918150440864.png" /></p>
 <p>这篇论文的题目中的Short
 Snippets指的就是2-3s的视频段，基本方法如上图，如果按照双流网络的思想，原始的输入只有几帧，处理的视频是很短的，为了处理长的视频，得找到合适的方法对抽取的特征做pooling，比如简单的Max
 pooling或Average pooling，这篇文章对这些pooling做了详细的研究，类似Deep
 video做了late pooling等，最后的结果conv
 pooling效果最好，也尝试了使用LSTM做特征融合，而最后的结果提升有限。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918151315556.png"
-alt="image-20220918151315556" />
-<figcaption aria-hidden="true">image-20220918151315556</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918151315556.png" /></p>
 <p>上图c代表卷积神经网络对每个视频帧抽取的特征，且这些卷积神经网络权值共享，接着使用五层LSTM去处理抽取的视频特征，最后使用softmax做分类。</p>
 <p>正常来说LSTM在处理时序信息应该是会得到更好的效果的，但在处理短视频时，视频在时间上整个画面几乎没有变化，比较连续，也就是说输入到LSTM的时序特征没有变化，LSTM也就学不到什么东西。</p>
 <h2
@@ -424,23 +384,15 @@ fusion：在每个位置上计算两特征的矩阵外积在哪合并</p></li>
 </ol>
 <h3 id="在哪合并">在哪合并</h3>
 <p>作者针对在哪一层合并，做了大量的消融实验，得到了两种效果比较好的方式，如下图。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918165944620.png"
-alt="image-20220918165944620" />
-<figcaption aria-hidden="true">image-20220918165944620</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918165944620.png" /></p>
 <p>第一种是空间流和时间流分别做，然后到conv4之后，进行一次fusion，在模型中间已经二合一，成为一流的网络。而第二种则是单独做到conv5以后，把空间流和时间流的特征做一次合并，得到一个spatial
 temporal 的特征，然后继续保持空间流的完整性，在最后做一次合并。</p>
 <h3 id="temporal-fusion">Temporal fusion</h3>
 <p>当有很多视频帧，每一帧都有抽取了特征，如何在时间轴上把这些特征合并起来，得到最后的特征。作者尝试了两种方式：3D
 Pooling和3D Conv + 3D Pooling</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918201122804.png"
-alt="image-20220918201122804" />
-<figcaption aria-hidden="true">image-20220918201122804</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918201122804.png" /></p>
 <p>上图是作者提出的整体框架，蓝色是空间流，绿色是时间流，同样先分别用这两个网络去抽取RGB和光流图像的特征，抽取好特征之后就使用上文所说的Fusion方法，使用3D
 Conv + 3D
 Pooling的方法聚合特征，通过一个FC层，最后计算Spatiotemporal的损失函数。由于在视频处理中，时序信息很重要，因此作者单独把时间流拿出来再做一个3D
@@ -453,12 +405,8 @@ fusion的方式得到分类结果。</p>
 <h3 id="temporal-segment">Temporal Segment</h3>
 <p>这篇论文处理长视频的思路非常简单，就是把视频分成多段。具体来说，假如把视频分为三段，每一段随机抽取一帧，并以这一帧作为起点去选几帧计算光流图像，输入双流网络，每一段都如此处理，但权值共享。把每一个段出来的logits做一个consensus，也就是融合（乘法，加法，max，average或者lstm）每个段出来的分类结果，最后把时间流和空间流的结果做late
 fusion。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918210327820.png"
-alt="image-20220918210327820" />
-<figcaption aria-hidden="true">image-20220918210327820</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918210327820.png" /></p>
 <p>Temporal Segment 的思想不仅可以用在这种短视频这种裁剪好的video
 clip上，也可以运用在没裁剪过的长视频，就算分的段落的含义不一样，只要在consensus上不使用average的方式，比如使用lstm去模拟时间的走势。而且这种思想还可以用在弱监督和无监督的工作上。</p>
 <h3 id="好用的技巧">好用的技巧</h3>
@@ -488,12 +436,8 @@ target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44966641/artic
 。值得一提的是，作者最终的做法是将 fc6 得到的 4096 维的特征直接用 SVM
 来做分类，又快效果又好。本文被称为 C3D 也是指的这个 fc6 得到的 4096
 维的特征，被称为 C3D 特征。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919193757565.png"
-alt="image-20220919193757565" />
-<figcaption aria-hidden="true">image-20220919193757565</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919193757565.png" /></p>
 <p>之前提到，C3D
 的性能在同期工作中并不突出，那为什么这篇工作有如此大的影响力呢？实际上，这篇工作的主要贡献有两点。一是实现深度
 3D CNN 模型，并在大型数据集上进行训练，证明了在视频领域，3D CNN 比 2D
@@ -514,30 +458,18 @@ CNN
 模型中。并且为了适配视频任务，本文的 Non-local
 算子是时空（spacetime）维度的。除了视频任务之外，本文也测试了 Non-local
 算子在检测/分割等其他视觉任务上的性能。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195350007.png"
-alt="image-20220919195350007" />
-<figcaption aria-hidden="true">image-20220919195350007</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195350007.png" /></p>
 <p>上图就是用于时空的non-local算子，这实际上就是注意力机制，下面三个类似QKV，QK相乘得到注意力矩阵，再于V相乘，并有个残差操作。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195832134.png"
-alt="image-20220919195832134" />
-<figcaption aria-hidden="true">image-20220919195832134</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195832134.png" /></p>
 <p>消融实验体现了作者的设计思路。第一步是注意力怎么算，第二步是non-local用在哪一层，第三步是加多少个non-local，第四个就是证明spacetime上的自注意力机制的重要性。表格g探索了
 non-local 在长视频（128帧）上的性能，可以看到提升也是很显著的。</p>
 <h2 id="r21d">R(2+1)D</h2>
 <p>CVPR 2018</p>
 <p>这篇文章对时空的卷积做了详尽的实验，对各种2D+3D的卷积网络结构进行分析。最后的结论是把3D拆分成时间上的1D和空间上的2D能得到更好的效果。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115102912016.png"
-alt="image-20221115102912016" />
-<figcaption aria-hidden="true">image-20221115102912016</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115102912016.png" /></p>
 <p>作者尝试了以下五种 2D/3D 卷积结构，来处理视频数据：</p>
 <ol type="a">
 <li>R2D：纯 2D 卷积，对每一帧单独的提取图像特征；</li>
@@ -549,30 +481,19 @@ alt="image-20221115102912016" />
 的一篇工作，是将 2D 的 ResNet 转换到 3D；</li>
 <li>R(2+1)D：将 3D 拆分为空间维度的 2D 卷积和时间维度的 1D 卷积</li>
 </ol>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115103836603.png"
-alt="image-20221115103836603" />
-<figcaption aria-hidden="true">image-20221115103836603</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115103836603.png" /></p>
 <p>从参数量的角度上看，R2D明显参数量少，但效果不行，而3D和2D混合的方法都能达到50左右，最后论文提出的R（2+1）D在参数量与R3D一样的情况下，依然效果好了很多。</p>
-<figure>
-<img src="F:\Master\研究生课程\模式识别\image-20221115104452852.png"
-alt="image-20221115104452852" />
-<figcaption aria-hidden="true">image-20221115104452852</figcaption>
-</figure>
+<p><img
+src="F:\Master\研究生课程\模式识别\image-20221115104452852.png" /></p>
 <p>就是将一个<span class="math inline">\(d t\times d\times d\)</span> 的
 3D 卷积，拆分为一个 2D 的空间维度上的 $ 1dd$ 的卷积，和一个 1D
 的时间维度上的 <span class="math inline">\(t\times 1\times 1\)</span>
 的卷积。中间进行了一次投射 <span
 class="math inline">\(M_i\)</span>,可以保持与纯 3D
 卷积的参数量相当，偏于公平的对比。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115110443121.png"
-alt="image-20221115110443121" />
-<figcaption aria-hidden="true">image-20221115110443121</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115110443121.png" /></p>
 <p>上图展示了训练和测试过程的错误，把R3D和R（2+1）D做了对比，
 结果展示无论是18层的浅层网络还是34层的深层网络，R（2+1)D的训练和测试误差都要比R3D低
 。</p>
@@ -589,12 +510,8 @@ alt="image-20221115110443121" />
 <p>这篇论文是把精度和效率结合的比较好的，研究动机来源于人眼中分别处理静态图像的场景信息和动态图像的运动信息的两种不同细胞，于是借鉴双流网络的结构，提出有
 Slow Pathway 和 Fast Pathway
 两支网络分别处理静态信息和动态信息的SlowFast网络。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115141919372.png"
-alt="image-20221115141919372" />
-<figcaption aria-hidden="true">image-20221115141919372</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115141919372.png" /></p>
 <blockquote>
 <p>蓝色部分是 Slow
 Pathway，它用来处理静态的场景信息，它的特点是输入小，模型大。假设我们有一共
@@ -609,12 +526,8 @@ m 细胞占比较小。</p>
 </blockquote>
 <p>最后这个两分支的网络，在这两分支之间还使用了late
 connection的方式结合起来，所以也就是双流之间的信息是可交互的，从而能够更好地学习到这个时空特征，最后达到一个速度和精度的结合。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115142838755.png"
-alt="image-20221115142838755" />
-<figcaption aria-hidden="true">image-20221115142838755</figcaption>
-</figure>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115142838755.png" /></p>
 <p>从网络看，快慢分支都是I3D，除了通道数不同，都是残差网络。从output
 size看，在时序部分都不做下采样，始终保持输入的时间长度。</p>
 

@@ -28,10 +28,10 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2307.08476 code: https:&#x2F;&#x2F;github.com&#x2F;HongYan1123&#x2F;SkeletonMAE 摘要 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-07T07:09:08.000Z">
-<meta property="article:modified_time" content="2023-10-14T08:11:22.440Z">
+<meta property="article:modified_time" content="2023-11-17T07:00:24.909Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="ICCV2023">
 <meta name="twitter:card" content="summary">
 
@@ -143,7 +143,7 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +218,7 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-10-14 16:11:22" itemprop="dateModified" datetime="2023-10-14T16:11:22+08:00">2023-10-14</time>
+      <time title="Modified: 2023-11-17 15:00:24" itemprop="dateModified" datetime="2023-11-17T15:00:24+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +226,7 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
         </span>
     </span>
 
@@ -246,6 +246,7 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
 <p>骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预训练一个可以泛化到不同数据集的高效骨架序列学习模型。在本文中,我们提出了一个高效的骨架序列学习框架,命名为骨架序列学习(SSL)。为了全面捕获人体姿态并获得有区分性的骨架序列表示,我们构建了一个基于非对称图的编码器-解码器预训练架构,命名为SkeletonMAE,它将骨架关节序列嵌入图卷积网络,并根据先验人体拓扑知识重构被屏蔽的骨架关节和边。然后,预训练的SkeletonMAE编码器与空间-时域表示学习(STRL)模块相结合,构建SSL框架。大量的实验结果显示,我们的SSL可以很好地泛化到不同的数据集,并在FineGym、Diving48、NTU
 60和NTU
 120数据集上优于目前最先进的自监督基于骨架的方法。此外,我们获得了可与一些完全监督方法相媲美的性能。</p>
+<span id="more"></span>
 <h1 id="引言">引言</h1>
 <p>论文背景:
 骨架序列表示学习在动作识别中具有很大的优势，因为它能够有效地建模人体关节和拓扑结构。然而，现有的方法通常需要大量标记数据来训练计算成本高昂的模型，并且忽视了如何利用不同骨架关节之间的细粒度依赖关系来预训练一个能够在不同数据集上泛化良好的骨架序列学习模型。</p>
@@ -259,20 +260,12 @@ SkeletonMAE的基于图的编码器-解码器预训练架构,将骨架关节序�
 为了学习骨架序列的全面时空依赖性,我们提出了一个高效的骨架序列学习框架,称为骨架序列学习(SSL),它将预训练的SkeletonMAE编码器与时空表示学习(STRL)模块集成。
 3. 在FineGym、Diving48、NTU 60和NTU
 120数据集上的大量实验结果表明,我们的SSL方法优于当前最先进的基于自监督的骨架动作识别方法,并达到可与最先进的完全监督方法媲美的性能。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161406.png"
-alt="20231007161406" />
-<figcaption aria-hidden="true">20231007161406</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161406.png" /></p>
 <p>传统的MAE通常使用随机遮蔽策略来重构骨架,这往往会忽略对动作敏感的骨架区域。不同的是,SkeletonMAE基于先验人体拓扑知识重构被遮蔽的骨架关节和边缘,以获得对动作的全面感知。</p>
 <h1 id="方法">方法</h1>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161542.png"
-alt="20231007161542" />
-<figcaption aria-hidden="true">20231007161542</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161542.png" /></p>
 <p>骨架序列预训练架构SkeletonMAE的详细信息如下：</p>
 <ol type="a">
 <li><p>构建了一个基于GIN的不对称编码器-解码器结构，用于重建关节特征，以增强动作表示能力。</p></li>
@@ -291,12 +284,8 @@ class="math inline">\(\mathcal{V}_0,...,\mathcal{V}_5\)</span>，将所有的<sp
 class="math inline">\(N = 17\)</span>个关节点划分为<span
 class="math inline">\(R =
 6\)</span>个区域。然后，遮罩这些骨架区域，使SkeletonMAE能够基于相邻的关节重建遮罩的关节特征及其边缘。通过重建被遮罩的骨架关节和边缘，SkeletonMAE可以推断关节的底层拓扑结构，并获得对动作的全面感知。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007162754.png"
-alt="20231007162754" />
-<figcaption aria-hidden="true">20231007162754</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007162754.png" /></p>
 <p>SkeletonMAE是一种不对称的编码器-解码器架构，包括一个编码器和一个解码器。编码器由<span
 class="math inline">\(L_{D}\)</span>个GIN层组成，将输入的2D骨架数据映射到隐藏特征上。解码器由仅包含一个GIN层的部分组成，在重建准则的监督下重新构建隐藏特征。根据先前的人体骨架知识，人体骨架可以表示为一个以关节为顶点、以肢体为边缘的图结构，将人体骨架表述为以下的图结构。</p>
 <p>对包含<span class="math inline">\(N\)</span>个人体骨架关节和<span
@@ -400,12 +389,8 @@ class="math display">\[\begin{equation}
 这个公式表示在所有被遮罩的关节上，重建特征与输入特征之间的相似性差距的平均值。<span
 class="math inline">\(\beta\)</span>被设置为2，即采用了平方的幂来缩放余弦误差的贡献，以便更强调容易样本的影响。</p>
 <h2 id="fine-tuning">Fine-tuning</h2>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231008100540.png"
-alt="20231008100540" />
-<figcaption aria-hidden="true">20231008100540</figcaption>
-</figure>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231008100540.png" /></p>
 <p>如上图，骨架序列学习（SSL）的流程如下：</p>
 <ol type="a">
 <li><p>在预训练阶段，我们构建一个名为SkeletonMAE的编码器-解码器模块，将骨架关节及其先前的拓扑知识嵌入到GIN中，并重建底层的遮罩关节和拓扑结构。</p></li>
@@ -476,8 +461,8 @@ pooling）来获得最终的输出。最后，由MLP和softmax组成的分类器
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/ICCV2023/" rel="tag"># ICCV2023</a>
           </div>
 

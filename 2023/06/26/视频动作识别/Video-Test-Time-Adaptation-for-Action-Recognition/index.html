@@ -28,10 +28,10 @@
 <meta property="og:description" content="Video Test-Time Adaptation for Action Recognition paper：http:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2211.15393 code： https:&#x2F;&#x2F;github.com&#x2F;wlin-at&#x2F;ViTTA 摘要 尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-26T02:56:29.000Z">
-<meta property="article:modified_time" content="2023-06-28T02:13:19.382Z">
+<meta property="article:modified_time" content="2023-11-17T06:39:44.152Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="CVPR2023">
 <meta name="twitter:card" content="summary">
 
@@ -142,7 +142,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -217,7 +217,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-28 10:13:19" itemprop="dateModified" datetime="2023-06-28T10:13:19+08:00">2023-06-28</time>
+      <time title="Modified: 2023-11-17 14:39:44" itemprop="dateModified" datetime="2023-11-17T14:39:44+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -225,7 +225,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -246,6 +246,7 @@
 <p>尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未展示视频动作识别模型的测试时间自适应能力。我们提出了一种针对时空模型的方法，可以在单个视频样本的每一步上进行自适应。该方法通过一种特征分布对齐技术，将在线估计的测试集统计数据与训练统计数据进行对齐。我们进一步通过对同一测试视频样本进行时间增强视图的预测一致性来强化。在三个基准动作识别数据集上的评估结果表明，我们提出的技术不依赖于具体的架构，能够显著提高最先进的卷积架构TANet和Video
 Swin
 Transformer的性能。我们的方法在单个分布变化的评估和随机分布变化的挑战性情况下都表现出了显著的性能提升。</p>
+<span id="more"></span>
 <h1 id="背景信息">背景信息:</h1>
 <p>论文背景:
 行为识别系统在对分布内的测试数据进行评估时可以达到最佳性能，但对于测试数据中的未预期分布变化却很脆弱。例如，用于识别机动或行人交通事件的摄像头可能会记录罕见的天气状况，如冰雹;体育运动识别系统可能会受到体育场馆观众产生的干扰的影响，如照明弹的烟雾。然而，迄今为止，尚未展示出针对常见分布变化的视频行为识别模型的测试时间自适应方法。</p>
@@ -420,8 +421,8 @@ class="math inline">\(M=2\)</span>设定为足以显著提升性能的方法，�
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
           </div>
 
