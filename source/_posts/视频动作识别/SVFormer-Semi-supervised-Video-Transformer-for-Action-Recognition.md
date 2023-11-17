@@ -1,8 +1,13 @@
 ---
 title: 'SVFormer: Semi-supervised Video Transformer for Action Recognition'
+tags:
+  - 论文笔记
+  - 动作识别
+  - CVPR2023
+  - Transformer-based
+categories:
+  - 视频动作识别
 date: 2023-06-28 09:24:39
-tags: [论文笔记,动作识别,CVPR2023,Transformer-based]
-categories: [视频理解]
 ---
 SVFormer: Semi-supervised Video Transformer for Action Recognition
 
@@ -13,6 +18,8 @@ code：https://github.com/ChenHsing/SVFormer
 # 摘要
 
 半监督动作识别是一项具有挑战性但又至关重要的任务，因为视频注释的成本很高。现有方法主要使用卷积神经网络，然而当前的革命性视觉Transformer模型尚未得到充分探索。在本文中，我们研究了在半监督学习（SSL）设置下使用Transformer模型进行动作识别的方法。为此，我们引入了SVFormer，它采用了稳定的伪标签框架（即EMATeacher）来处理无标签视频样本。虽然广泛的数据增强方法已被证明对于半监督图像分类是有效的，但对于视频识别而言，它们通常产生有限的结果。因此，我们引入了一种针对视频数据的新型增强策略，称为Tube Token-Mix，其中视频剪辑通过掩码和一致的遮蔽标记在时间轴上混合。此外，我们提出了一种时域扭曲增强方法，用于覆盖视频中复杂的时域变化，它将选定的帧在剪辑中拉伸到不同的时间长度。对三个数据集Kinetics-400、UCF-101和HMDB-51进行了大量实验证实了SVFormer的优势。特别是，在Kinetics-400的1%标注率下，SVFormer在较少的训练周期内比现有技术提升了31.5%。我们的方法有望作为一个强有力的基准，并鼓励未来在使用Transformer网络进行半监督动作识别方面的研究。
+
+<!--more-->
 
 # 引言
 

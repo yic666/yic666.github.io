@@ -2,9 +2,13 @@
 title: >-
   《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action
   Recognition》阅读笔记
+tags:
+  - 动作识别
+  - 论文笔记
+  - Fine-Grained Action Recognition
+categories:
+  - 视频动作识别
 date: 2022-10-18 10:48:59
-tags: [动作识别,论文笔记,Fine-Grained Action Recognition]
-categories: [视频理解]
 ---
 
 # 摘要、引言、结论
@@ -17,6 +21,8 @@ categories: [视频理解]
 
 解决的问题：成功地区分具有细微差别的操作类别（细粒度设置中较高的类间相似性）
 
+<!--more-->
+
 # 提出的方法
 
 ## 概述
@@ -25,7 +31,7 @@ categories: [视频理解]
 
 
 
-![image-20221019154610958](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png)
+![DSTS Module](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png)
 
 DSTS的图示如上，DSTS处理从backbone传过来的特征。DSTS模块内有L层，每一层都由N个专门化神经元组成。当特征映射X被输入到第j个DSTS层时，首先计算每个专门化神经元$n_{ij}$的脉冲值$v_{ij}$，接着该层中具有最高脉冲值的神经元被Gumbel- Softmax激活。在被送入分类器之前，一个从backbone到输出的跳过连接被加到生成的特征。
 
@@ -90,7 +96,7 @@ Z_{T}=T_{a}\left(X_{T}\right)
 $$
 其中$Z_S$表示捕获输入特征图空间信息的特征$X$，而$Z_T$表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为$Z'_S$和$Z'_t$ ，输出特征图为两者之和。最后，对Z进行1 × 1 × 1卷积，融合空间和时间特征。而融合的特征$Z'$将作为下一层DSTS或分类器的输入。
 
-![image-20221123205910863](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png)
+![时空专门化](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png)
 
 ## 上下游学习
 
@@ -117,4 +123,4 @@ $$
   d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train }}\right)
   $$
 
-![image-20221124161756656](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png)

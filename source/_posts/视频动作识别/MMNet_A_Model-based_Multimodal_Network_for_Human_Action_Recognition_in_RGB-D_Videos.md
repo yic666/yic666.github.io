@@ -1,15 +1,22 @@
 ---
 title: >-
-  《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记
+  《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D
+  Videos》阅读笔记
+tags:
+  - 动作识别
+  - 论文笔记
+  - RGB-D Action Recognition
+categories:
+  - 视频动作识别
 date: 2023-01-08 10:00:59
-tags: [动作识别,论文笔记,RGB-D Action Recognition]
-categories: [视频理解]
 ---
 2022 tpami
 
 ## 摘要
 
 自廉价深度传感器问世以来，RGB-D视频中的人体动作识别(HAR)得到了广泛研究。目前，单模态方法(如基于骨架和基于RGB视频)已经在越来越大的数据集上实现了实质性的改进。然而，很少研究具有模型级融合的多模态方法。本文提出一种基于模型的多模态网络(MMNet)，通过一种基于模型的方法融合骨架和RGB模态。该方法的目标是通过有效地利用不同数据模态的互补信息来提高集成识别的精度。对于基于模型的融合方案，我们对骨架模态使用时空图卷积网络来学习注意力权重，并将其迁移到RGB模态的网络中。在5个基准数据集上进行了广泛的实验:NTU RGB+D 60、NTU RGB+D 120、PKU-MMD、Northwestern-UCLA Multiview和Toyota smarhome。在聚合多个模态的结果后，发现所提出方法在五个数据集的六个评估协议上优于最先进的方法;因此，MMNet能够有效地捕获不同RGB-D视频模态中相互补充的特征，为HAR提供更具判别力的特征。在包含更多户外动作的RGB视频数据集Kinetics 400上测试了MMNet，结果与RGB- d视频数据集的结果一致。
+
+<!--more-->
 
 ## 序言
 
@@ -21,7 +28,7 @@ categories: [视频理解]
 
     
 
-![image-20230105201002470](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png)
 
 多模态HAR方法的核心任务是数据融合，可进一步分为数据级融合、特征级融合和决策级融合
 
@@ -41,7 +48,7 @@ categories: [视频理解]
 
 ## 网络架构
 
-![image-20230106140433610](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106140433610.png)
+![网络架构](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106140433610.png)
 
 $B^{(i)}$,$J^{(i)}$和$V^{(i)}$分别代表骨骼、骨骼关节和RGB视频的输入;
 
@@ -63,7 +70,7 @@ R_{t j}^{(i)}=g\left(f_{t}^{(i)}, o_{t j}^{(i)}\right), j \in\left(m_{1}, \ldots
 $$
 其中$O_{t j}^{(i)}$为时刻t时OpenPose骨架的第j个关节。
 
-![image-20230106193800339](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106193800339.png)
+![构建ST-ROI](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106193800339.png)
 
 如上图，在$V^{(i)}$进行时间采样，选择L个代表帧，将它们拼接成一个方形ST-ROI，如上图中的单受试者案例所示。对于有两个主体的动作，我们裁剪每个主体的ST-ROI，如上图中两个主体的情况所示。ST-ROI显著减少了RGB视频输入的数据量，同时保留了物体的外观和动作的运动信息。在$τ$时刻的时域子ROI将具有$M′$个空间子ROI,可以垂直连接并表示为$R_{\tau}^{(i)}$;相反，第$j$个关节的空间子ROI将具有$L$个时间子ROI，可以水平级联并表示为$R^{(i)}_ j$;最后对于$V^{(i)}$的ST-ROI可用$R_{(i)}$表示,包含$M'\times L$个子ST-ROI$R_{\tau j}^{(i)}$
 
@@ -71,7 +78,7 @@ $$
 
 ### 从骨架模态中学习关节权重
 
-![image-20230106204310906](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106204310906.png)
+![时空骨架图结构和图卷积网络的空间采样策略](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106204310906.png)
 
 (a)时空骨架图结构。(b)图卷积网络的空间采样策略。不同的颜色表示不同的子集:绿色星形表示顶点本身;黄色三角形表示离心力较远的子集;蓝色方块表示更接近的向心子集。
 
@@ -116,7 +123,7 @@ R^{\prime(i)}=h\left(R_{j}^{(i)}, w_{j}^{(i)}\right), j=m_{1}^{\prime}, \ldots, 
 $$
 其中$w_{j}$为第$j$个关节的权重，$R_{j}^{(i)}$为对应身体区域的子空间ROI。而$m_{1}^{\prime}, \ldots, m_{M^{\prime}}^{\prime}$是$M’$个不同骨骼关节对应于建议关注的身体区域的指数。$M '$的值等于公式2中$M ' _O$的值。公式6的数据融合过程如下图所示。
 
-![image-20230107180156852](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107180156852.png)
+![Model-based fusion scheme](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107180156852.png)
 
 ### 目标函数
 
@@ -156,4 +163,4 @@ $$
 
 为了追求更高的识别精度，还可以采用其他几个损失项作为关节权重。但本文依旧采用了关节权重的普通实现，作为RGB模态的空间注意力，以验证新颖的基于模型的数据融合机制的有效性。给定目标函数，使用随机梯度下降(SGD)求解方程11、12和13。网络$G_J$可以预训练，也可以与$G_V$同时训练，以获得空间注意力权重以进行特征融合。子模型$G_J$和$G_V$可以通过将$Θ_J$和$Θ_V$一起调优来进行端到端训练，或者简单地通过修改$Θ_J$来更新$Θ_V$。同时，对骨骼的网络$G_B$进行单独训练，并将其聚合到$G_J$和$G_V$的结果中，从而实现集成预测。具体训练步骤如算法1所示。
 
-![image-20230107205547516](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107205547516.png)
+![算法1](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107205547516.png)

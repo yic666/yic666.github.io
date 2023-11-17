@@ -1,8 +1,12 @@
 ---
 title: SkeletonMAE
+tags:
+  - 论文笔记
+  - 动作识别
+  - ICCV2023
+categories:
+  - 骨架动作识别
 date: 2023-10-07 15:09:08
-tags: [论文笔记,动作识别,ICCV2023]
-categories: [动作识别]
 ---
 
 paper: https://arxiv.org/abs/2307.08476
@@ -12,6 +16,8 @@ code: https://github.com/HongYan1123/SkeletonMAE
 # 摘要 
 
 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预训练一个可以泛化到不同数据集的高效骨架序列学习模型。在本文中,我们提出了一个高效的骨架序列学习框架,命名为骨架序列学习(SSL)。为了全面捕获人体姿态并获得有区分性的骨架序列表示,我们构建了一个基于非对称图的编码器-解码器预训练架构,命名为SkeletonMAE,它将骨架关节序列嵌入图卷积网络,并根据先验人体拓扑知识重构被屏蔽的骨架关节和边。然后,预训练的SkeletonMAE编码器与空间-时域表示学习(STRL)模块相结合,构建SSL框架。大量的实验结果显示,我们的SSL可以很好地泛化到不同的数据集,并在FineGym、Diving48、NTU 60和NTU 120数据集上优于目前最先进的自监督基于骨架的方法。此外,我们获得了可与一些完全监督方法相媲美的性能。
+
+<!--more-->
 
 # 引言
 
@@ -26,13 +32,13 @@ code: https://github.com/HongYan1123/SkeletonMAE
 2. 为了学习骨架序列的全面时空依赖性,我们提出了一个高效的骨架序列学习框架,称为骨架序列学习(SSL),它将预训练的SkeletonMAE编码器与时空表示学习(STRL)模块集成。
 3. 在FineGym、Diving48、NTU 60和NTU 120数据集上的大量实验结果表明,我们的SSL方法优于当前最先进的基于自监督的骨架动作识别方法,并达到可与最先进的完全监督方法媲美的性能。
 
-![20231007161406](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161406.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161406.png)
 
 传统的MAE通常使用随机遮蔽策略来重构骨架,这往往会忽略对动作敏感的骨架区域。不同的是,SkeletonMAE基于先验人体拓扑知识重构被遮蔽的骨架关节和边缘,以获得对动作的全面感知。
 
 # 方法
 
-![20231007161542](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161542.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007161542.png)
 
 骨架序列预训练架构SkeletonMAE的详细信息如下：
 
@@ -54,7 +60,7 @@ code: https://github.com/HongYan1123/SkeletonMAE
 
 遵循Kinetics Skeleton数据集的joint label，如下图，根据身体的自然部位：$\mathcal{V}_0,...,\mathcal{V}_5$，将所有的$N = 17$个关节点划分为$R = 6$个区域。然后，遮罩这些骨架区域，使SkeletonMAE能够基于相邻的关节重建遮罩的关节特征及其边缘。通过重建被遮罩的骨架关节和边缘，SkeletonMAE可以推断关节的底层拓扑结构，并获得对动作的全面感知。
 
-![20231007162754](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007162754.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231007162754.png)
 
 SkeletonMAE是一种不对称的编码器-解码器架构，包括一个编码器和一个解码器。编码器由$L_{D}$个GIN层组成，将输入的2D骨架数据映射到隐藏特征上。解码器由仅包含一个GIN层的部分组成，在重建准则的监督下重新构建隐藏特征。根据先前的人体骨架知识，人体骨架可以表示为一个以关节为顶点、以肢体为边缘的图结构，将人体骨架表述为以下的图结构。
 
@@ -96,7 +102,7 @@ $$
 
 ## Fine-tuning
 
-![20231008100540](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231008100540.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20231008100540.png)
 
 如上图，骨架序列学习（SSL）的流程如下：
 

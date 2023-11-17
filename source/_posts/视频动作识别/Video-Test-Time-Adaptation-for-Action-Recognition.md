@@ -1,8 +1,12 @@
 ---
 title: Video Test-Time Adaptation for Action Recognition
+tags:
+  - 论文笔记
+  - 动作识别
+  - CVPR2023
+categories:
+  - 视频动作识别
 date: 2023-06-26 10:56:29
-tags: [论文笔记,动作识别,CVPR2023]
-categories: [视频理解]
 ---
 
 Video Test-Time Adaptation for Action Recognition
@@ -14,6 +18,8 @@ code： https://github.com/wlin-at/ViTTA
 # 摘要
 
 尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未展示视频动作识别模型的测试时间自适应能力。我们提出了一种针对时空模型的方法，可以在单个视频样本的每一步上进行自适应。该方法通过一种特征分布对齐技术，将在线估计的测试集统计数据与训练统计数据进行对齐。我们进一步通过对同一测试视频样本进行时间增强视图的预测一致性来强化。在三个基准动作识别数据集上的评估结果表明，我们提出的技术不依赖于具体的架构，能够显著提高最先进的卷积架构TANet和Video Swin Transformer的性能。我们的方法在单个分布变化的评估和随机分布变化的挑战性情况下都表现出了显著的性能提升。
+
+<!--more-->
 
 # 背景信息:
 

@@ -1,8 +1,10 @@
 ---
 title: Video-Swin-Transformers
+tags:
+  - Transformer-based
+categories:
+  - 视频动作识别
 date: 2023-03-28 19:49:09
-tags: [Transformer-based]
-categories: [视频理解]
 ---
 
 paper: https://arxiv.org/abs/2106.13230
@@ -12,6 +14,8 @@ code: https://github.com/SwinTransformer/Video-Swin-Transformer
 # 摘要
 
 视觉社区正在见证从CNN到Transformer的建模转变，其中纯Transformer架构在主要视频识别基准上获得了最高准确性。这些视频模型都建立在Transformer层上，它们在空间和时间维度上全局连接补丁。在本文中，我们反而提倡在视频变换器中引入局部性的归纳偏差，与先前计算全局自我关注甚至具有空间-时间因子分解的方法相比，这导致了更好的速度-准确性折衷。所提出的视频架构的局部性是通过适应为图像域设计的Swin Transformer实现的，同时继续利用预训练图像模型的能力。我们的方法在广泛的视频识别基准上实现了最先进的准确性，包括动作识别（Kinetics-400上84.9的top-1准确性和Kinetics-600上85.9的top-1准确性，预训练数据约少20倍，模型大小约小3倍）和时间建模（Something-Something v2上69.6的top-1准确性）。
+
+<!--more-->
 
 # 方法
 
@@ -23,11 +27,11 @@ Video Swin Transformer的总体架构如图所示，它展示了其tiny版本（
 
 该架构的主要组成部分是视频Swin Transformer块，该块是通过将标准Transformer层中的多头自注意(MSA)模块替换为基于3D移动窗口的多头自注意模块，并保持其他组件不变的方式构建的。
 
-![20230329134824](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329134824.png)
+![Video Swin Transfromer](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329134824.png)
 
 ## 基于3D移位窗口的MSA模块
 
-![20230329145740](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329145740.png)
+![3D移位窗口](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230329145740.png)
 
 **非重叠3D窗口的多头注意力机制**：直接扩展2D的方法去处理视频输入。给定一个由$T’$$\times$$H’$$\times$$W’$ 3D token组成的视频和一个$P$$\times$$M$$\times$$M$的3D窗口大小，窗口被安排以非重叠的方式均匀划分视频输入。也就是说，输入token被划分为$\lceil\frac{T’}{P}\rceil$$\times$$\lceil\frac{H’}{M}\rceil$$\times$$\lceil\frac{W’}{M}\rceil$个不重叠的3D窗口。例如，如图所示，对于输入大小为$8\times8\times8$个token和窗口大小为$4\times 4 \times 4$的情况，第$l$层的窗口数量将为$2\times 2 \times 2$=8,并且在每个3D窗口内执行多头自注意力。
 

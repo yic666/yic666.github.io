@@ -1,8 +1,12 @@
 ---
 title: PoseConv3d笔记
+tags:
+  - 动作识别
+  - 论文笔记
+  - 骨架
+categories:
+  - 骨架动作识别
 date: 2022-09-22 16:48:46
-tags: [动作识别,论文笔记,骨架]
-categories: [动作识别]
 ---
 
 Revisiting Skeleton-based Action Recognition
@@ -21,6 +25,8 @@ Revisiting Skeleton-based Action Recognition
   - 在处理多人场景方面无需额外计算成本
 
 - 另外，更容易与其他模态结合，在八个多模态识别基准达到了SOTA
+
+<!--more-->
 
 # 引言
 
@@ -46,7 +52,7 @@ Revisiting Skeleton-based Action Recognition
 
 一般来说2D姿势比3D姿势效果更好，如下图。与自底向上的方法相比，自顶向下的方法在标准基准(如coco -关键点)上获得了优越的性能。
 
-![image-20220923200807607](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png)
+![(https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png)
 
 ### 消融实验
 
@@ -54,11 +60,11 @@ Revisiting Skeleton-based Action Recognition
 
 #### 2D v.s. 3D 骨架
 
-![image-20220923201902224](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923201902224.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923201902224.png)
 
 使用MS-G3D（用于基于骨骼的动作识别的当前最先进的GCN），对2D和3D关键点具有相同的配置和训练计划，结果如上表。
 
-![image-20220923204038409](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923204038409.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923204038409.png)
 
 除了基于rgb的3d位姿估计方法，还考虑了“提升”方法，直接“提升”2d姿势(序列)到3d姿势(序列)，基于HRNet提取的2D姿态对3D姿态进行回归，利用提升后的3D姿态进行动作识别。上表的结果表明，这种被提升的3D姿势没有提供任何额外的信息，在动作识别方面的表现甚至比原始的2D姿势更差。
 
@@ -70,13 +76,13 @@ Revisiting Skeleton-based Action Recognition
 
 #### Interested Person v.s. All Persons.
 
-![image-20220923210416469](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210416469.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210416469.png)
 
 很多人可能存在于一个视频中，但并不是所有人都与感兴趣的动作有关。作者使用3种人物边界框进行姿态提取：Detection，Tracking（使用Siamese-RPN)和GT(对运动员的关注增加)。从上表的结果可以得到当事人的先验是极其重要的，即使是较弱的先验知识(每个视频1 个GT box)也能大大提高性能。
 
 #### Coordinates v.s. Heatmaps
 
-![image-20220923211126851](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923211126851.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923211126851.png)
 
 存储3D热图可能会占用大量磁盘空间。为提升效率，将每个 2D 关键点存储为坐标 (x, y, score)，其中 score 为预测的置信度。在 FineGYM 上进行了实验，以估计这种热图 → 坐标的压缩会带来多大信息损失。作者发现，在使用高质量特征提取器的情况下，使用坐标作为输入，动作识别的精度仅有少量下降 (0.4%)。因此在后续工作中，作者以坐标的格式来存储提取出的 2D 姿态。
 
@@ -102,7 +108,7 @@ $\boldsymbol{L}_{k i j}=e^{-\frac{\mathcal{D}\left((i, j), s e g\left[a_{k}, b_{
 
 通过对帧的子集进行采样，还可以沿时间维减小3D热图的体积。具体来说，为从视频中采样n帧，将视频分成n个等长的片段，并从每个片段中随机选择一帧。
 
-![image-20220924200056400](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924200056400.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924200056400.png)
 
 ## 用于基于骨架的动作识别的3D-CNN
 
@@ -110,16 +116,16 @@ $\boldsymbol{L}_{k i j}=e^{-\frac{\mathcal{D}\left((i, j), s e g\left[a_{k}, b_{
 
 PoseConv3D以3D热图堆叠作为输入，可以用各种3D- cnn的backbone实例化。与一般的3D-CNN网络相比，需要添加两个修改：（1）由于3D热图体积的空间分辨率不需要像RGB剪辑那么大，因此在3D- cnn中删除了早期阶段的下采样操作；（2）由于采用的3D热图已经是中级特征，因此一个更浅(更少层)和更薄(更少通道)的网络对于PoseConv3D已经足够了。基于这些改动，作者采用了三种著名的3D-CNN：C3D，SlowOnly和X3D
 
-![image-20220924164508040](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924164508040.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924164508040.png)
 
 如下表所示，采用轻量级版本的3d - cnn可以显著降低计算复杂度，但识别性能略有下降。而SlowOnly直接从Resnet膨胀而来而且具有良好的识别性能，作者将其作为Backbone。
 
-![image-20220924183705271](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924183705271.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924183705271.png)
 
 ### RGBPose-Conv3D
 
 作者提出RGBPose-Conv3D用于早期的人体骨骼和RGB帧的融合，有两条通路分别处理RGB模态和Pose模态。总的来说，RGBPose-Conv3D的架构遵循几个原则：（1）相比于RGB流，Pose流具有较小的通道宽度和较小的深度，以及更小的输入空间分辨率；（2）加了Early Fusion，增加了两个通路之间的双向横向连接，促进两种模式之间的早期特征融合。RGBPose- Conv3D分别使用每个通路的两个单独损失进行训练，因为联合从两种模态学习的单个损失会导致严重的过拟合。
 
-![image-20220924195658960](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924195658960.png)
+![](https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924195658960.png)
 
 # 实验

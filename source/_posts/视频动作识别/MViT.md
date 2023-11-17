@@ -1,8 +1,10 @@
 ---
 title: MViT
+tags:
+  - Transformer-based
+categories:
+  - 视频动作识别
 date: 2023-03-23 21:11:34
-tags: [Transformer-based]
-categories: [视频理解]
 ---
 
 
@@ -14,6 +16,8 @@ code: https://github.com/facebookresearch/SlowFast
 
 我们提出了用于视频和图像识别的多尺度视觉Transformer（MViT），通过将多尺度特征层次结构的开创性想法与Transformer模型相连接。多尺度Transformer具有多个通道-分辨率尺度阶段。从输入分辨率和小通道维度开始，这些阶段在减小空间分辨率的同时分层扩展通道容量。这创建了一个多尺度特征金字塔，早期层以高空间分辨率操作，以模拟简单的低层次视觉信息，而深层以空间粗糙但复杂的高维特征操作。我们评估了这个基本的架构先验来模拟视觉信号的密集性质，针对多种视频识别任务进行了评估，其中它的表现优于依赖于大规模外部预训练的并且计算和参数成本高5-10倍的同时期视觉Transformer。我们进一步去除了时间维度，并将我们的模型应用于图像分类，其中它比视觉Transformer之前的工作中表现更好。
 
+<!--more-->
+
 # 方法
 
 通用多尺度变压器架构是建立在stages得核心概念上的。每一个stage由多个具有特定时空分辨率和channel维度的Transformer块组成。主要思想是逐步扩大信道容量，同时汇集网络从输入到输出的分辨率。
@@ -21,7 +25,7 @@ code: https://github.com/facebookresearch/SlowFast
 ## 多头池化注意力
 
 多头池化注意力（Multi Head Pooling Attention,MHPA）是一种可以在Transformer块中灵活建模不同分辨率的自注意力算子，使得多尺度Transformer可以在不断变化的时空分辨率下运行。与原始的多头注意力算子相比，MHPA将潜在张量序列进行池化，以减少参与输入的序列长度(分辨率)，如下图。
-![20230326125003](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230326125003.png)
+![多头池化注意力](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230326125003.png)
 输入$X \in \mathbb{R}^{L \times D}$是一个序列长度为$L$的$D$维输入张量，与MHA一样得到query、key、value：
 
 $$
@@ -46,7 +50,7 @@ $$ f_j = s^j_T \cdot s^j_H \cdot s^j_W, \ \forall \ j \in \{Q,K,V\}. $$
 
 Vision Transformer（ViT）架构通过将分辨率为$T\times H \times W$的输入视频分成大小为$1\times 16 \times 16$的不重叠补丁，并对展平的图像补丁应用逐点线性层，将它们投影到Transformer的潜在维度$D$中。这相当于使用大小和步长均为$1\times 16 \times 16$的卷积，将其显示为模型定义中的patch$_1$阶段。
 
-![20230327181457](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327181457.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327181457.png)
 
 接下来，对于长度为$L$、维度为$D$的投影序列的每个元素都加上一个位置嵌入$\mathbf{E} \in \mathbb{R}^{L \times D}$，以编码位置信息并打破排列不变性。一个可学习的类别嵌入被添加到投影的图像补丁中。
 
@@ -63,7 +67,7 @@ $$
 
 MViT的关键是在整个网络中同时逐步“增加”通道分辨率（即维度）并“降低”时空分辨率（即序列长度）。MViT架构在早期层中具有细节的时空（和“粗略”的通道）分辨率，这些分辨率在后期层中进行上/下采样以获得粗略的时空（和“精细”的通道）分辨率。
 
-![20230327193043](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327193043.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327193043.png)
 
 一个scale stage被定义为在相同scale上操作的一组$N$个transformer块，其在通道和时空维度上具有相同的分辨率$D\times T\times H\times W$。在输入（cube$_1$）中，将图像块（或立方体）投影到较小的通道维度（例如，比典型的ViT模型小8倍），但有更长的序列（例如，比典型的ViT模型密集16倍）。
 
@@ -79,5 +83,5 @@ MViT的关键是在整个网络中同时逐步“增加”通道分辨率（即�
 
 为了处理阶段之间通道维度的不匹配，作者使用了一个额外的线性层，对MHPA操作的层归一化输出进行操作。请注意，这与其他（保留分辨率）的跳跃连接不同，它们在未标准化的信号上进行操作。
 
-![20230327212411](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327212411.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230327212411.png)
 

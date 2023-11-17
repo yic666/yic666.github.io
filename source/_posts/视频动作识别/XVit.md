@@ -1,8 +1,11 @@
 ---
 title: XVit
+tags:
+  - Transformer-based
+  - 代码
+categories:
+  - 视频动作识别
 date: 2023-03-17 10:44:02
-tags: [Transformer-based,代码]
-categories: [视频理解]
 ---
 
 
@@ -16,6 +19,8 @@ code: https://github.com/1adrianb/video-transformers
 本文研究的是利用Transformer进行视频识别。最近在这一领域的尝试在识别精度方面已经证明了有希望的结果，但在许多情况下，由于对时间信息的额外建模，它们也被证明会导致显著的计算开销。在这项工作中，我们提出了一个视频Transformer模型，其复杂性与视频序列中的帧数成线性比例，因此与基于图像的Transformer模型相比没有开销。为了实现这一点，我们的模型对视频Transformer中使用的全时空注意力做了两个近似:(a)它将时间注意力限制在局部时间窗口，并利用Transformer的深度来获得视频序列的全时间覆盖。(b)它使用高效的时空混合来联合关注空间和时间位置，而不会在纯空间注意力模型的基础上产生任何额外的成本。我们还展示了如何集成2个非常轻量级的全局时间关注机制，以最小的计算成本提供额外的精度改进。我们证明了我们的模型在最流行的视频识别数据集上产生非常高的识别精度，同时比其他视频转换器模型更有效。代码将被提供。
 
 ![Different approaches to space-time self-attention for video recognition.](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230317104614654.png)
+
+<!--more-->
 
 # 主要贡献
 

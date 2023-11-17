@@ -1,9 +1,12 @@
 ---
-title: >-
-  Temporal Query Networks for Fine-grained Video Understanding
-date: 2023-02-19
-tags: [动作识别,论文笔记,Fine-Grained Action Recognition]
-categories: [视频理解]
+title: Temporal Query Networks for Fine-grained Video Understanding
+tags:
+  - 动作识别
+  - 论文笔记
+  - Fine-Grained Action Recognition
+categories:
+  - 视频动作识别
+date: 2023-02-19 00:00:00
 ---
 
 
@@ -20,6 +23,9 @@ CVPR 2021
 2. 提出了一种新的方法-随机特征库更新-在不同长度的视频上训练网络，并使用响应细粒度查询所需的密集采样
 3. 将TQN与其他体系结构和文本监督方法进行比较，分析其优缺点
 4. 在FineGym和Diving48基准上广泛评估细粒度动作分类的方法并仅使用RGB特征超越最先进的方法
+
+
+<!--more-->
 
 # Temporal Query Networks
 
@@ -86,10 +92,10 @@ DETR[4]是最近提出的一种基于Transformer的目标检测模型，同样�
 
 记忆库缓存clip级别的3D卷积网络视觉特征。对于给定的视频，clip特征$\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2}, \ldots, \Phi_{t}\right)$可以被相互独立提取。缓存库是由预训练的3D卷积网络中提取的所有训练视频的片段特征初始化的。然后在每次训练迭代中，固定数量的$n_{online}$个随机采样clip通过视觉编码器计算得到，而剩下的$(r-n_{online})$个clip特征则从缓存库中获得。然后将两组视觉特征组合并输入TQN解码器进行最终预测和反向传播以更新模型参数。最后，将在线计算得到的记忆库中的clip特征替换为在线特征。在推理过程中，所有的特征都是在没有缓存库的情况下在线计算的。
 
-![image-20230219134722818](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png)
+![随机更新特征库(https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png)
 
 # 将类别分解为属性查询
 
 在本节中，作者演示了通常与细粒度视频识别数据集相关的预定义的N个类别$\mathcal{C}=\left\{c_{1}, c_{2}, \ldots, c_{N}\right\}$集合如何被分解为属性查询。在这些数据集中，类别在微妙的细节上有所不同，例如特定类型、持续时间或特定事件序列的数量。这些事件可能是快速发生(持续时间短)，但时间位置和持续时间未知。
 
-![image-20230219150729217](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png)
+![](https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png)

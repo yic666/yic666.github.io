@@ -1,0 +1,10 @@
+{
+  "userIgnoreFilters": [
+    "node_modules/",
+    "themes/",
+    "scaffolds/"
+  ],
+  "newFileLocation": "folder",
+  "newFileFolderPath": "source/_posts",
+  "promptDelete": false
+}

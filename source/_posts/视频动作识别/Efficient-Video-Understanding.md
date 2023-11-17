@@ -1,8 +1,12 @@
 ---
 title: Efficient Video Understanding
+tags:
+  - CLIP
+  - Efficient
+  - Prompt
+categories:
+  - 视频动作识别
 date: 2023-04-01 14:25:58
-tags: [CLIP,Efficient,Prompt]
-categories: [视频理解]
 ---
 
 # Prompting Visual-Language Models for Efficient Video Understanding
@@ -15,6 +19,8 @@ code: https://github.com/ju-chen/Efficient-Prompt
 ## 基于图像的视觉语言模型
 
 ![](https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230406151516.png)
+
+<!--more-->
 
 ### Pre-training
 

@@ -1,8 +1,12 @@
 ---
 title: TimeSFormer与ViViT
+tags:
+  - 经典论文
+  - 代码
+  - Transformer-based
+categories:
+  - 视频动作识别
 date: 2023-03-13 12:24:22
-tags: [经典论文,代码,Transformer-based]
-categories: [视频理解]
 ---
 
 # TimeSFormer
@@ -14,6 +18,8 @@ code: https://github.com/facebookresearch/TimeSformer
 ## 摘要
 
 我们提出了一种基于空间和时间上的自注意力机制的无卷积视频分类方法。我们的方法，命名为“TimeSformer”，通过从一系列帧级别的图像块直接进行时空特征学习，将标准的Transformer架构适应到视频上。我们的实验研究比较了不同的自注意力方案，并发现“分割注意力”架构，在每个网络块中分别应用时间注意力和空间注意力，能够在我们考虑的设计选择中获得最佳的视频分类准确率。尽管设计完全不同，TimeSformer在几个动作识别基准上都达到了最先进的结果，包括在Kinetics-400和Kinetics-600上获得了最佳的准确率。最后，与3D卷积网络相比，我们的模型训练速度更快，可以实现更高的测试效率（以较小的准确率损失为代价），并且可以应用于更长的视频片段（超过一分钟）。 
+
+<!--more-->
 
 ## 整体架构
 
