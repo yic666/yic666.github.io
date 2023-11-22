@@ -134,7 +134,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -172,7 +172,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/13/TimesFormer%E4%B8%8EViViT/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/13/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/TimesFormer%E4%B8%8EViViT/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -190,7 +190,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/03/13/TimesFormer%E4%B8%8EViViT/" class="post-title-link" itemprop="url">TimeSFormer与ViViT</a>
+          <a href="/2023/03/13/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/TimesFormer%E4%B8%8EViViT/" class="post-title-link" itemprop="url">TimeSFormer与ViViT</a>
         </h2>
 
         <div class="post-meta-container">
@@ -208,7 +208,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-22 13:09:57" itemprop="dateModified" datetime="2023-03-22T13:09:57+08:00">2023-03-22</time>
+      <time title="Modified: 2023-11-17 14:39:44" itemprop="dateModified" datetime="2023-11-17T14:39:44+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -216,7 +216,7 @@
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -235,350 +235,14 @@
 <p>code: https://github.com/facebookresearch/TimeSformer</p>
 <h2 id="摘要">摘要</h2>
 <p>我们提出了一种基于空间和时间上的自注意力机制的无卷积视频分类方法。我们的方法，命名为“TimeSformer”，通过从一系列帧级别的图像块直接进行时空特征学习，将标准的Transformer架构适应到视频上。我们的实验研究比较了不同的自注意力方案，并发现“分割注意力”架构，在每个网络块中分别应用时间注意力和空间注意力，能够在我们考虑的设计选择中获得最佳的视频分类准确率。尽管设计完全不同，TimeSformer在几个动作识别基准上都达到了最先进的结果，包括在Kinetics-400和Kinetics-600上获得了最佳的准确率。最后，与3D卷积网络相比，我们的模型训练速度更快，可以实现更高的测试效率（以较小的准确率损失为代价），并且可以应用于更长的视频片段（超过一分钟）。</p>
-<h2 id="整体架构">整体架构</h2>
-<p><strong>输入视频</strong>：TimeSformer的输入为<span
-class="math inline">\(X \in \mathbb{R}^{H \times W \times 3 \times
-F}\)</span>，表示<span class="math inline">\(F\)</span>个size为$HW
-$的RGB帧。</p>
-<p><strong>转换为Patch</strong>：与ViT一样，将每一帧分解为N个不重叠的Patch，每一个patch的大小都为<span
-class="math inline">\(P \times P\)</span>，因此<span
-class="math inline">\(N = HW/P^2\)</span>。把patch展开为向量<span
-class="math inline">\(\mathbf{x}_{(p, t)} \in \mathbb{R}^{3
-P^{2}}\)</span>，其中<span class="math inline">\(p = 1, \dots ,
-N\)</span>表示空间位置，<span class="math inline">\(t = 1, \dots
-,F\)</span>为时间帧的索引。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PatchEmbed</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Image to Patch Embedding</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, img_size=<span class="number">224</span>, patch_size=<span class="number">16</span>, in_chans=<span class="number">3</span>, embed_dim=<span class="number">768</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        img_size = to_2tuple(img_size)</span><br><span class="line">        patch_size = to_2tuple(patch_size)</span><br><span class="line">        num_patches = (img_size[<span class="number">1</span>] // patch_size[<span class="number">1</span>]) * (img_size[<span class="number">0</span>] // patch_size[<span class="number">0</span>])</span><br><span class="line">        self.img_size = img_size</span><br><span class="line">        self.patch_size = patch_size</span><br><span class="line">        self.num_patches = num_patches</span><br><span class="line"></span><br><span class="line">        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">            B, C, T, H, W = x.shape</span><br><span class="line">            x = rearrange(x, <span class="string">&#x27;b c t h w -&gt; (b t) c h w&#x27;</span>)</span><br><span class="line">            x = self.proj(x) <span class="comment"># ((bt), dim, h//p, w//p)</span></span><br><span class="line">            W = x.size(-<span class="number">1</span>)</span><br><span class="line">            x = x.flatten(<span class="number">2</span>).transpose(<span class="number">1</span>, <span class="number">2</span>)<span class="comment"># ((bt), (hw)//(p^2), dim)</span></span><br><span class="line">            <span class="keyword">return</span> x, T, W</span><br></pre></td></tr></table></figure>
-<p><strong>Linear embedding</strong>：将<span
-class="math inline">\(\mathbf{x}_{(p, t)} \in \mathbb{R}^{3
-P^{2}}\)</span>线性映射到<span class="math inline">\(\mathbf{z}_{(p,
-t)}^{(0)} \in \mathbb{R}^{D}\)</span>： <span class="math display">\[
-\mathbf{z}_{(p, t)}^{(0)}=E \mathbf{x}_{(p, t)}+\mathbf{e}_{(p, t)}^{p o
-s}
-\]</span> 其中，<span class="math inline">\(E \in \mathbb{R}^{D \times 3
-P^{2}}\)</span>为可学习的线性映射系数矩阵，<span
-class="math inline">\(\mathbf{e}^{pos}_{(p,t)} \in \mathbb{R} ^
-D\)</span>为可学习的空间位置编码，<span
-class="math inline">\(\mathbf{z}_{(p, t)}\)</span>
-序列是Transformer的输入。与ViT一样，在序列的第一个位置加入一个可学习的向量<span
-class="math inline">\(\mathbf{z}_{(0, 0)}\)</span>作为cls-token。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">B = x.shape[<span class="number">0</span>]</span><br><span class="line">x, T, W = self.patch_embed(x)</span><br><span class="line">cls_tokens = self.cls_token.expand(x.size(<span class="number">0</span>), -<span class="number">1</span>, -<span class="number">1</span>)</span><br><span class="line">x = torch.cat((cls_tokens, x), dim=<span class="number">1</span>)</span><br><span class="line">x = x + self.pos_embed <span class="comment"># pose embeding</span></span><br></pre></td></tr></table></figure>
-<p><strong>QKV计算</strong>：Transformer包含<span
-class="math inline">\(L\)</span>层encoding
-blocks，每个block的query、key、value表达为 <span class="math display">\[
-\begin{array}{l}
-\mathbf{q}_{(p, t)}^{(\ell, a)}=W_{Q}^{(\ell, a)}
-\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
-\mathbb{R}^{D_{h}} \\
-\mathbf{k}_{(p, t)}^{(\ell, a)}=W_{K}^{(\ell, a)}
-\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
-\mathbb{R}^{D_{h}} \\
-\mathbf{v}_{(p, t)}^{(\ell, a)}=W_{V}^{(\ell, a)}
-\operatorname{LN}\left(\mathbf{z}_{(p, t)}^{(\ell-1)}\right) \in
-\mathbb{R}^{D_{h}}
-\end{array}
-\]</span> 其中，<span class="math inline">\(a = 1 ,
-\dots,A\)</span>代表注意力头的数量，<span
-class="math inline">\(D_h\)</span>代表每个head的维度</p>
-<p><strong>自注意力计算</strong>：对于自注意力计算部分，论文给出了五种不同的方式，将在下一节详细介绍。对于query
-patch<span class="math inline">\((p,t)\)</span>的自注意力权重<span
-class="math inline">\(\boldsymbol{\alpha}_{(p, t)}^{(\ell, a)} \in
-\mathbb{R}^{N F+1}\)</span>通用的给出如下： <span
-class="math display">\[
-\boldsymbol{\alpha}_{(p, t)}^{(\ell,
-a)}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
-a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
-a)}\left\{\mathbf{k}_{\left(p^{\prime}, t^{\prime}\right)}^{(\ell,
-a)}\right\}_{\substack{p^{\prime}=1, \ldots, N \\ t^{\prime}=1, \ldots,
-F}}\right]\right)
-\]</span> <strong>编码</strong>：第<span
-class="math inline">\(\ell\)</span>个编码<span
-class="math inline">\(\mathbf{z}_{(p,
-t)}^{(\ell)}\)</span>是利用每个注意头的自注意系数计算值向量的加权和得到：
-<span class="math display">\[
-\mathbf{s}_{(p, t)}^{(\ell, a)}=\alpha_{(p, t),(0,0)}^{(\ell, a)}
-\mathbf{v}_{(0,0)}^{(\ell, a)}+\sum_{p^{\prime}=1}^{N}
-\sum_{t^{\prime}=1}^{F} \alpha_{(p, t),\left(p^{\prime},
-t^{\prime}\right)}^{(\ell, a)} \mathbf{v}_{\left(p^{\prime},
-t^{\prime}\right)}^{(\ell, a)}
-\]</span>
-然后，将来自所有head的这些向量的拼接映射并通过MLP，这两个操作都具有残差连接：
-<span class="math display">\[
-\begin{array}{l}
-\mathbf{z}_{(p, t)}^{\prime(\ell)}=W_{O}\left[\begin{array}{c}
-\mathbf{s}_{(p, t)}^{(\ell, 1)} \\
-\vdots \\
-\mathbf{s}_{(p, t)}^{(\ell, \mathcal{A})}
-\end{array}\right]+\mathbf{z}_{(p, t)}^{(\ell-1)} \\
-\mathbf{z}_{(p,
-t)}^{(\ell)}=\operatorname{MLP}\left(\operatorname{LN}\left(\mathbf{z}_{(p,
-t)}^{\prime(\ell)}\right)\right)+\mathbf{z}_{(p, t)}^{\prime(\ell)} .
-\end{array}
-\]</span> <strong>分类 embedding</strong> 取出cls-token用作最终的分类：
-<span class="math display">\[
-y = MLP(LN(\mathbf{z}^{(L)}_{(0, 0)}))
-\]</span></p>
-<h2 id="自注意力机制">自注意力机制</h2>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230313191932395.png"
-alt="论文研究的视频自注意力块" />
-<figcaption aria-hidden="true">论文研究的视频自注意力块</figcaption>
-</figure>
-<p>通过对输入图像进行分块，论文中一共研究了五种不同的注意力机制：</p>
-<ol type="1">
-<li>空间注意力机制（S)：只取同一帧内的图像块进行自注意力机制</li>
-<li>时空共同注意力机制（ST）：取所有帧中的所有图像块进行注意力机制</li>
-<li>分开的时空注意力机制（T+S）：先对同一帧中的所有图像块进行自注意力机制，然后对不同帧中<strong>对应位置</strong>的图像块进行注意力机制</li>
-<li>稀疏局部全局注意力机制（L+G）：先利用所有帧中，相邻的 H/2 和 W/2
-的图像块计算局部的注意力，然后在空间上，使用2个图像块的步长，在整个序列中计算自注意力机制，这个可以看做全局的时空注意力更快的近似</li>
-<li>轴向的注意力机制（T+W+H）：先在时间维度上进行自注意力机制，然后在纵坐标相同的图像块上进行自注意力机制，最后在横坐标相同的图像块上进行自注意力机制</li>
-</ol>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230313192113759.png"
-alt="论文研究的五种时空自注意力机制方案的可视化" />
-<figcaption
-aria-hidden="true">论文研究的五种时空自注意力机制方案的可视化</figcaption>
-</figure>
-<h3 id="space-attention">Space Attention</h3>
-<p>Space
-Attention就是标准的Transformer结构，只计算空间注意力，跟ViT一样，只有<span
-class="math inline">\(N+1\)</span>个query-key对。 <span
-class="math display">\[
-\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { space
-}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
-a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
-a)}\left\{\mathbf{k}_{\left(p^{\prime}, t\right)}^{(\ell,
-a)}\right\}_{p^{\prime}=1, \ldots, N}\right]\right)
-\]</span> 代码部分，向量加上空间位置编码后，就可以输入到Attention
-blocks，而由于在转换patch的时候batchsize和t是并在一起的，所以需要转换回去，并多帧取平均。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Attention blocks</span></span><br><span class="line"><span class="keyword">for</span> blk <span class="keyword">in</span> self.blocks:</span><br><span class="line">    x = blk(x, B, T, W)</span><br><span class="line"></span><br><span class="line"><span class="comment">### Predictions for space-only baseline</span></span><br><span class="line"><span class="keyword">if</span> self.attention_type == <span class="string">&#x27;space_only&#x27;</span>:</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b t) n m -&gt; b t n m&#x27;</span>,b=B,t=T)</span><br><span class="line">    x = torch.mean(x, <span class="number">1</span>) <span class="comment"># averaging predictions for every frame</span></span><br></pre></td></tr></table></figure>
-<p>self.blocks如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">num_spatial_tokens = (x.size(<span class="number">1</span>) - <span class="number">1</span>) // T</span><br><span class="line">H = num_spatial_tokens // W</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> self.attention_type <span class="keyword">in</span> [<span class="string">&#x27;space_only&#x27;</span>, <span class="string">&#x27;joint_space_time&#x27;</span>]:</span><br><span class="line">    x = x + self.drop_path(self.attn(self.norm1(x)))</span><br><span class="line">    x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h3 id="joint-space-time-attention">Joint Space-Time Attention</h3>
-<p><span class="math display">\[
-\boldsymbol{\alpha}_{(p, t)}^{(\ell,
-a)}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
-a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
-a)}\left\{\mathbf{k}_{\left(p^{\prime}, t^{\prime}\right)}^{(\ell,
-a)}\right\}_{\substack{p^{\prime}=1, \ldots, N \\ t^{\prime}=1, \ldots,
-F}}\right]\right)
-\]</span></p>
-<p>Joint Space-Time
-Attention需要在输入Transformer前先加上TimeEmbeeding，相关代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Time Embeddings</span></span><br><span class="line"><span class="keyword">if</span> self.attention_type != <span class="string">&#x27;space_only&#x27;</span>:</span><br><span class="line">    cls_tokens = x[:B, <span class="number">0</span>, :].unsqueeze(<span class="number">1</span>)</span><br><span class="line">    x = x[:,<span class="number">1</span>:]</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b t) n m -&gt; (b n) t m&#x27;</span>,b=B,t=T)</span><br><span class="line">	x = x + self.time_embed</span><br><span class="line">    x = self.time_drop(x)</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;(b n) t m -&gt; b (n t) m&#x27;</span>,b=B,t=T)</span><br><span class="line">    x = torch.cat((cls_tokens, x), dim=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="divided-space-time-attention">Divided Space-Time Attention</h3>
-<p>对于Divided Space-Time Attention，先计算时间自注意力如下： <span
-class="math display">\[
-\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { time
-}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
-a)^{\top}}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
-a)}\left\{\mathbf{k}_{\left(p, t^{\prime}\right)}^{(\ell,
-a)}\right\}_{t^{\prime}=1, \ldots, F}\right]\right)
-\]</span>
-得到时间注意力权重后，同样经过编码的操作，但不通过MLP，得到时间编码<span
-class="math inline">\(z&#39;^{(\ell )time}_{(p,t)}\)</span>。</p>
-<p>通过时间编码可计算出响应的Q、K、V，计算空间自注意力如下： <span
-class="math display">\[
-\boldsymbol{\alpha}_{(p, t)}^{(\ell, a) \text { space
-}}=\operatorname{SM}\left(\frac{\mathbf{q}_{(p, t)}^{(\ell,
-a)}}{\sqrt{D_{h}}} \cdot\left[\mathbf{k}_{(0,0)}^{(\ell,
-a)}\left\{\mathbf{k}_{\left(p^{\prime}, t\right)}^{(\ell,
-a)}\right\}_{p^{\prime}=1, \ldots, N}\right]\right)
-\]</span> 这样得到的自注意力权重就会包含时空信息。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elif</span> self.attention_type == <span class="string">&#x27;divided_space_time&#x27;</span>:</span><br><span class="line">    <span class="comment">## Temporal</span></span><br><span class="line">    xt = x[:,<span class="number">1</span>:,:]</span><br><span class="line">    xt = rearrange(xt, <span class="string">&#x27;b (h w t) m -&gt; (b h w) t m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res_temporal = self.drop_path(self.temporal_attn(self.temporal_norm1(xt)))</span><br><span class="line">    res_temporal = rearrange(res_temporal, <span class="string">&#x27;(b h w) t m -&gt; b (h w t) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res_temporal = self.temporal_fc(res_temporal)</span><br><span class="line">    xt = x[:,<span class="number">1</span>:,:] + res_temporal</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Spatial</span></span><br><span class="line">    init_cls_token = x[:,<span class="number">0</span>,:].unsqueeze(<span class="number">1</span>)</span><br><span class="line">    cls_token = init_cls_token.repeat(<span class="number">1</span>, T, <span class="number">1</span>)</span><br><span class="line">    cls_token = rearrange(cls_token, <span class="string">&#x27;b t m -&gt; (b t) m&#x27;</span>,b=B,t=T).unsqueeze(<span class="number">1</span>)</span><br><span class="line">    xs = xt</span><br><span class="line">    xs = rearrange(xs, <span class="string">&#x27;b (h w t) m -&gt; (b t) (h w) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    xs = torch.cat((cls_token, xs), <span class="number">1</span>)</span><br><span class="line">    res_spatial = self.drop_path(self.attn(self.norm1(xs)))</span><br><span class="line"></span><br><span class="line">    <span class="comment">### Taking care of CLS token</span></span><br><span class="line">    cls_token = res_spatial[:,<span class="number">0</span>,:]</span><br><span class="line">    cls_token = rearrange(cls_token, <span class="string">&#x27;(b t) m -&gt; b t m&#x27;</span>,b=B,t=T)</span><br><span class="line">    cls_token = torch.mean(cls_token,<span class="number">1</span>,<span class="literal">True</span>) <span class="comment">## averaging for every frame</span></span><br><span class="line">    res_spatial = res_spatial[:,<span class="number">1</span>:,:]</span><br><span class="line">    res_spatial = rearrange(res_spatial, <span class="string">&#x27;(b t) (h w) m -&gt; b (h w t) m&#x27;</span>,b=B,h=H,w=W,t=T)</span><br><span class="line">    res = res_spatial</span><br><span class="line">    x = xt</span><br><span class="line"></span><br><span class="line">    <span class="comment">## Mlp</span></span><br><span class="line">    x = torch.cat((init_cls_token, x), <span class="number">1</span>) + torch.cat((cls_token, res), <span class="number">1</span>)</span><br><span class="line">    x = x + self.drop_path(self.mlp(self.norm2(x)))</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<h1 id="vivit">ViViT</h1>
-<p>paper: https://arxiv.org/abs/2103.15691</p>
-<p>code:
-https://github.com/google-research/scenic/tree/main/scenic/projects/vivit</p>
-<h2 id="摘要-1">摘要</h2>
-<p>这篇文章介绍了一种基于纯变换器的视频分类模型，该模型受到图像分类中此类模型的最近成功的启发。为了有效处理视频中可能遇到的大量时空token，我们提出了几种沿着空间和时间维度分解我们模型的方法，以提高效率和可扩展性。此外，为了在较小的数据集上有效地训练我们的模型，我们展示了如何在训练过程中对模型进行正则化并利用预训练的图像模型。我们进行了彻底的消融研究，并在多个视频分类基准测试中取得了最先进的结果，包括
-Kinetics 400 和 600、Epic Kitchens、Something-Something v2 和 Moments in
-Time，优于基于深度 3D 卷积网络的先前方法。</p>
-<h2 id="vit概述">ViT概述</h2>
-<p>视觉变换器 (ViT) 适应了变换器架构，以最小的改动来处理2D图像。
-具体来说，ViT 提取 <span class="math inline">\(N\)</span>
-个不重叠的图像块，<span class="math inline">\(x_i \in \mathbb{R}^{h
-\times w}\)</span>，执行线性投影，然后将它们栅格化为1Dtoken <span
-class="math inline">\(z_i \in
-\mathbb{R}^d\)</span>。输入到下面的变换器编码器的token序列为 <span
-class="math display">\[
-\mathbf{z} = [z_{cls}, \mathbf{E}x_1, \mathbf{E}x_2, \ldots ,
-\mathbf{E}x_N] + \mathbf{p}
-\]</span> 其中，<span class="math inline">\(\mathbf{E}\)</span>
-的投影相当于2D卷积。一个可选的学习分类token <span
-class="math inline">\(z_{cls}\)</span>
-被添加到这个序列的前面，它在编码器的最后一层的表示作为分类层使用的最终表示。
-此外，一个学习位置嵌入，<span class="math inline">\(\mathbf{p} \in
-\mathbb{R}^{N \times
-d}\)</span>，被添加到token中以保留位置信息，因为变换器中后续的自注意力操作是排列不变的。
-然后将token传递到由 <span class="math inline">\(L\)</span>
-个变换器层组成的编码器中。 每一层 <span
-class="math inline">\(\ell\)</span> 都包括多头自注意力、层归一化 (LN) 和
-MLP 块，如下所示： <span class="math display">\[
-\mathbf{y}^{\ell} = \text{MSA}(\text{LN}(\mathbf{z}^\ell))
-+\mathbf{z}^\ell  \\
-\mathbf{z}^{\ell + 1} = \text{MLP}(\text{LN}(\mathbf{y}^\ell)) +
-\mathbf{y}^\ell
-\]</span> MLP 由两个线性投影组成，它们之间由 GELU 非线性分隔，token维度
-<span class="math inline">\(d\)</span> 在所有层中保持不变。
-最后，使用线性分类器根据 <span class="math inline">\(z_{cls}^L \in
-\mathbb{R}^d\)</span>
-对编码输入进行分类，如果它被添加到输入的前面，或者对所有token进行全局平均池化
-<span class="math inline">\(\mathbf{z}^{L}\)</span>。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314154425261.png"
-alt="ViViT架构" />
-<figcaption aria-hidden="true">ViViT架构</figcaption>
-</figure>
-<h2 id="视频片段-embeeding">视频片段 Embeeding</h2>
-<p>论文给出了两种方法把视频<span class="math inline">\(\mathbf{V} \in
-\mathbb{R}^{T \times H \times W \times
-C}\)</span>映射到一个token序列<span
-class="math inline">\(\mathbf{\tilde{z}} \in \mathbb{R}^{n_t \times n_h
-\times n_w \times d}\)</span>，接着加上位置embedding并reshape为<span
-class="math inline">\(\mathbb{R}^{N \times
-d}\)</span>以得到transformer的输入<span
-class="math inline">\(\mathbf{z}\)</span>。</p>
-<h3 id="uniform-frame-sampling">Uniform frame sampling</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314162311574.png"
-alt="Uniform frame sampling" />
-<figcaption aria-hidden="true">Uniform frame sampling</figcaption>
-</figure>
-<p>如图所示，标记输入视频的一种简单方法是从输入视频剪辑中均匀采样 <span
-class="math inline">\(n_t\)</span> 帧，使用与 ViT 相同的方法独立嵌入每个
-2D 帧，并将所有这些token连接在一起。 具体地，如果从每个帧中提取 <span
-class="math inline">\(n_h \cdot n_w\)</span> 个不重叠的图像块，则总共有
-<span class="math inline">\(n_t \cdot n_h \cdot n_w\)</span>
-个token将通过变换器编码器转发。
-直观地，这个过程可以看作是简单地构造一个大的 2D 图像来按照 ViT
-进行标记。 这种方法跟TimeSformer的一样。</p>
-<h3 id="tubelet-embedding">Tubelet embedding</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314162920579.png"
-alt="Tubelet embedding" />
-<figcaption aria-hidden="true">Tubelet embedding</figcaption>
-</figure>
-<p>另一种方法，如图所示，是从输入体积中提取不重叠的时空“tubes”，并将其线性投影到
-<span class="math inline">\(\mathbb{R}^d\)</span>。 这种方法是 ViT
-embedding的 3D 扩展，类似于 3D 卷积。 对于一个维度为 <span
-class="math inline">\(t \times h \times w\)</span> 的tubelet，<span
-class="math inline">\(n_t =
-\left\lfloor\frac{T}{t}\right\rfloor\)</span>，<span
-class="math inline">\(n_h =
-\left\lfloor\frac{H}{h}\right\rfloor\)</span> 和 <span
-class="math inline">\(n_w =
-\left\lfloor\frac{W}{w}\right\rfloor\)</span>，分别从时间、高度和宽度维度提取token。
-较小的tubelet尺寸因此会导致更多的token，增加了计算量。直观地说，这种方法在标记过程中融合了时空信息，而与“均匀帧采样”不同，在那里来自不同帧的时间信息由变换器融合。</p>
-<h2 id="视频transformer-模型">视频Transformer 模型</h2>
-<h3 id="model-1-spatio-temporal-attention">Model 1: Spatio-temporal
-attention</h3>
-<p>这个模型跟TimeSformer中的Joint Space-Time
-Attention基本一致，简单地将所有的时空token<span
-class="math inline">\(\mathbf{z}^{0}\)</span>输入到Transformer的编码器。而由于token的数量会随着采样帧的变多而变多，这样就会带来更大的计算复杂度。</p>
-<h3 id="model-2-factorised-encoder">Model 2: Factorised encoder</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314170832424.png"
-alt="Model 2: Factorised encoder" />
-<figcaption aria-hidden="true">Model 2: Factorised encoder</figcaption>
-</figure>
-<p>如图所示，该模型由两个独立的Transformer编码器组成。首先是空间编码器，仅以同一帧中提取的token为输入在<span
-class="math inline">\(L_s\)</span>层后获得每帧的表示。<span
-class="math inline">\(z_{cls}^{L_s}\)</span>是空间编码的cls-token，用于表达的空间特征。将每帧的特征cat以得到<span
-class="math inline">\(\mathbf{H} \in \mathbb{R}^{n_t \times
-d}\)</span>输入到<span
-class="math inline">\(L_t\)</span>个Transformer组成的时间编码器，以建模来自不同帧的token之间的特征交互，最后该编码器的cls-token用于分类。相比于模型1，计算复杂度从<span
-class="math inline">\(\mathcal{O}((n_t \cdot n_h \cdot
-n_w)^2)\)</span>减低到<span class="math inline">\(\mathcal{O}({(n_h
-\cdot n_w)^2 + n_t^2)}\)</span> 。</p>
-<p>代码来自https://github.com/rishikksh20/ViViT-pytorch/blob/master/vivit.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.to_patch_embedding(x)</span><br><span class="line">    b, t, n, _ = x.shape</span><br><span class="line">    cls_space_tokens = repeat(self.space_token, <span class="string">&#x27;() n d -&gt; b t n d&#x27;</span>, b = b, t=t) <span class="comment"># 按维度扩展</span></span><br><span class="line">    x = torch.cat((cls_space_tokens, x), dim=<span class="number">2</span>)</span><br><span class="line">    x += self.pos_embedding[:, :, :(n + <span class="number">1</span>)]</span><br><span class="line">    x = self.dropout(x)</span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b t n d -&gt; (b t) n d&#x27;</span>)</span><br><span class="line">    x = self.space_transformer(x)</span><br><span class="line">    x = rearrange(x[:, <span class="number">0</span>], <span class="string">&#x27;(b t) ... -&gt; b t ...&#x27;</span>, b=b) <span class="comment">#提取每帧计算得到的cls-token</span></span><br><span class="line">    cls_temporal_tokens = repeat(self.temporal_token, <span class="string">&#x27;() n d -&gt; b n d&#x27;</span>, b=b)</span><br><span class="line">    x = torch.cat((cls_temporal_tokens, x), dim=<span class="number">1</span>)</span><br><span class="line">    x = self.temporal_transformer(x)        </span><br><span class="line">    x = x.mean(dim = <span class="number">1</span>) <span class="keyword">if</span> self.pool == <span class="string">&#x27;mean&#x27;</span> <span class="keyword">else</span> x[:, <span class="number">0</span>]</span><br><span class="line">    <span class="keyword">return</span> self.mlp_head(x)</span><br></pre></td></tr></table></figure>
-<h3 id="model-3-factorised-self-attention">Model 3: Factorised
-self-attention</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314203922539.png"
-alt="Model 3: Factorised self-attention" />
-<figcaption aria-hidden="true">Model 3: Factorised
-self-attention</figcaption>
-</figure>
-<p>模型3与TimeSFormer的Divided
-Space-Time基本一致，不同的是没有使用cls-token，以避免在空间和时间维度之间重新构造输入token时产生歧义，而且他们的方法验证出无论是先空间自注意力还是时间自注意力结果是一样的。</p>
-<h3 id="model-4-factorised-dot-product-attention">Model 4: Factorised
-dot-product attention</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230314204755483.png"
-alt="Model 4: Factorised dot-product attention" />
-<figcaption aria-hidden="true">Model 4: Factorised dot-product
-attention</figcaption>
-</figure>
-<p>模型4一个与模型2和模型3具有相同计算复杂度的模型，同时保留了与未分解的模型1相同的参数数量。具体而言，模型4采用了不同的注意力头分别在空间和时间维度上计算每个token的注意权重，自注意操作被定义为
-<span class="math display">\[
-Attention(\mathbf{Q}, \mathbf{K}, \mathbf{V}) =
-Softmax\left(\frac{\mathbf{Q} \mathbf{K}^\top}{\sqrt{d_k}} \right)
-\mathbf{V}. \label{eq:selfattn}
-\]</span> 在自注意力中，查询<span class="math inline">\(\mathbf{Q} =
-\mathbf{X} \mathbf{W}_q\)</span>，键<span
-class="math inline">\(\mathbf{K} = \mathbf{X}
-\mathbf{W}_k\)</span>和值<span class="math inline">\(\mathbf{V}=
-\mathbf{X} \mathbf{W}_v\)</span>是输入<span
-class="math inline">\(\mathbf{X}\)</span>的线性投影，其中<span
-class="math inline">\(\mathbf{X}, \mathbf{Q}, \mathbf{K}, \mathbf{V} \in
-\mathbb{R}^{N \times d}\)</span>。
-注意，在未分解的情况下（模型1），空间和时间维度合并为<span
-class="math inline">\(N = n_t \cdot n_h \cdot n_w\)</span>。</p>
-<p>这里的主要思想是通过构造<span class="math inline">\(\mathbf{K}_s,
-\mathbf{V}_s \in \mathbb{R}^{n_h \cdot n_w \times d}\)</span>和<span
-class="math inline">\(\mathbf{K}_t, \mathbf{V}_t \in \mathbb{R}^{n_t
-\times
-d}\)</span>，即与这些维度对应的键和值，修改每个查询的键和值，以仅关注来自相同空间和时间索引的令牌。然后，对于一半的注意力头，通过计算<span
-class="math inline">\(\mathbf{Y}_s = Attention(\mathbf{Q}, \mathbf{K}_s,
-\mathbf{V}_s)\)</span>来关注来自空间维度的token，对于其余部分，通过计算<span
-class="math inline">\(\mathbf{Y}_t = Attention(\mathbf{Q}, \mathbf{K}_t,
-\mathbf{V}_t)\)</span>来关注时间维度。</p>
-<p>鉴于只是为每个查询更改注意力邻域，注意力操作与未分解情况下具有相同的维度，即<span
-class="math inline">\(\mathbf{Y}_s, \mathbf{Y}_t \in\mathbb {R}^{N\times
-d}\)</span>。 然后通过连接它们并使用线性投影来组合多个头的输出， $
-=Concat（ _s, _t） _O $。</p>
-<p>代码来自：https://github.com/noureldien/vivit_pytorch/blob/master/modules/vivit.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward_space</span>(<span class="params">self, x</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    x: (b, t, n, d)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># hide time dimension into batch dimension</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b t n d -&gt; (b t) n d&#x27;</span>)  <span class="comment"># (bt, n, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># apply self-attention</span></span><br><span class="line">    out = self.forward_attention(x)  <span class="comment"># (bt, n, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># recover time dimension and merge it into space</span></span><br><span class="line">    out = rearrange(out, <span class="string">&#x27;(b t) n d -&gt; b (t n) d&#x27;</span>, t=t, n=n)  <span class="comment"># (b, tn, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward_time</span>(<span class="params">self, x</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    x: (b, t, n, d)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># hide time dimension into batch dimension</span></span><br><span class="line">    x = x.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>)  <span class="comment"># (b, n, t, d)</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b n t d -&gt; (b n) t d&#x27;</span>)  <span class="comment"># (bn, t, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># apply self-attention</span></span><br><span class="line">    out = self.forward_attention(x)  <span class="comment"># (bn, t, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># recover time dimension and merge it into space</span></span><br><span class="line">    out = rearrange(out, <span class="string">&#x27;(b n) t d -&gt; b (t n) d&#x27;</span>, t=t, n=n)  <span class="comment"># (b, tn, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line"></span><br><span class="line">    t = self.num_patches_time</span><br><span class="line">    n = self.num_patches_space</span><br><span class="line"></span><br><span class="line">    <span class="comment"># reshape to reveal dimensions of space and time</span></span><br><span class="line">    x = rearrange(x, <span class="string">&#x27;b (t n) d -&gt; b t n d&#x27;</span>, t=t, n=n)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.attn_type == <span class="string">&#x27;space&#x27;</span>:</span><br><span class="line">        out = self.forward_space(x) <span class="comment"># (b, tn, d)</span></span><br><span class="line">    <span class="keyword">elif</span> self.attn_type == <span class="string">&#x27;time&#x27;</span>:</span><br><span class="line">        out = self.forward_time(x) <span class="comment"># (b, tn, d)</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&#x27;Unknown attention type: %s&#x27;</span> % (self.attn_type))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="利用预训练模型进行初始化">利用预训练模型进行初始化</h2>
-<p>由于Transformer缺乏CNN那样的归纳偏置，因此往往需要大规模的数据集作为训练集。为了规避这个问题，类似于3D-CNN的方法用ImageNet上预训练的2D-CNN网络（如Resnet等），使用了在大规模图片数据集上预训练的ViT迁移到ViViT的方法。</p>
-<h3 id="positional-embeddings">Positional embeddings</h3>
-<p>位置嵌入<span
-class="math inline">\(\mathbf{p}\)</span>被添加到每个输入token。
-但是，视频模型比预训练的图像模型多<span
-class="math inline">\(n_t\)</span>倍的token。因此，通过将它们从<span
-class="math inline">\(\mathbb{R}^{n_w \cdot n_h \times
-d}\)</span>临时“重复”到<span class="math inline">\(\mathbb{R}^{n_t \cdot
-n_h \cdot n_w \times d}\)</span>来初始化位置嵌入。
-在初始化时，具有相同空间索引的所有token都具有相同的嵌入，然后进行微调。</p>
-<h3 id="embedding-weights-e">Embedding weights, E</h3>
-<p>当使用“tubelet embedding”token化方法时，<span
-class="math inline">\(\mathbf{E}\)</span>是一个3D张量，与预训练模型中的2D张量<span
-class="math inline">\(\mathbf{E}_{\text{image}}\)</span>相比。用于视频分类的从2D滤波器初始化3D卷积滤波器的常用方法是通过沿时间维度复制滤波器并对它们进行平均来“膨胀”它们，如I3D。
-<span class="math display">\[
-\mathbf{E} = \frac{1}{t}[\mathbf{E}_{\text{image}}, \ldots,
-\mathbf{E}_{\text{image}}, \ldots, \mathbf{E}_{\text{image}}].
-\]</span> 论文也提出了一种不一样的方式，称为“central frame
-initialisation”：除了中间帧，<span
-class="math inline">\(\mathbf{E}\)</span>的其他帧都使用0来初始化， <span
-class="math display">\[
-\mathbf{E} = [\mathbf{0}, \ldots,  \mathbf{E}_{\text{image}}, \ldots,
-\mathbf{0}].
-\]</span></p>
-<h3 id="transformer-weights-for-model-3">Transformer weights for Model
-3</h3>
-<p>模型3的结构设计，是独立的空间attention和时序attention，空间attention可以直接使用图像模型的pretrain，时序attention初始化为0。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/03/13/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/TimesFormer%E4%B8%8EViViT/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -604,7 +268,7 @@ class="math display">\[
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/19/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/19/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -622,7 +286,7 @@ class="math display">\[
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/19/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/" class="post-title-link" itemprop="url">Temporal Query Networks for Fine-grained Video Understanding</a>
+          <a href="/2023/02/19/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/" class="post-title-link" itemprop="url">Temporal Query Networks for Fine-grained Video Understanding</a>
         </h2>
 
         <div class="post-meta-container">
@@ -640,7 +304,7 @@ class="math display">\[
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-06-28 09:26:48" itemprop="dateModified" datetime="2023-06-28T09:26:48+08:00">2023-06-28</time>
+      <time title="Modified: 2023-11-17 14:58:15" itemprop="dateModified" datetime="2023-11-17T14:58:15+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -648,7 +312,7 @@ class="math display">\[
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -672,99 +336,14 @@ class="math display">\[
 <li>将TQN与其他体系结构和文本监督方法进行比较，分析其优缺点</li>
 <li>在FineGym和Diving48基准上广泛评估细粒度动作分类的方法并仅使用RGB特征超越最先进的方法</li>
 </ol>
-<h1 id="temporal-query-networks">Temporal Query Networks</h1>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230218195704209.png"
-alt="Temporal Query Network" />
-<figcaption aria-hidden="true">Temporal Query Network</figcaption>
-</figure>
-<p>时间查询网络(TQN)在未修剪的视频中快速识别发生的区分性事件(只跨越几帧)，并且可以在只有弱监督的情况下进行训练，即没有事件的时间位置或持续时间信息。它通过学习一组置换不变的查询向量来实现这一点，这些查询向量对应于关于事件及其属性的预定义查询，使用Transformer[56]解码器层将其转换为响应向量，并从3D卷积网络主干中提取视觉特征。图2给出了模型的概述。视觉骨干和TQN解码器描述如下。</p>
-<h2 id="queryattributes-查询属性">Query–Attributes 查询属性</h2>
-<p>查询集query set： <span class="math display">\[
-\mathcal{Q}=\left\{q_{i}\right\}_{i=1}^{K}
-\]</span> 其中每一个查询<span
-class="math inline">\(q_i\)</span>都有一个相关的属性集： <span
-class="math display">\[
-\mathcal{A}_{i}=\left\{a_{1}^{i}, a_{2}^{i}, \ldots, a_{n_{i}-1}^{i},
-\varnothing\right\}
-\]</span> 由<span
-class="math inline">\(q_i\)</span>的响应的可接受值<span
-class="math inline">\(a_j^i\)</span>组成</p>
-<p>例如，在跳水视频中，查询可以是圈数，属性集为可能的计数{0.5,1.0,2.5};或者在体操中，查询可以是项目类型，属性集为{vault,
-floor-exercise, balanced beam}</p>
-<h2 id="视觉-backbone">视觉 backbone</h2>
-<p>给定一个未修剪的视频，使用3D
-ConvNet提取8帧连续不重叠剪辑的第一个视觉特征: <span
-class="math display">\[
-\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2}, \ldots, \Phi_{t}\right)
-\]</span> 其中<span
-class="math inline">\(t\)</span>是剪辑片段的总数，<span
-class="math inline">\(\Phi_{i} \in
-\mathbb{R}^{d}\)</span>是d维剪辑级视觉特征。</p>
-<p>在整个视频中密集地提取特征有两个原因：</p>
-<ol type="1">
-<li>避免了引起时间混叠，也避免了丢失快速事件(只跨越几帧)</li>
-<li>从完整视频中选择片段进行分类是次优的，因为这些事件的位置是未知的</li>
-</ol>
-<h2 id="tqn-decoder">TQN decoder</h2>
-<p>给定剪辑级特征和标签查询，TQN解码器为每个查询输出一个响应。具体而言，对于每一个标签查询<span
-class="math inline">\(q_i\)</span>，学习一个矢量<span
-class="math inline">\(\mathbf{q}_{i} \in
-\mathbb{R}^{d_{q}}\)</span>，通过对视觉特征的关注产生一个响应矢量<span
-class="math inline">\(\mathbf{r}_{i} \in
-\mathbb{R}^{d_{q}}\)</span>。然后将每个响应矢量<span
-class="math inline">\(\mathbf{r}_{i}\)</span>独立线性分类到相应的属性集<span
-class="math inline">\(\mathcal{A}_{i}\)</span>中。</p>
-<h2 id="训练">训练</h2>
-<p>通过反向传播将来自视觉编码器和TQN解码器的模型参数与属性分类器<span
-class="math inline">\(\Psi_{i}\)</span>进行端到端的联合训练。</p>
-<p>这个训练的loss是一个单个分类器损失的多任务组合，是属性集<span
-class="math inline">\(\mathcal{A}_{i}\)</span>上对数<span
-class="math inline">\(\Psi_{i} \cdot
-\mathbf{r}_{i}^{(M)}\)</span>上的Softmax交叉熵损失<span
-class="math inline">\(\mathcal{L}_{C E}\)</span> <span
-class="math display">\[
-\mathcal{L}_{\text {total }}=\sum_{i=1}^{K} \mathcal{L}_{C
-E}^{(i)}\left(a^{i}, \Psi_{i} \cdot \mathbf{r}_{i}^{(M)}\right)
-\]</span> 其中<span class="math inline">\(a_i\)</span>是标签查询<span
-class="math inline">\(q_i\)</span>的groud-truth属性。</p>
-<p>本质上，TQN解码器学习建立查询向量和相关视觉特征之间的时间对应关系以生成响应。由于查询向量本身是学习的，它们被优化为“专家”，可以在未修剪的时间特征流中定位相应的事件。</p>
-<h2 id="discussion-tqn-and-detr">Discussion: TQN and DETR</h2>
-<p>DETR[4]是最近提出的一种基于Transformer的目标检测模型，同样采用非自回归并行解码一次性输出目标检测。然而，有三个关键的区别：</p>
-<ol type="1">
-<li>DETR对象查询都是等价的-因为它们的输出都指定了相同的“标签空间”(对象类和它们的RoI)，本质上查询是学习位置编码。相比之下，TQN查询具有不同的语义，具有对应事件类型和属性的语义;它们的输出响应向量每个指定一组不同的属性，属性的数量依赖于查询。</li>
-<li>由于TQN响应与这些查询绑定，它们可以在直接监督属性标签的情况下进行训练，从而避免了DETR中使用的预测和真实值之间的训练时间
-Hungarian Matching[33]。</li>
-<li>TQN没有时间上的定位监督，而DETR训练有提供(空间)位置。因此，尽管TQN的任务是(隐式)检测事件，但它是在更弱的监督下完成的。</li>
-</ol>
-<h1
-id="随机更新特征库-stochastically-updated-feature-bank">随机更新特征库
-Stochastically Updated Feature Bank</h1>
-<p>对整个未修剪的视频输入帧进行密集的时间采样是检测时间位置未知的快速判别事件的关键。但是问题在于GPU显存的限制，无法在每次训练迭代中转发密集采样的帧。作者使用特征内存库来克服这些限制。</p>
-<p>记忆库缓存clip级别的3D卷积网络视觉特征。对于给定的视频，clip特征<span
-class="math inline">\(\boldsymbol{\Phi}=\left(\Phi_{1}, \Phi_{2},
-\ldots,
-\Phi_{t}\right)\)</span>可以被相互独立提取。缓存库是由预训练的3D卷积网络中提取的所有训练视频的片段特征初始化的。然后在每次训练迭代中，固定数量的<span
-class="math inline">\(n_{online}\)</span>个随机采样clip通过视觉编码器计算得到，而剩下的<span
-class="math inline">\((r-n_{online})\)</span>个clip特征则从缓存库中获得。然后将两组视觉特征组合并输入TQN解码器进行最终预测和反向传播以更新模型参数。最后，将在线计算得到的记忆库中的clip特征替换为在线特征。在推理过程中，所有的特征都是在没有缓存库的情况下在线计算的。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219134722818.png"
-alt="image-20230219134722818" />
-<figcaption aria-hidden="true">image-20230219134722818</figcaption>
-</figure>
-<h1 id="将类别分解为属性查询">将类别分解为属性查询</h1>
-<p>在本节中，作者演示了通常与细粒度视频识别数据集相关的预定义的N个类别<span
-class="math inline">\(\mathcal{C}=\left\{c_{1}, c_{2}, \ldots,
-c_{N}\right\}\)</span>集合如何被分解为属性查询。在这些数据集中，类别在微妙的细节上有所不同，例如特定类型、持续时间或特定事件序列的数量。这些事件可能是快速发生(持续时间短)，但时间位置和持续时间未知。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230219150729217.png"
-alt="image-20230219150729217" />
-<figcaption aria-hidden="true">image-20230219150729217</figcaption>
-</figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/19/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -790,7 +369,7 @@ alt="image-20230219150729217" />
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/08/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/08/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -808,7 +387,7 @@ alt="image-20230219150729217" />
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/08/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/" class="post-title-link" itemprop="url">《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记</a>
+          <a href="/2023/01/08/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/" class="post-title-link" itemprop="url">《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记</a>
         </h2>
 
         <div class="post-meta-container">
@@ -826,7 +405,7 @@ alt="image-20230219150729217" />
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:28:00" itemprop="dateModified" datetime="2023-03-13T12:28:00+08:00">2023-03-13</time>
+      <time title="Modified: 2023-11-17 14:51:47" itemprop="dateModified" datetime="2023-11-17T14:51:47+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -834,7 +413,7 @@ alt="image-20230219150729217" />
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -854,273 +433,14 @@ alt="image-20230219150729217" />
 RGB+D 60、NTU RGB+D 120、PKU-MMD、Northwestern-UCLA Multiview和Toyota
 smarhome。在聚合多个模态的结果后，发现所提出方法在五个数据集的六个评估协议上优于最先进的方法;因此，MMNet能够有效地捕获不同RGB-D视频模态中相互补充的特征，为HAR提供更具判别力的特征。在包含更多户外动作的RGB视频数据集Kinetics
 400上测试了MMNet，结果与RGB- d视频数据集的结果一致。</p>
-<h2 id="序言">序言</h2>
-<p>使用骨架或RGB模态的单模态方法存在障碍:</p>
-<ol type="1">
-<li><p>基于RGB的方法的主要限制是缺乏3D结构；</p></li>
-<li><p>基于骨骼的方法也受到缺乏纹理和外观特征的限制。</p></li>
-</ol>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230105201002470.png"
-alt="image-20230105201002470" />
-<figcaption aria-hidden="true">image-20230105201002470</figcaption>
-</figure>
-<p>多模态HAR方法的核心任务是数据融合，可进一步分为数据级融合、特征级融合和决策级融合</p>
-<p>除了这三种之外还有一种融合方法，称为协同学习</p>
-<p>为了推进之前围绕协作学习的工作，本文提出了一种新的基于模型的多模态网络(MMNet)，在融合骨架和RGB模态时建模有效的知识转换，以提高RGB-
-D视频中的人体动作识别</p>
-<p>通过构建感兴趣的时空区域(STROI)特征图来关注整个RGB视频帧的不同外观特征，这种策略减轻了与大量视频数据相关的挑战。</p>
-<p>从所提出的MMNet的骨架关节流Skeleton
-Joints中衍生出一个注意力掩码，以关注提供互补特征的ST-ROI区域，可以提高RGB-D视频中人体动作的识别。</p>
-<p>贡献：</p>
-<ol type="1">
-<li>首先，引入了一种多模态深度学习架构，在模型层次上用注意力机制融合不同的数据模态，并使用骨架骨流Skeleton
-Bones。</li>
-<li>其次，通过三个基准数据集证明，所提出方法大大提高了最先进的性能</li>
-<li>通过对MMNet的两个关键参数进行分析，进一步验证了该方法的有效性。</li>
-</ol>
-<h2 id="网络架构">网络架构</h2>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106140433610.png"
-alt="image-20230106140433610" />
-<figcaption aria-hidden="true">image-20230106140433610</figcaption>
-</figure>
-<p><span class="math inline">\(B^{(i)}\)</span>,<span
-class="math inline">\(J^{(i)}\)</span>和<span
-class="math inline">\(V^{(i)}\)</span>分别代表骨骼、骨骼关节和RGB视频的输入;</p>
-<p><span
-class="math inline">\(w^{(i)}\)</span>是来自骨骼关节图表示的空间注意力权重<span
-class="math inline">\(\hat{J}^{(i)}\)</span>，它指导从RGB视频输入<span
-class="math inline">\(V^{(i)}\)</span>转换为ST-ROI的焦点;</p>
-<p>在这种基于模型的数据融合之后,以骨架为中心的ST-ROI<span
-class="math inline">\(R^{\prime(i)}\)</span>将被馈送到ResNet以生成特定模式的预测;</p>
-<p><span class="math inline">\(\hat{y}_{c}^{J^{(i)}}\)</span>和<span
-class="math inline">\(\hat{y}_{c}^{B^{(i)}}\)</span>分别表示来自skeleton
-joint 和 bone流的预测,这些预测通过RGB模态的特定预测<span
-class="math inline">\(\hat{y}_{c}^{V^{(i)}}\)</span>进行聚合，以提供集成识别结果。</p>
-<h3 id="从rgb模态构建st-roi">从RGB模态构建ST-ROI</h3>
-<p>基于视频的模比如I3D和S3D等需要大量的RAM和GPU显存的计算资源，并且需要很长时间才能收敛,而较早的模型如C3D在NTU
-RGB+D上则受限于数据量并不能有好的表现.因此,作者建议从RGB模态构建ST-ROI，并使用通用CNN模型从中检索有效特征。</p>
-<p>以符号<span class="math inline">\(V=\left\{V^{(i)} \mid i=1, \ldots,
-N\right\}\)</span>表示为有N个视频样本进行训练的RGB模态,那么可以表示出<span
-class="math inline">\(V^{(i)}=\left(f_{1}^{(i)}, \ldots, f_{t}^{(i)},
-\ldots, f_{T}^{(i)}\right)\)</span></p>
-<p>其中<span class="math inline">\(f_{t}^{(i)}\)</span>是<span
-class="math inline">\(t\)</span>帧。给定一个RGB帧<span
-class="math inline">\(f_{t}^{(i)}\)</span>，作者定义了一个函数<span
-class="math inline">\(g\)</span>来构建空间ROI<span
-class="math inline">\(R_{t j}^{(i)}\)</span>为 <span
-class="math display">\[
-R_{t j}^{(i)}=g\left(f_{t}^{(i)}, o_{t j}^{(i)}\right), j
-\in\left(m_{1}, \ldots, m_{M_{O}^{\prime}}\right), M_{O}^{\prime} \leq
-M_{O}
-\]</span> 其中<span class="math inline">\(O_{t
-j}^{(i)}\)</span>为时刻t时OpenPose骨架的第j个关节。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106193800339.png"
-alt="image-20230106193800339" />
-<figcaption aria-hidden="true">image-20230106193800339</figcaption>
-</figure>
-<p>如上图，在<span
-class="math inline">\(V^{(i)}\)</span>进行时间采样，选择L个代表帧，将它们拼接成一个方形ST-ROI，如上图中的单受试者案例所示。对于有两个主体的动作，我们裁剪每个主体的ST-ROI，如上图中两个主体的情况所示。ST-ROI显著减少了RGB视频输入的数据量，同时保留了物体的外观和动作的运动信息。在<span
-class="math inline">\(τ\)</span>时刻的时域子ROI将具有<span
-class="math inline">\(M′\)</span>个空间子ROI,可以垂直连接并表示为<span
-class="math inline">\(R_{\tau}^{(i)}\)</span>;相反，第<span
-class="math inline">\(j\)</span>个关节的空间子ROI将具有<span
-class="math inline">\(L\)</span>个时间子ROI，可以水平级联并表示为<span
-class="math inline">\(R^{(i)}_ j\)</span>;最后对于<span
-class="math inline">\(V^{(i)}\)</span>的ST-ROI可用<span
-class="math inline">\(R_{(i)}\)</span>表示,包含<span
-class="math inline">\(M&#39;\times L\)</span>个子ST-ROI<span
-class="math inline">\(R_{\tau j}^{(i)}\)</span></p>
-<h3 id="从骨架模态中学习关节权重">从骨架模态中学习关节权重</h3>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230106204310906.png"
-alt="image-20230106204310906" />
-<figcaption aria-hidden="true">image-20230106204310906</figcaption>
-</figure>
-<p>(a)时空骨架图结构。(b)图卷积网络的空间采样策略。不同的颜色表示不同的子集:绿色星形表示顶点本身;黄色三角形表示离心力较远的子集;蓝色方块表示更接近的向心子集。</p>
-<p>符号表示:</p>
-<p><span class="math inline">\(J^{(i)}=\left(J_{1}^{(i)}, \ldots,
-J_{t}^{(i)}, \ldots, J_{T}^{(i)}\right)\)</span>表示从时间<span
-class="math inline">\(t=1\)</span>开始到时间<span
-class="math inline">\(T\)</span>结束的第<span
-class="math inline">\(i\)</span>个训练样本对应的<span
-class="math inline">\(T\)</span>个骨架帧序列；</p>
-<p><span class="math inline">\(B^{(i)}=\left(B_{1}^{(i)}, \ldots,
-B_{t}^{(i)}, \ldots,
-B_{T}^{(i)}\right)\)</span>表示由骨骼关节转化而来的骨骼的相应序列；</p>
-<p><span class="math inline">\(J_{t}^{(i)}=\left(J_{t 1}^{(i)}, \ldots,
-J_{t j}^{(i)}, \ldots, J_{t
-M}^{(i)}\right)\)</span>表示给定一组t时刻观察到的骨架中的M个关节得到的骨架数据;</p>
-<p>构造一个时空图来表示<span
-class="math inline">\(J^{(i)}\)</span>的时空结构,即上图(a),其中单个骨架框架的关节和骨骼分别由图顶点([a]中的橙色圆圈)及其自然连接([a]中的紫色线)表示。两个相邻的骨架通过关节之间的边连接起来([a]中的黑线虚线)。图顶点的属性可以是每个关节对应的三维坐标。骨架输入<span
-class="math inline">\(J^{(i)}\)</span>的骨架图可以符号化为<span
-class="math inline">\(\mathcal{G}=(\mathcal{V},
-\mathcal{E})\)</span>，其中<span
-class="math inline">\(\mathcal{V}\)</span>和<span
-class="math inline">\(\mathcal{E}\)</span>分别表示关节和骨骼。</p>
-<h4 id="图卷积运算">图卷积运算</h4>
-<p>为表示卷积操作的采样区域，一个节点<span
-class="math inline">\(v_{ti}\)</span>的邻居集被定义为<span
-class="math inline">\(N\left(v_{t i}\right)=\left\{v_{t j} \mid
-d\left(v_{t i}, v_{t j}\right) \leq D\right\}\)</span>,其中D是<span
-class="math inline">\(d\left(v_{t i}, v_{t
-j}\right)\)</span>的最大路径长度.该策略如图4(b)所示，其中×表示骨架的重心,采样面积<span
-class="math inline">\(N\left(v_{t i}\right)\)</span>被曲线包围.</p>
-<p>假设在邻居集中有固定数量的K个子集,它们将被映射为数字标记<span
-class="math inline">\(l_{t i}: N\left(v_{t i}\right) \rightarrow\{0,
-\ldots, K-1\}\)</span>;在时间上，邻域概念扩展到时间连接的关节，如<span
-class="math inline">\(N\left(v_{t i}\right)=\left\{v_{q
-j}\left|d\left(v_{t j}, v_{t i}\right) \leq K,\right| q-t \mid \leq
-\Gamma / 2\right\}\)</span>,其中<span
-class="math inline">\(\Gamma\)</span>是控制邻居集的时间范围的时间内核大小。这样图卷积就可以计算为
-<span class="math display">\[
-\hat{v}_{t i}=\sum_{v_{t j} \in N\left(v_{t i}\right)} \frac{1}{Z_{t
-i}\left(v_{t j}\right)} f_{i n}\left(v_{t j}\right)
-\mathbf{w}\left(l\left(v_{t j}\right)\right)
-\]</span> 其中<span class="math inline">\(f_{i n}\left(v_{t
-j}\right)\)</span>为获取<span
-class="math inline">\(v_{tj}\)</span>的属性向量的特征映射，<span
-class="math inline">\(\mathbf{w}\left(l\left(v_{t
-j}\right)\right)\)</span>是权重函数<span
-class="math inline">\(\mathbf{w}\left(v_{t i}, v_{t
-j}\right)\)</span>:<span class="math inline">\(N\left(v_{t i}\right)
-\rightarrow \mathbb{R}^{C}\)</span>可以用<span
-class="math inline">\((C,K)\)</span>维张量实现;<span
-class="math inline">\(Z_{t i}\left(v_{t j}\right)=\left|v_{t k}\right|
-l_{t i}\left(v_{t k}\right)=l_{t i}\left(v_{t j}\right)
-\mid\)</span>等于相应子集的基数，这是一个归一化项。</p>
-<h4 id="关节权重">关节权重</h4>
-<p>对骨架模态应用图卷积后，图上每个顶点的输出可以用来推断相应骨架节点的重要性。骨架序列的特征映射可以用(C,
-T,
-M)维的张量表示，其中C表示关节顶点的属性个数，T表示时间长度，M表示顶点个数。这种划分策略可以用一个邻接矩阵A来表示，矩阵A中的元素表示一个顶点<span
-class="math inline">\(v_{ti}\)</span>是否属于<span
-class="math inline">\(N(v_{ti})\)</span>的子集。因此，图卷积可以使用<span
-class="math inline">\(1 \times
-\Gamma\)</span>经典二维卷积，并通过在二维上将所得张量乘以归一化邻接矩阵<span
-class="math inline">\(\boldsymbol{\Lambda}^{-\frac{1}{2}} \mathbf{A}
-\boldsymbol{\Lambda}^{-\frac{1}{2}}\)</span>来实现。若采用K种分区策略<span
-class="math inline">\(\sum_{k=1}^{K}
-\mathbf{A}_{k}\)</span>，图卷积的公式可被转换为 <span
-class="math display">\[
-\hat{J}^{(i)}=\sum_{k=1}^{K} \boldsymbol{\Lambda}^{-\frac{1}{2}}
-\mathbf{A} \boldsymbol{\Lambda}^{-\frac{1}{2}} f_{i
-n}\left(J^{(i)}\right) \mathbf{W}_{k} \odot \mathbf{M}_{k}
-\]</span></p>
-<p>其中<span class="math inline">\(\boldsymbol{\Lambda}_{k}^{i
-i}=\sum_{j}\left(\mathbf{A}_{k}^{i
-j}\right)+\alpha\)</span>为对角矩阵且<span
-class="math inline">\(\alpha\)</span>被设为0.001以避免空行；<span
-class="math inline">\(\mathbf{W}_{k}\)</span>是一个具有<span
-class="math inline">\((C_in, C_out, 1,1)\)</span>维的1 x
-1卷积运算的权重张量，它表示方程3的权重函数；<span
-class="math inline">\(\mathbf{M}_{k}\)</span>是与<span
-class="math inline">\(A_k\)</span>相同大小的注意力图，表明了每个顶点的重要性;<span
-class="math inline">\(\odot\)</span>表示两个矩阵的元素乘积；<span
-class="math inline">\(\hat{J}^{(i)}\)</span>是一个大小为<span
-class="math inline">\((c, t, M)\)</span>的张量，其中<span
-class="math inline">\(c\)</span>是输出通道数，<span
-class="math inline">\(t\)</span>是输出时间长度，<span
-class="math inline">\(M\)</span>是顶点数。该张量可用于推断动作类别，并可转换为关节权重，为RGB模态提供注意力知识。代表其相应身体面积重要性的关节权重可以计算为
-<span class="math display">\[
-w^{(i)}=\frac{1}{c t} \sum_{1}^{c} \sum_{1}^{t} \sqrt{\left(\hat{J}_{c
-t}^{(i)}\right)^{2}}
-\]</span>
-其中t和c分别为卷积图的输出维数，分别表示时间长度和输出通道。<span
-class="math inline">\(w^{(i)}\)</span>是包含M个不同骨架关节权重的向量。</p>
-<h3 id="基于模型的融合">基于模型的融合</h3>
-<p>本文提出一种RGB帧的空间权重机制，使机器能够关注将提供判别式信息的RGB特征，更明确的是，机器将更有能力，因为它直观地模仿了人眼的动作识别。本文选择使用来自骨架模态的关节权重，并将其乘以ST-ROI来正则化RGB模态。可以将第i个训练样本的骨架聚焦的ST-ROI(记为<span
-class="math inline">\(R^{&#39;(i)}\)</span>)从<span
-class="math inline">\(R^{(i)}\)</span>映射出来，函数<span
-class="math inline">\(h\)</span>定义为 <span class="math display">\[
-R^{\prime(i)}=h\left(R_{j}^{(i)}, w_{j}^{(i)}\right), j=m_{1}^{\prime},
-\ldots, m_{M^{\prime}}^{\prime}, M^{\prime}&lt;M
-\]</span> 其中<span class="math inline">\(w_{j}\)</span>为第<span
-class="math inline">\(j\)</span>个关节的权重，<span
-class="math inline">\(R_{j}^{(i)}\)</span>为对应身体区域的子空间ROI。而<span
-class="math inline">\(m_{1}^{\prime}, \ldots,
-m_{M^{\prime}}^{\prime}\)</span>是<span
-class="math inline">\(M’\)</span>个不同骨骼关节对应于建议关注的身体区域的指数。<span
-class="math inline">\(M &#39;\)</span>的值等于公式2中<span
-class="math inline">\(M &#39;
-_O\)</span>的值。公式6的数据融合过程如下图所示。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107180156852.png"
-alt="image-20230107180156852" />
-<figcaption aria-hidden="true">image-20230107180156852</figcaption>
-</figure>
-<h3 id="目标函数">目标函数</h3>
-<p>用动作标签监督的损失项集合的和构建了MMNet的端到端格式，表示为 <span
-class="math display">\[
-\mathcal{L}=\mathcal{L}_{J}\left(\hat{y}^{J},
-y\right)+\mathcal{L}_{B}\left(\hat{y}^{B},
-y\right)+\mathcal{L}_{V}\left(\hat{y}^{V}, y\right)
-\]</span> 其中<span
-class="math inline">\(\mathcal{L}_{J},\mathcal{L}_{B},\mathcal{L}_{V}\)</span>分别为骨架关节、骨架骨骼、RGB视频输入的损失项。</p>
-<p>将骨架关节输入输入到公式4中引入的图卷积模型中。因此，骨骼关节的预测可以定义为
-<span class="math display">\[
-\hat{y}^{J^{(i)}}=\sigma\left(G_{J}\left(\Theta_{J},
-J^{(i)}\right)\right)
-\]</span> 其中<span
-class="math inline">\(G_J\)</span>表示式4定义的图卷积运算；<span
-class="math inline">\(Θ_J\)</span>为GCN子模型的可学习参数；<span
-class="math inline">\(J^{(i)}\)</span>是骨骼关节输入的数据样本。而<span
-class="math inline">\(σ\)</span>表示一个线性层，将子模型输出的形状转换为one
-- hot表示</p>
-<p>骨骼输入基本上是骨骼关节输入的转换。将同样的图卷积运算方法应用于骨骼输入，可以表示为
-<span class="math display">\[
-\hat{y}^{B^{(i)}}=\sigma\left(G_{B}\left(\Theta_{B},
-B^{(i)}\right)\right)
-\]</span>
-本文提出了ST-ROI作为RGB视频输入的转换形式，它可以大幅减少数据量，并保持HAR的核心判别信息。由于ST-ROI本质上是一个二维特征图，便采用ResNet如下
-<span class="math display">\[
-\hat{y}^{V^{(i)}}=\sigma\left(G_{V}\left(R^{\prime(i)},
-\Theta_{V}\right)+R^{\prime(i)}\right)
-\]</span> 其中<span class="math inline">\(G_{V}\left(R^{\prime(i)},
-\Theta_{V}\right)\)</span>表示待学习的残差映射，ΘV表示基于ResNet层数的可学习参数</p>
-<p>给定上述子模型预测的定义，根据以下目标制定优化问题: <span
-class="math display">\[
-\begin{array}{c}
-\underset{\Theta_{B}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{B^{(i)}}\right)}_{\mathcal{L}_{B}} \\
-\underset{\Theta_{J}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{J^{(i)}}\right)}_{\mathcal{L}_{J}} \\
-\underset{\Theta_{V}}{\arg \min }-\sum_{i=1}^{N} \sum_{c=1}^{N_{c}}
-\underbrace{y_{c} \log
-\left(\hat{y}_{c}^{V^{(i)}}\right)}_{\mathcal{L}_{V}}
-\end{array}
-\]</span> 其中<span
-class="math inline">\(\mathcal{L}\)</span>是交叉熵损失函数，<span
-class="math inline">\(N_c\)</span>是特定数据集中动作类的数量，<span
-class="math inline">\(N\)</span>表示训练集中的样本个数。</p>
-<h3 id="训练与优化">训练与优化</h3>
-<p>为了追求更高的识别精度，还可以采用其他几个损失项作为关节权重。但本文依旧采用了关节权重的普通实现，作为RGB模态的空间注意力，以验证新颖的基于模型的数据融合机制的有效性。给定目标函数，使用随机梯度下降(SGD)求解方程11、12和13。网络<span
-class="math inline">\(G_J\)</span>可以预训练，也可以与<span
-class="math inline">\(G_V\)</span>同时训练，以获得空间注意力权重以进行特征融合。子模型<span
-class="math inline">\(G_J\)</span>和<span
-class="math inline">\(G_V\)</span>可以通过将<span
-class="math inline">\(Θ_J\)</span>和<span
-class="math inline">\(Θ_V\)</span>一起调优来进行端到端训练，或者简单地通过修改<span
-class="math inline">\(Θ_J\)</span>来更新<span
-class="math inline">\(Θ_V\)</span>。同时，对骨骼的网络<span
-class="math inline">\(G_B\)</span>进行单独训练，并将其聚合到<span
-class="math inline">\(G_J\)</span>和<span
-class="math inline">\(G_V\)</span>的结果中，从而实现集成预测。具体训练步骤如算法1所示。</p>
-<figure>
-<img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20230107205547516.png"
-alt="image-20230107205547516" />
-<figcaption aria-hidden="true">image-20230107205547516</figcaption>
-</figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/08/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1146,7 +466,7 @@ alt="image-20230107205547516" />
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/18/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1164,7 +484,7 @@ alt="image-20230107205547516" />
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/10/18/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action Recognition》阅读笔记</a>
+          <a href="/2022/10/18/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action Recognition》阅读笔记</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1182,7 +502,7 @@ alt="image-20230107205547516" />
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:27:12" itemprop="dateModified" datetime="2023-03-13T12:27:12+08:00">2023-03-13</time>
+      <time title="Modified: 2023-11-17 14:44:00" itemprop="dateModified" datetime="2023-11-17T14:44:00+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1190,7 +510,7 @@ alt="image-20230107205547516" />
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -1211,186 +531,14 @@ Specialization，简称DSTS），该模块由只会被高度相似的样本子�
 <p>而在端到端的训练中，需要训练两种类型的参数：upstream
 参数（如评分核和门参数）用于做动态决策和downstream参数（如时空算子）用于处理输入。由于上流参数的训练也会影响到下流参数，因此本文设计了一种上游-下游学习的算法（UDL），学习如何做出对下游参数训练有积极影响的决策，提高DSTS模块的性能。</p>
 <p>解决的问题：成功地区分具有细微差别的操作类别（细粒度设置中较高的类间相似性）</p>
-<h1 id="提出的方法">提出的方法</h1>
-<h2 id="概述">概述</h2>
-<p>对于每个输入样本，每层中只有一个专门神经元被激活——这种动态激活发生在论文所说的突触机制，而且这种突出机制使得每个专门的神经元旨在相似的样本子集上被激活。由于训练过程中，每个专门神经元只在包含相似样本的子集上训练，因此训练loss会促使专门的神经元去学习处理与这些样本相关的细粒度信息，而不是学到更多常见的辨别性线索。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221019154610958.png"
-alt="image-20221019154610958" />
-<figcaption aria-hidden="true">image-20221019154610958</figcaption>
-</figure>
-<p>DSTS的图示如上，DSTS处理从backbone传过来的特征。DSTS模块内有L层，每一层都由N个专门化神经元组成。当特征映射X被输入到第j个DSTS层时，首先计算每个专门化神经元<span
-class="math inline">\(n_{ij}\)</span>的脉冲值<span
-class="math inline">\(v_{ij}\)</span>，接着该层中具有最高脉冲值的神经元被Gumbel-
-Softmax激活。在被送入分类器之前，一个从backbone到输出的跳过连接被加到生成的特征。</p>
-<p>为简单起见，将batchsize设置为1，假设预训练的backbone输出的特征图为<span
-class="math inline">\(X \in \mathbb{R}^{N_{i n} \times N_{t} \times
-N_{h} \times N_{w}}\)</span>，其中<span class="math inline">\(N_{i n},
-N_{t}, N_{h},
-N_{w}\)</span>代表特征图的通道、时间、高度和宽度的维度。DSTS模块由L层组成，每层由N个专门的神经元组成。定义第j层的第i个专门神经元为<span
-class="math inline">\(n_{ij}\)</span>，每个专门的神经元<span
-class="math inline">\(n_{ij}\)</span>都有一个评分核<span
-class="math inline">\(m_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{i n} \times 1 \times 1 \times
-1}\)</span>(大小为1×1×1，用于高效编码特征图X的所有通道的信息)，一个由卷积核组成的空间算子<span
-class="math inline">\(S_{i j} \in \mathbb{R}^{N_{\text {out }} \times
-N_{\text {in }} \times 1 \times 3 \times
-3}\)</span>，一个由卷积核组成的时间算子<span class="math inline">\(T_{i
-j} \in \mathbb{R}^{N_{\text {out }} \times N_{i n} \times 3 \times 1
-\times 1}\)</span>，以及门<span class="math inline">\(g_{i j} \in
-\mathbb{R}^{N_{i n}}\)</span></p>
-<h2 id="dsts层">DSTS层</h2>
-<h3 id="突触机制"><strong>突触机制</strong></h3>
-<p>为了专业化效应的突触机制，每一个专门神经元上都包含一个用于在scoring
-convolution的输入特征图X的评分核。输出的结果会被求和以得到反映输入特征映射X与专门化神经元<span
-class="math inline">\(n_i\)</span>的细粒度专门化能力之间的相关性得分，称之为脉冲<span
-class="math inline">\(v_i\)</span>。专门化神经元产生的脉冲越高，专门化神经元的知识与输入特征的相关性越高，就越有可能被激活。</p>
-<ol type="1">
-<li>首先在X上应用一个评分核为<span
-class="math inline">\(m_i\)</span>的卷积</li>
-</ol>
-<p><span class="math display">\[
-q_{i}=m_{i}(X)
-\]</span></p>
-<p>其中，<span
-class="math inline">\(m_{i}(·)\)</span>是评分卷积的简略表示，<span
-class="math inline">\(q_{i} \in \mathbb{R}^{N_{\text {out }} \times
-Q_{t} \times Q_{h} \times Q_{w}}\)</span> 。</p>
-<ol start="2" type="1">
-<li>把<span
-class="math inline">\(q_i\)</span>中的所有元素相加，就得到了特殊神经元<span
-class="math inline">\(n_i\)</span>的脉冲<span
-class="math inline">\(v_i\)</span>。</li>
-</ol>
-<p><span class="math display">\[
-v_{i}=\sum_{u_{c}=1}^{N_{\text {out }}} \sum_{u_{t}=1}^{Q_{t}}
-\sum_{u_{h}=1}^{Q_{h}} \sum_{u_{w}=1}^{Q_{w}} q_{i, u_{c}, u_{t}, u_{h},
-u_{w}}\\
-\mathcal{V}=\left\{v_{i}\right\}_{i=1}^{N}
-\]</span></p>
-<ol start="3" type="1">
-<li><p>在<span
-class="math inline">\(\mathcal{V}\)</span>上应用Gumbel-Softmax技术来选择一个特定的神经元进行激活。</p>
-<p>激活特定神经元<span
-class="math inline">\(n_a\)</span>的选择是通过在所选指标a处产生一个具有1的one-hot向量来实现的。在训练过程中，Gumbel-Softmax允许梯度通过这种选择机制反向传播。在测试过程中，被激活的神经元<span
-class="math inline">\(n_a\)</span>是在<span
-class="math inline">\(\mathcal{V}\)</span>里具有最高脉冲的，以及具有最相关的专门化来区分与输入X相似的样本。</p></li>
-</ol>
-<p>作者认为，突触机制对于专门神经元的专门化是至关重要的。卷积滤波器会对相似的特征图输入产生相似的想要，因此<span
-class="math inline">\(q_i\)</span>和<span
-class="math inline">\(v_i\)</span>对于相似的特征图会趋于相似。于是，在训练过程中，相似的特征图极有可能为相同的专门化神经元产生高脉冲得分(并激活);而这个神经元将只在相似样本的子集上被更新，这样就能使得这个神经元专门研究细粒度的差异来区分它们。</p>
-<blockquote>
-<p><a
-target="_blank" rel="noopener" href="https://wmathor.com/index.php/archives/1595/">Gumbel-Softmax完全解析
-- mathor (wmathor.com)</a></p>
-</blockquote>
-<h3 id="时空专门化"><strong>时空专门化</strong></h3>
-<p>直观地说，在<span
-class="math inline">\(n_a\)</span>被激活后，可以简单地在X上应用一个三维卷积核(对应于<span
-class="math inline">\(n_a\)</span>)来提取时空信息。但在细粒度动作识别，动作之间的细粒度差异会存在与动作的更多时空方面，因此还优化了专门化神经元的结构，以专门关注更多空间或更多时间的细粒度信息。</p>
-<p>更具体地说，时空专门化方法适应专门化神经元的体系结构，为每个输入通道选择空间算子或时间算子。空间算符使用二维卷积集中在特征映射的空间方面，而时间算子使用关注时间方面的一维卷积。在训练过程中，这种架构设计使得每个专门神经元利用所选方面的相似样本之间每个通道的细粒度差异，这样能具有更好的敏感度。通过让模型调整架构来选择每个通道的操作子从而实现更大的识别能力，而这种架构决策是通过门参数来学习的，当专门神经元专注于某个方面是有益的，门参数将学会使用相应的运算子。</p>
-<ol type="1">
-<li>Spatio-temporal Architectural Decisions using Gates</li>
-</ol>
-<p>专门化神经元的门参数<span class="math inline">\(g_a\)</span>由<span
-class="math inline">\(N_{in}\)</span>个元素组成，每个元素对应一个输入通道。每个门参数决定了对应的通道是用空间还是时间算子处理的。</p>
-<p>在正向传递过程中，使用改进的Semhash方法从门参数<span
-class="math inline">\(g_a\)</span>中采样二进制决策，获得二进制向量<span
-class="math inline">\(\mathbf{b} \in\{0,1\}^{N_{i
-n}}\)</span>。改进的Semhash方法使得我们可以以端对端的方式训练门参数<span
-class="math inline">\(g_a\)</span>。我们把b的第l个元素表示为<span
-class="math inline">\(b_l\)</span>。如果<span
-class="math inline">\(b_l\)</span>为0则对应的输入通道<span
-class="math inline">\(l\)</span>将使用空间算子，如果<span
-class="math inline">\(b_l\)</span>为1则使用时间算子。</p>
-<ol start="2" type="1">
-<li>Specialized Spatio-Temporal Processing</li>
-</ol>
-<p>在获得通道型架构决策b后，可以从通道型输入特征映射X的选择开始，得到如下的特征<span
-class="math inline">\(X_S\)</span>和<span
-class="math inline">\(X_T\)</span>，分别用于学习细粒度的空间和时间信息
-<span class="math display">\[
-\begin{array}{r}
-X_{S}=(\mathbf{1}-\mathbf{b}) \cdot X, \\
-X_{T}=\mathbf{b} \cdot X,
-\end{array}
-\]</span> 其中<span
-class="math inline">\(\mathbf{1}\)</span>是一个长度为<span
-class="math inline">\(N_{in}\)</span>的向量，大小为1，而<span
-class="math inline">\(\cdot\)</span>指的是沿通道维度的乘法，同时将<span
-class="math inline">\(b\)</span>和<span class="math inline">\((1 -
-b)\)</span>的每个元素视为一个通道。 <span class="math display">\[
-\begin{array}{l}
-Z_{S}=S_{a}\left(X_{S}\right) \\
-Z_{T}=T_{a}\left(X_{T}\right)
-\end{array}
-\]</span> 其中<span
-class="math inline">\(Z_S\)</span>表示捕获输入特征图空间信息的特征<span
-class="math inline">\(X\)</span>，而<span
-class="math inline">\(Z_T\)</span>表示捕获时间信息的特征。在经过一个bn层和ReLU层之后得到的特征为<span
-class="math inline">\(Z&#39;_S\)</span>和<span
-class="math inline">\(Z&#39;_t\)</span>
-，输出特征图为两者之和。最后，对Z进行1 × 1 ×
-1卷积，融合空间和时间特征。而融合的特征<span
-class="math inline">\(Z&#39;\)</span>将作为下一层DSTS或分类器的输入。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221123205910863.png"
-alt="image-20221123205910863" />
-<figcaption aria-hidden="true">image-20221123205910863</figcaption>
-</figure>
-<h2 id="上下游学习">上下游学习</h2>
-<p>为了进一步提高DSTS模块的性能，论文设计了一个UDL算法，该算法可以更好地优化与动态决策相关的模型参数，称之为上游参数。动态决策相关的上游参数（例如评分核<span
-class="math inline">\(m\)</span>和门参数<span
-class="math inline">\(g\)</span>）和处理输入的下游参数（例如时空算子<span
-class="math inline">\(S\)</span>和<span
-class="math inline">\(T\)</span>）会在端到端的训练中联合训练，而这的挑战主要是上游参数也会影响到下游参数的训练。因此，作者使用元学习（meta-learning）优化上游参数，同时考虑下游参数的影响，从而提高下游参数的学习能力，提高整体性能。</p>
-<blockquote>
-<p>元学习算法由三步骤组成。第一步，通过更新下游参数的同时冻结上游参数从而模拟使用当前上游参数集进行动态决策时，下游参数的训练过程。第二步，在验证集上评估模型在held-out样本的性能。来自该评估的二阶梯度(相对于上游参数)提供了如何更新上游参数的反馈，以便它们在训练期间的动态决策可以改进下游参数的学习过程，从而在held-out样本上获得更好的性能。最后一步，使用元优化的上游参数对下游参数进行优化，这些参数现在在模型中做出动态决策，以便下游参数能够从训练中获得更多好处，并提高(测试)性能。</p>
-</blockquote>
-<p>具体地说，在每一次迭代中，在训练数据中采样两个mini-batch：训练样本<span
-class="math inline">\(D_{train}\)</span>和验证样本<span
-class="math inline">\(D_{val}\)</span>。</p>
-<ul>
-<li><p>Simulated Update Step：在<span
-class="math inline">\(D_{train}\)</span>上使用监督loss更新下游参数<span
-class="math inline">\(d\)</span> <span class="math display">\[
-\hat{d}=d-\alpha \nabla_{d} \ell\left(u, d ; D_{\text {train }}\right)
-\]</span> 其中，<span
-class="math inline">\(\alpha\)</span>为学习率超参数，<span
-class="math inline">\(u\)</span>和<span
-class="math inline">\(d\)</span>分别表示上游和下游参数。在这个步骤中<span
-class="math inline">\(u\)</span>保持固定。</p></li>
-<li><p>Meta-Update Step：在<span
-class="math inline">\(D_{val}\)</span>中验证更新后的模型，当上游参数<span
-class="math inline">\(u\)</span>在第一个模拟更新步骤中用于决策时，使用关于<span
-class="math inline">\(u\)</span>的二阶梯度更新上游参数<span
-class="math inline">\(u\)</span> <span class="math display">\[
-u^{\prime}=u-\alpha \nabla_{u} \ell\left(\hat{u}, \hat{d} ; D_{v a
-l}\right)
-\]</span> 其中<span class="math inline">\(\hat{u}\)</span>是<span
-class="math inline">\(u\)</span>的副本，但不计算关于<span
-class="math inline">\(\hat{u}\)</span>的梯度。这里需要计算的梯度指的是<span
-class="math inline">\(u^{\prime}\)</span>关于<span
-class="math inline">\(\hat{d}\)</span>中<span
-class="math inline">\(u\)</span>的梯度，即二阶梯度。这些二阶梯度为如何调节<span
-class="math inline">\(u\)</span>提供反馈以更好地训练下游参数，从而提高在不可见样本的性能。在这个步骤中<span
-class="math inline">\(d\)</span>保持固定。</p></li>
-<li><p>Actual Update Step：保持<span
-class="math inline">\(u^{\prime}\)</span>冻结的情况下更新<span
-class="math inline">\(d\)</span> <span class="math display">\[
-d^{\prime}=d-\alpha \nabla_{d} \ell\left(u^{\prime}, d ; D_{\text {train
-}}\right)
-\]</span></p></li>
-</ul>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221124161756656.png"
-alt="image-20221124161756656" />
-<figcaption aria-hidden="true">image-20221124161756656</figcaption>
-</figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/10/18/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E3%80%8ADynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition%E3%80%8B%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1416,7 +564,7 @@ alt="image-20221124161756656" />
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/22/PoseConv3d%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/22/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/PoseConv3d%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1434,7 +582,7 @@ alt="image-20221124161756656" />
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/09/22/PoseConv3d%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">PoseConv3d笔记</a>
+          <a href="/2022/09/22/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/PoseConv3d%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">PoseConv3d笔记</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1452,7 +600,7 @@ alt="image-20221124161756656" />
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-07-18 13:30:14" itemprop="dateModified" datetime="2023-07-18T13:30:14+08:00">2023-07-18</time>
+      <time title="Modified: 2023-11-17 14:59:22" itemprop="dateModified" datetime="2023-11-17T14:59:22+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1460,7 +608,7 @@ alt="image-20221124161756656" />
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">动作识别</span></a>
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
         </span>
     </span>
 
@@ -1489,148 +637,14 @@ alt="image-20221124161756656" />
 </ul></li>
 <li>另外，更容易与其他模态结合，在八个多模态识别基准达到了SOTA</li>
 </ul>
-<h1 id="引言">引言</h1>
-<p>基于人体骨架的动作识别其动作聚焦性和紧凑性，近年来受到越来越多的关注。在实践中，视频中的人体骨架主要表示为一系列的关节坐标列表，其中的坐标由姿态估计器提取。GCN是最受欢迎的方法之一，具体地说，GCN将每个时间步长的每个人体关节视为一个节点，空间和时间维度上的相邻节点通过边连接起来，然后将图卷积层应用于所构建的图，以发现跨空间和时间的动作模式。</p>
-<p>基于GCN的方法在以下方面有局限性:</p>
-<ul>
-<li>鲁棒性：由于GCN直接处理关节坐标，坐标上的微小扰动通常导致完全不同的预测。</li>
-<li>互操作性：由于GCN是在骨架图上操作的，因此难以与其他模态结合。</li>
-<li>可扩展性：由于GCN将每个人体关节视为节点，因此涉及多人的场景中复杂性线性上升。</li>
-</ul>
-<p>本文提出了PoseConv3D，解决了GCN方法的局限性：</p>
-<ul>
-<li>使用3D热图表示骨架对姿态估计更具有鲁棒性，对不同方法获得的输入挂架具有很好的泛化能力</li>
-<li>依赖于热图表示，更容易与其他模态集成到多流网络</li>
-<li>热图表示的复杂度与人数无关，处理多人场景不会增加计算开销</li>
-</ul>
-<h1 id="网络结构">网络结构</h1>
-<h2 id="姿态提取的良好实践">姿态提取的良好实践</h2>
-<p>人体骨骼或姿态提取是基于骨骼的动作识别的重要预处理步骤，对最终的识别精度有很大影响。</p>
-<p>一般来说2D姿势比3D姿势效果更好，如下图。与自底向上的方法相比，自顶向下的方法在标准基准(如coco
--关键点)上获得了优越的性能。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png"
-alt="image-20220923200807607" />
-<figcaption aria-hidden="true">image-20220923200807607</figcaption>
-</figure>
-<h3 id="消融实验">消融实验</h3>
-<p>作者设计了一系列采用的不同的替代方法的姿态提取的消融实验。以下的3D-CNN实验的输入均为<span
-class="math inline">\(T*H*W=48*56*56\)</span></p>
-<h4 id="d-v.s.-3d-骨架">2D v.s. 3D 骨架</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923201902224.png"
-alt="image-20220923201902224" />
-<figcaption aria-hidden="true">image-20220923201902224</figcaption>
-</figure>
-<p>使用MS-G3D（用于基于骨骼的动作识别的当前最先进的GCN），对2D和3D关键点具有相同的配置和训练计划，结果如上表。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923204038409.png"
-alt="image-20220923204038409" />
-<figcaption aria-hidden="true">image-20220923204038409</figcaption>
-</figure>
-<p>除了基于rgb的3d位姿估计方法，还考虑了“提升”方法，直接“提升”2d姿势(序列)到3d姿势(序列)，基于HRNet提取的2D姿态对3D姿态进行回归，利用提升后的3D姿态进行动作识别。上表的结果表明，这种被提升的3D姿势没有提供任何额外的信息，在动作识别方面的表现甚至比原始的2D姿势更差。</p>
-<h4 id="bottom-up-v.s.-top-down.">Bottom-Up v.s. Top-Down.</h4>
-<p><img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210128369.png" /></p>
-<p>作者用相同的主干实例化这两种方法(HRNet-w32)。此外，作者还用MobileNet-v2骨干网实例化自顶向下方法进行比较，它在coco验证方面的性能与HRNet(自底向上)相似。上表的结果显示，HRNet(自下而上)在COCO-val上的性能远低于HRNet(自顶向下)，接近于MobileNet(自顶向下)。</p>
-<h4 id="interested-person-v.s.-all-persons.">Interested Person v.s. All
-Persons.</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923210416469.png"
-alt="image-20220923210416469" />
-<figcaption aria-hidden="true">image-20220923210416469</figcaption>
-</figure>
-<p>很多人可能存在于一个视频中，但并不是所有人都与感兴趣的动作有关。作者使用3种人物边界框进行姿态提取：Detection，Tracking（使用Siamese-RPN)和GT(对运动员的关注增加)。从上表的结果可以得到当事人的先验是极其重要的，即使是较弱的先验知识(每个视频1
-个GT box)也能大大提高性能。</p>
-<h4 id="coordinates-v.s.-heatmaps">Coordinates v.s. Heatmaps</h4>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923211126851.png"
-alt="image-20220923211126851" />
-<figcaption aria-hidden="true">image-20220923211126851</figcaption>
-</figure>
-<p>存储3D热图可能会占用大量磁盘空间。为提升效率，将每个 2D
-关键点存储为坐标 (x, y, score)，其中 score 为预测的置信度。在 FineGYM
-上进行了实验，以估计这种热图 →
-坐标的压缩会带来多大信息损失。作者发现，在使用高质量特征提取器的情况下，使用坐标作为输入，动作识别的精度仅有少量下降
-(0.4%)。因此在后续工作中，作者以坐标的格式来存储提取出的 2D 姿态。</p>
-<h2 id="从2d姿势生成3d热图">从2D姿势生成3D热图</h2>
-<p>论文用大小为<span
-class="math inline">\(K*H*W\)</span>的热图来表示二维姿势,其中K是关节点的数量，H和W是框架的高度和宽度。如果只有coordinate-triplets<span
-class="math inline">\((x_k; y_k;
-c_k)\)</span>,可以通过组合以每个关节为中心的K个高斯映射来得到一个关节热图J:</p>
-<p><span class="math inline">\(\boldsymbol{J}_{k i
-j}=e^{-\frac{\left(i-x_{k}\right)^{2}+\left(j-y_{k}\right)^{2}}{2 *
-\sigma^{2}}} * c_{k}\)</span></p>
-<p>其中<span
-class="math inline">\(\sigma\)</span>控制高斯映射的方差，<span
-class="math inline">\((x_k, y_k)\)</span>和<span
-class="math inline">\(c_k\)</span>分别是第k个关节的位置和置信度分数，还可以创建limb热图：</p>
-<p><span class="math inline">\(\boldsymbol{L}_{k i
-j}=e^{-\frac{\mathcal{D}\left((i, j), s e g\left[a_{k},
-b_{k}\right]\right)^{2}}{2 * \sigma^{2}}} * \min \left(c_{a_{k}},
-c_{b_{k}}\right)\)</span></p>
-<p>第k个limb是在两个关节<span class="math inline">\(a_k\)</span>和<span
-class="math inline">\(b_k\)</span>之间。函数D计算从点<span
-class="math inline">\((i,J)\)</span>到段<span
-class="math inline">\(\left[\left(x_{a_{k}},
-y_{a_{k}}\right),\left(x_{b_{k}},
-y_{b_{k}}\right)\right]\)</span>的距离。值得注意的是，尽管上述过程假设每一帧中都有一个人，但可以很容易地将其扩展到多人的情况，在这里直接累积所有人的第k个高斯映射，而无需放大热图。最后，一个3D热图堆叠是通过将所有热图(<span
-class="math inline">\(J\)</span>或<span
-class="math inline">\(L\)</span>)沿时间维度堆叠而得到的，因此形状会是<span
-class="math inline">\(K \times T \times H \times W\)</span></p>
-<p>实际应用中，作者使用了两种方法来尽可能减少 3D
-热图堆叠中的冗余，使其更紧凑</p>
-<ol type="1">
-<li>Subjects-Centered Cropping</li>
-</ol>
-<p>使热图与帧一样大是低效的，特别是当相关人员只在一个小区域活动时。在这种情况，先找到能够囊括了所有的2D姿势的边界框，然后根据找到的框裁剪所有帧，并将它们调整为目标大小。这样的话，2D姿势以及它们的移动能被保存，且使得三维热图体积的大小可以在空间上缩小。</p>
-<ol start="2" type="1">
-<li>Uniform Sampling.</li>
-</ol>
-<p>通过对帧的子集进行采样，还可以沿时间维减小3D热图的体积。具体来说，为从视频中采样n帧，将视频分成n个等长的片段，并从每个片段中随机选择一帧。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924200056400.png"
-alt="image-20220924200056400" />
-<figcaption aria-hidden="true">image-20220924200056400</figcaption>
-</figure>
-<h2
-id="用于基于骨架的动作识别的3d-cnn">用于基于骨架的动作识别的3D-CNN</h2>
-<h3 id="poseconv3d">PoseConv3D</h3>
-<p>PoseConv3D以3D热图堆叠作为输入，可以用各种3D-
-cnn的backbone实例化。与一般的3D-CNN网络相比，需要添加两个修改：（1）由于3D热图体积的空间分辨率不需要像RGB剪辑那么大，因此在3D-
-cnn中删除了早期阶段的下采样操作；（2）由于采用的3D热图已经是中级特征，因此一个更浅(更少层)和更薄(更少通道)的网络对于PoseConv3D已经足够了。基于这些改动，作者采用了三种著名的3D-CNN：C3D，SlowOnly和X3D</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924164508040.png"
-alt="image-20220924164508040" />
-<figcaption aria-hidden="true">image-20220924164508040</figcaption>
-</figure>
-<p>如下表所示，采用轻量级版本的3d -
-cnn可以显著降低计算复杂度，但识别性能略有下降。而SlowOnly直接从Resnet膨胀而来而且具有良好的识别性能，作者将其作为Backbone。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924183705271.png"
-alt="image-20220924183705271" />
-<figcaption aria-hidden="true">image-20220924183705271</figcaption>
-</figure>
-<h3 id="rgbpose-conv3d">RGBPose-Conv3D</h3>
-<p>作者提出RGBPose-Conv3D用于早期的人体骨骼和RGB帧的融合，有两条通路分别处理RGB模态和Pose模态。总的来说，RGBPose-Conv3D的架构遵循几个原则：（1）相比于RGB流，Pose流具有较小的通道宽度和较小的深度，以及更小的输入空间分辨率；（2）加了Early
-Fusion，增加了两个通路之间的双向横向连接，促进两种模式之间的早期特征融合。RGBPose-
-Conv3D分别使用每个通路的两个单独损失进行训练，因为联合从两种模态学习的单个损失会导致严重的过拟合。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924195658960.png"
-alt="image-20220924195658960" />
-<figcaption aria-hidden="true">image-20220924195658960</figcaption>
-</figure>
-<h1 id="实验">实验</h1>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/22/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/PoseConv3d%E7%AC%94%E8%AE%B0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1656,7 +670,7 @@ alt="image-20220924195658960" />
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/12/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/12/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1674,7 +688,7 @@ alt="image-20220924195658960" />
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/09/12/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/" class="post-title-link" itemprop="url">视频理解相关论文</a>
+          <a href="/2022/09/12/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/" class="post-title-link" itemprop="url">视频理解相关论文</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1692,7 +706,7 @@ alt="image-20220924195658960" />
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-08-28 22:21:41" itemprop="dateModified" datetime="2023-08-28T22:21:41+08:00">2023-08-28</time>
+      <time title="Modified: 2023-11-17 14:49:01" itemprop="dateModified" datetime="2023-11-17T14:49:01+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1700,7 +714,7 @@ alt="image-20220924195658960" />
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -1714,384 +728,15 @@ alt="image-20220924195658960" />
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这篇博文参考李沐读论文系列中视频理解的相关内容 # 双流网络</p>
-<h2 id="前言">前言</h2>
-<p>视频本身是一个很好的数据来源，比2D的单个图像包含更多信息，比如物体移动的信息，以及长期的时序信息，包括音频信息。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913100303892.png"
-alt="image-20220913100303892" />
-<figcaption aria-hidden="true">image-20220913100303892</figcaption>
-</figure>
-<p>这篇论文是第一篇利用深度学习进行视频理解效果与之前的手工特征方法效果相当的方法。</p>
-<p>双流网络顾名思义就是使用了两个卷积神经网络，如下图所示：</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913101016813.png"
-alt="image-20220913101016813" />
-<figcaption aria-hidden="true">image-20220913101016813</figcaption>
-</figure>
-<p>视频相当于连续的多张图片，因此早期的工作将视频的关键帧抽取出来，一个个输入卷积网络，最后以Early
-Fasion或者Late
-Fasion的方式合并结果，达到一种时空学习的效果，但效果不如手工设置特征。因此，双流网络的作者认为卷积网络适合学习局部特征，而不适合学习物体的移动信息（Motion-information)，于是作者使用了光流法来获取物体的移动信息，以学习光流和动作分类的映射。作者把双流网络分为空间流神经网络和时间流神经网络，空间流的输入为单帧图像，而时间流的输入为一系列光流图片。</p>
-<h2 id="摘要和引言">摘要和引言</h2>
-<p>在这篇论文中，作者研究了如何使用深度卷积网络实现视频的动作识别。主要问题的难点在于如何同时学习两种信息：一种是从静止的的图像上学到信息，比如物体的形状大小颜色，以及整体的场景信息；另一种是物体之间的移动信息，或者说是视频中的时序信息。这篇论文主要有三个贡献：双流网络、能取得很好效果的在少量数据上训练的光流网络、muliti-task
-learning。</p>
-<p>视频天生就能提供一种数据增强，因为在视频中，同一个物体会有多种形变以及遮挡和光照的改变，是一种非常自然的数据增强。</p>
-<h2 id="双流网络结构">双流网络结构</h2>
-<p>空间流学习空间特征，时间流学习运动特征，最后使用late
-fusion合并结果。可以通过简单的加权平均，也可以训练一个多分类的线性SVM。</p>
-<h3 id="空间流">空间流</h3>
-<p>空间流神经网络的输入就是一帧帧的图像，其实就是个图像分类的任务。静止的信息本身就是个有用的信息，因为很多动作与识别出的物体是紧密相关的。因此单独空间流网络已经能达到很好的效果了，而且还能使用Imagenet去预训练。</p>
-<h3 id="时间流">时间流</h3>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913104904429.png"
-alt="image-20220913104904429" />
-<figcaption aria-hidden="true">image-20220913104904429</figcaption>
-</figure>
-<p>（a）和（b）为视频中的前后两帧，从这两帧可以得到如（c）的光流，在数学上光流实际上就是一个在平面上的向量，因此得到分为（d）水平方向和（e）垂直方向两个方向的可视化结果。从维度上看，假如输入为<span
-class="math inline">\(w*h\)</span>的RGB图像也就是输入维度是<span
-class="math inline">\(w*h*3\)</span>，而得到的光流图维度则为<span
-class="math inline">\(w*h*2\)</span>，2代表两个方向。</p>
-<h3 id="如何叠加光流图">如何叠加光流图</h3>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913110726700.png"
-alt="image-20220913110726700" />
-<figcaption aria-hidden="true">image-20220913110726700</figcaption>
-</figure>
-<p>第一种方式就是简单直接地将得到的光流图堆叠在一起，每次叠加的都是同样位置的光流特征，这种方式不需要更多的预处理，但没有充分利用光流的信息。第二种则是根据光流的轨迹，在轨迹上进行数值的叠加。另外，作者也使用了双向光流的方法。</p>
-<h3 id="实现细节">实现细节</h3>
-<p>事实上，两个流网络都可以看作是Alexnet的变体都是五层卷积加两层全连接，训练部分都是标准的操作。</p>
-<ol type="1">
-<li><p>测试部分：</p>
-<p>无论视频多长，都是等间距抽取25帧。对每一帧都做ten
-crop，即这一帧及其翻转都取四个边角以及中间部分，也就是会有10个crop，即最后会有250帧。由于视频的测试方式多种多样，因此不同的测试方式的比较不公平。</p></li>
-<li><p>光流处理：</p>
-<p>使用在GPU上运行的算法去获得光流（0.06s)，耗时大。而光流的另一个问题是这种密集光流所占的空间大，而这篇论文把光流图resize，并以jpeg的形式存储，使得从1.5TB降到27GB。但即使如此，光流法所占的时间和空间成本都是相当高的。</p></li>
-</ol>
-<h2 id="结论和总结">结论和总结</h2>
-<p>这篇论文提出了一个具有竞争力的深度视频分类模型，包含了基于卷积神经网络的独立空间和时间识别流，
-是视频理解的开山之作。</p>
-<p>这篇论文给予了一种使用先验知识作为网络输入的思路来解决单神经网络不能解决的问题，提供了一种多流网络的思路，另外双流网络可以当作是一种多模态学习的先例。</p>
-<h1 id="i3d">I3D</h1>
-<p>从论文标题可以看出这篇论文的两个重要贡献： I3D模型（Inflated 3D
-ConvNet）、Kinetics数据集。I3D直译为扩散的3D卷积神经网络，扩散的意思就是把原有的2D模型“扩散”到3D。</p>
-<h2 id="相关工作">相关工作</h2>
-<p>在2D的图像分类领域已经有了主导的神经网络结构，如VGG和Resnet，而视频领域至今依旧没有主导的架构。当时主要有以下几种选择，要么是纯2D网络，后面再接上比如LSTM这样的操作，从而对时间进行建模，要么是加上光流使得网络具备对运动信息的建模能力，要么则是直接使用3D网络来学习Special
-Temporal 的时空特征 。</p>
-<p>而这篇论文提出的I3D（Two-Stream Inflated 3D
-ConvNets），有两个关键词：双流和inflated。由于3D网络的参数量过于巨大，而且也没有合适足够的数据去训练，因此网络不能太深（C3D）。作者在使用了其提出来的inflated操作直接就能使用例如Inception、VGG、Resnet这样的网络，而且能使用这些网络预训练的参数作为初始化。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913140943884.png"
-alt="image-20220913140943884" />
-<figcaption aria-hidden="true">image-20220913140943884</figcaption>
-</figure>
-<p>图a的方法就是卷积神经网络跟一个LSTM，把这个视频问题当作是一个图像分类问题，一张一张图片输入到卷积神经网络去做特征提取，接着把这些特征输入到LSTM网络。</p>
-<p>图b的方法就是非常暴力的3D卷积网络，直接将视频段当成一个Valume，输入到网络之中。这样的网络能进行时空学习，而且卷积核是三维的，因此参数量变得很大。</p>
-<p>图c的方法就是上文介绍过的双流网络。</p>
-<p>图d的方法是将b和c的方法结合在一起，与双流网络一样，分为空间流和时间流，而不同于双流网络使用的Late
-Fasion去融合结果，而是使用Early
-Fasion，在没出结果之前，就把两个特征先融合在一起，然后使用一个3D卷积神经网络去处理得到分类结果。</p>
-<p>以上四种方法作者都在其提出的数据集上进行了测试，然后提出双流I3D网络，即图e。</p>
-<h2 id="实现细节-1">实现细节</h2>
-<h3 id="如何inflated">如何Inflated</h3>
-<p>简单来说，就是直接暴力地把把一个2D网络转换为3D网络。就是简单的把2D的kernel变成3D的kernel，2D的pooling层变成3D的pooling层。这样就可以不用自己设置网络，直接使用之前的2D网络。比如最新的Timesformer也是从Vit从2D
-inflated 到3D</p>
-<h3 id="bootstrapping">Bootstrapping</h3>
-<p>Bootstrapping字面意思就是引导，就是如何从以及训练好的2D模型出发去初始化一个3D模型，然后继续训练以得到更好的效果。如何用
-2D CNN 的预训练权重来初始化一个 3D
-CNN。用同样一张图片，反复复制粘贴，变成一个boring的视频，然后只要保证这个无聊的视频输入到3D
-CNN的输出和图片输入到2D
-CNN的输出一致，就能保证初始化是正确的。具体的做法就是把所有的2D
-filters在时间维度上复制了n次，
-得到一个n帧的视频，为了保持输出的一致，除了 2D
-参数复制n次之外，还需将参数除以n。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220913151055074.png"
-alt="image-20220913151055074" />
-<figcaption aria-hidden="true">image-20220913151055074</figcaption>
-</figure>
-<h2 id="总结">总结</h2>
-<p>这篇论文通过一系列的实验证明了在大规模数据集作预训练后，再做迁移学习能得到很好的效果。另外，在网络结构的设计上，作者也认为本文并没有进行全面的探索，像
-action tubes、attention mechanism
-这些结构都没有进行尝试。这些都是未来研究中不错的跟进方向。</p>
-<p>这篇论文从两个方面上解决了训练的问题，一方面是没有数据也能使用Inflated的操作转换得到3D网络，并且能使用预训练的2D网络的参数去初始化3D网络，如P3D、R(2+1)D以及TimesFormer等；而另一方面，如果从头设计一个3D网络，这篇论文提供了一个足够大的数据集k
-400，而且不需要依赖于ImageNet预训练的参数，如slowfast、X3D、mvit等工作都是从头开始训练的。自此，视频理解领域的后续研究工作就可以从更多角度展开了。</p>
-<h1 id="deep-video">Deep Video</h1>
-<p>CVPR 2014</p>
-<h2 id="方法">方法</h2>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917200215637.png"
-alt="image-20220917200215637" />
-<figcaption aria-hidden="true">image-20220917200215637</figcaption>
-</figure>
-<ol type="1">
-<li>Single Frame
-其实就是一个图片分类的任务，单帧输入到卷积神经网络，不包含时间信息和视频信息</li>
-<li>Late Fusion 和 Early Fusion 上文介绍过</li>
-<li>Slow Fusion 在网络的过程中，对特征进行合并</li>
-</ol>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220917201204252.png"
-alt="image-20220917201204252" />
-<figcaption aria-hidden="true">image-20220917201204252</figcaption>
-</figure>
-<p>由于效果不好，作者尝试了图像领域的多分辨率卷积，将输入分成两部分（原图和正中间的抠图）。这种网络可以理解成一种双流网络，但双流的权值是共享的；也可以理解说是一种早期的注意力机制，这样的操作使得网络更关注图片中心的区域。</p>
-<h2 id="总结-1">总结</h2>
-<p>本文的主要贡献并不是在于任务性能的提升（实际也并没有提升），而是在于进行了深度
-CNN
-网络在视频理解领域的初步探索。在本文之后，大量的使用深度神经网络处理视频数据的工作涌现出来，视频理解领域正式进入深度学习时代。</p>
-<p># 双流网络系列</p>
-<p>## 原始双流网络改进方向</p>
-<ol type="1">
-<li><p>Late fusion 可否更换为Early
-Fusion，如果能先做空间和时间流的特征交互，应该效果会变好</p></li>
-<li><p>原始双流网络使用的是一种基于Alexnet的变体，采用VGG、Inception
-Net、ResNet等更好的backbone是否会得到更好的效果，如何在小数据集上去训练大模型，如何控制好过拟合问题？</p></li>
-<li><p>原始双流网络是直接把图片通过卷积神经网络的特征直接用做分类，而众所周知，RNN或LSTM可以很好的处理时序数据，或许可以使用LSTM处理卷积神经网络抽取的特征，得到更强的特征。</p></li>
-<li><p>如何做长时间的视频理解？原始双流网络处理的视频都是非常短的，远小于一般一个动作的时间。</p></li>
-</ol>
-<h2 id="beyond-short-snippets">Beyond Short Snippets</h2>
-<p>CVPR 2015</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918150440864.png"
-alt="image-20220918150440864" />
-<figcaption aria-hidden="true">image-20220918150440864</figcaption>
-</figure>
-<p>这篇论文的题目中的Short
-Snippets指的就是2-3s的视频段，基本方法如上图，如果按照双流网络的思想，原始的输入只有几帧，处理的视频是很短的，为了处理长的视频，得找到合适的方法对抽取的特征做pooling，比如简单的Max
-pooling或Average pooling，这篇文章对这些pooling做了详细的研究，类似Deep
-video做了late pooling等，最后的结果conv
-pooling效果最好，也尝试了使用LSTM做特征融合，而最后的结果提升有限。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918151315556.png"
-alt="image-20220918151315556" />
-<figcaption aria-hidden="true">image-20220918151315556</figcaption>
-</figure>
-<p>上图c代表卷积神经网络对每个视频帧抽取的特征，且这些卷积神经网络权值共享，接着使用五层LSTM去处理抽取的视频特征，最后使用softmax做分类。</p>
-<p>正常来说LSTM在处理时序信息应该是会得到更好的效果的，但在处理短视频时，视频在时间上整个画面几乎没有变化，比较连续，也就是说输入到LSTM的时序特征没有变化，LSTM也就学不到什么东西。</p>
-<h2
-id="convolutional-two-stream-network-fusion-for-video-action-recognition">Convolutional
-Two-Stream Network Fusion for Video Action Recognition</h2>
-<p>CVPR 2016</p>
-<p>这篇论文详细的讲如何做双流网络的合并，如何在时间流和空间流之中做Early
-Fusion。作者从三个角度展开了研究：一是如何进行空间维度的特征融合（Spatial
-Fusion），二是如何进行时间维度的特征融合（Temporal
-Fusion)，三是应该在哪一层进行特征融合。</p>
-<h3 id="spatial-fusion">Spatial Fusion</h3>
-<p>如何保证时间流和空间流的特征图在同样的位置产生的通道response可以联系起来，在特征图层面做合并，作者做了以下尝试：</p>
-<ol type="1">
-<li><p>Max
-Fusion：对于a和b两个不同的特征图，只取最大值作为合并后的特征图</p></li>
-<li><p>Concatenation fusion：将两个分支中对应位置的值拼接起来</p></li>
-<li><p>Conv fusion：将两个分支的值送入到一个卷积，得到结果</p></li>
-<li><p>Bilinear
-fusion：在每个位置上计算两特征的矩阵外积在哪合并</p></li>
-</ol>
-<h3 id="在哪合并">在哪合并</h3>
-<p>作者针对在哪一层合并，做了大量的消融实验，得到了两种效果比较好的方式，如下图。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918165944620.png"
-alt="image-20220918165944620" />
-<figcaption aria-hidden="true">image-20220918165944620</figcaption>
-</figure>
-<p>第一种是空间流和时间流分别做，然后到conv4之后，进行一次fusion，在模型中间已经二合一，成为一流的网络。而第二种则是单独做到conv5以后，把空间流和时间流的特征做一次合并，得到一个spatial
-temporal 的特征，然后继续保持空间流的完整性，在最后做一次合并。</p>
-<h3 id="temporal-fusion">Temporal fusion</h3>
-<p>当有很多视频帧，每一帧都有抽取了特征，如何在时间轴上把这些特征合并起来，得到最后的特征。作者尝试了两种方式：3D
-Pooling和3D Conv + 3D Pooling</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918201122804.png"
-alt="image-20220918201122804" />
-<figcaption aria-hidden="true">image-20220918201122804</figcaption>
-</figure>
-<p>上图是作者提出的整体框架，蓝色是空间流，绿色是时间流，同样先分别用这两个网络去抽取RGB和光流图像的特征，抽取好特征之后就使用上文所说的Fusion方法，使用3D
-Conv + 3D
-Pooling的方法聚合特征，通过一个FC层，最后计算Spatiotemporal的损失函数。由于在视频处理中，时序信息很重要，因此作者单独把时间流拿出来再做一个3D
-pooling，最后做一个针对时间上的损失函数。
-也就是最后的框架包含了两个分支，最后同样使用late
-fusion的方式得到分类结果。</p>
-<h2 id="tsn">TSN</h2>
-<p>eccv 2016</p>
-<p>这篇论文提出一种简单的方式处理比较长的视频，并且确定了很多好用的技巧。</p>
-<h3 id="temporal-segment">Temporal Segment</h3>
-<p>这篇论文处理长视频的思路非常简单，就是把视频分成多段。具体来说，假如把视频分为三段，每一段随机抽取一帧，并以这一帧作为起点去选几帧计算光流图像，输入双流网络，每一段都如此处理，但权值共享。把每一个段出来的logits做一个consensus，也就是融合（乘法，加法，max，average或者lstm）每个段出来的分类结果，最后把时间流和空间流的结果做late
-fusion。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220918210327820.png"
-alt="image-20220918210327820" />
-<figcaption aria-hidden="true">image-20220918210327820</figcaption>
-</figure>
-<p>Temporal Segment 的思想不仅可以用在这种短视频这种裁剪好的video
-clip上，也可以运用在没裁剪过的长视频，就算分的段落的含义不一样，只要在consensus上不使用average的方式，比如使用lstm去模拟时间的走势。而且这种思想还可以用在弱监督和无监督的工作上。</p>
-<h3 id="好用的技巧">好用的技巧</h3>
-<ol type="1">
-<li>Cross Modality Pre-training：</li>
-</ol>
-<p>Modality指的就是图像和光流。作者提出了也使用Imagenet预训练参数来对光流分支初始化，而问题就是RGB图片的通道数和光流的通道数不对应，无法直接参数初始化。而本文认为，直接把三通道的权重取平均，直接复制20份就行了。而实验结果证明了这样做的可行性。</p>
-<ol start="2" type="1">
-<li><p>Regularization Techniques：</p>
-<p>BN是一种广泛运用的正则化方法，但由于视频数据集太小会导致过拟合。本文提出了partial
-BN，只打开第一层的BN来适应新的输入，后面的全部冻住不动以避免过拟合。</p></li>
-<li><p>Data Augmentation</p>
-<p>为了防止过拟合，数据增强是一个必不可少的工具。作者提出了两个东西：corner
-croppong和scale-jittering。前者强制对边角处的图像进行裁剪；后者是对图片随机裁剪，得到不同长宽比的图片。</p></li>
-</ol>
-<h1 id="d网络系列">3D网络系列</h1>
-<p>参考<a
-target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44966641/article/details/126238074">深度学习时代的视频理解综述_Adenialzz的博客</a></p>
-<h2 id="c3d">C3D</h2>
-<p>ICCV-2015</p>
-<p>本文是早期探索 3D CNN
-在视频理解领域的工作之一。做法非常简单，就是简单的搭了一个深度的 3D
-卷积神经网络。与再之前的工作的差异在于使用了大型的数据集（Sports
-1M），并使用了更深的网络结构。</p>
-<p>文章给出的模型结构图非常简单，就是几层卷积和池化的堆叠，只是其中卷积核是
-3D 的： <span class="math inline">\(3\times 3\times3\)</span>
-。值得一提的是，作者最终的做法是将 fc6 得到的 4096 维的特征直接用 SVM
-来做分类，又快效果又好。本文被称为 C3D 也是指的这个 fc6 得到的 4096
-维的特征，被称为 C3D 特征。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919193757565.png"
-alt="image-20220919193757565" />
-<figcaption aria-hidden="true">image-20220919193757565</figcaption>
-</figure>
-<p>之前提到，C3D
-的性能在同期工作中并不突出，那为什么这篇工作有如此大的影响力呢？实际上，这篇工作的主要贡献有两点。一是实现深度
-3D CNN 模型，并在大型数据集上进行训练，证明了在视频领域，3D CNN 比 2D
-CNN
-再融合（DeepVideo）的效果要更好。二是作者指明并提供了抽特征（而非微调）的研究方式。在当时的年代，想要用大型的深度
-3D CNN
-模型跑大型的数据集不是每一个实验室都能做到的，作者提供了一个接口，上传视频，返回
-4096 维的 C3D 特征。这就方便后续的研究者们根据大型 3D CNN
-提取的特征，再进行下游任务的研究。这无疑极大地推动了当时视频领域的研究进程。因此，除了方法上有令人眼前一亮的新意之外，如果能够提供一些资源（如大数据集或大预训练模型），能够推动整个领域的研究进程，也是值得被铭记的工作。</p>
-<h2 id="non-local">Non-local</h2>
-<p>CVPR-2017</p>
-<p>之前在双流网络系列，我们介绍过使用 LSTM 来建模时序信息。在 2017
-年，NLP 领域发生了一件大事，Transformer 横空出世。我们知道，Transformer
-的核心就是 self-attention
-自注意力模块，它能够对长距离的序列信息进行建模。在之后，基于 Transformer
-的模型几乎横扫了 NLP 领域和近两年的 CV 领域。这篇 2018
-年的工作，就是将自注意力机制的 Non-local 算子，引入到了 CNN
-模型中。并且为了适配视频任务，本文的 Non-local
-算子是时空（spacetime）维度的。除了视频任务之外，本文也测试了 Non-local
-算子在检测/分割等其他视觉任务上的性能。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195350007.png"
-alt="image-20220919195350007" />
-<figcaption aria-hidden="true">image-20220919195350007</figcaption>
-</figure>
-<p>上图就是用于时空的non-local算子，这实际上就是注意力机制，下面三个类似QKV，QK相乘得到注意力矩阵，再于V相乘，并有个残差操作。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220919195832134.png"
-alt="image-20220919195832134" />
-<figcaption aria-hidden="true">image-20220919195832134</figcaption>
-</figure>
-<p>消融实验体现了作者的设计思路。第一步是注意力怎么算，第二步是non-local用在哪一层，第三步是加多少个non-local，第四个就是证明spacetime上的自注意力机制的重要性。表格g探索了
-non-local 在长视频（128帧）上的性能，可以看到提升也是很显著的。</p>
-<h2 id="r21d">R(2+1)D</h2>
-<p>CVPR 2018</p>
-<p>这篇文章对时空的卷积做了详尽的实验，对各种2D+3D的卷积网络结构进行分析。最后的结论是把3D拆分成时间上的1D和空间上的2D能得到更好的效果。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115102912016.png"
-alt="image-20221115102912016" />
-<figcaption aria-hidden="true">image-20221115102912016</figcaption>
-</figure>
-<p>作者尝试了以下五种 2D/3D 卷积结构，来处理视频数据：</p>
-<ol type="a">
-<li>R2D：纯 2D 卷积，对每一帧单独的提取图像特征；</li>
-<li>MCx：先 3D 卷积处理视频输入，再用计算开销更小的 2D
-卷积继续提取特征；</li>
-<li>rMCx：先 2D 卷积处理各帧图像输入，再用 3D
-卷积对时空特征进行建模；</li>
-<li>R3D：纯 3D 卷积，与 C3D、I3D 类似，这里的 R3D 也是 CVPR-2018
-的一篇工作，是将 2D 的 ResNet 转换到 3D；</li>
-<li>R(2+1)D：将 3D 拆分为空间维度的 2D 卷积和时间维度的 1D 卷积</li>
-</ol>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115103836603.png"
-alt="image-20221115103836603" />
-<figcaption aria-hidden="true">image-20221115103836603</figcaption>
-</figure>
-<p>从参数量的角度上看，R2D明显参数量少，但效果不行，而3D和2D混合的方法都能达到50左右，最后论文提出的R（2+1）D在参数量与R3D一样的情况下，依然效果好了很多。</p>
-<figure>
-<img src="F:\Master\研究生课程\模式识别\image-20221115104452852.png"
-alt="image-20221115104452852" />
-<figcaption aria-hidden="true">image-20221115104452852</figcaption>
-</figure>
-<p>就是将一个<span class="math inline">\(d t\times d\times d\)</span> 的
-3D 卷积，拆分为一个 2D 的空间维度上的 $ 1dd$ 的卷积，和一个 1D
-的时间维度上的 <span class="math inline">\(t\times 1\times 1\)</span>
-的卷积。中间进行了一次投射 <span
-class="math inline">\(M_i\)</span>,可以保持与纯 3D
-卷积的参数量相当，偏于公平的对比。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115110443121.png"
-alt="image-20221115110443121" />
-<figcaption aria-hidden="true">image-20221115110443121</figcaption>
-</figure>
-<p>上图展示了训练和测试过程的错误，把R3D和R（2+1）D做了对比，
-结果展示无论是18层的浅层网络还是34层的深层网络，R（2+1)D的训练和测试误差都要比R3D低
-。</p>
-<p>R(2+1)D 取得最优效果，作者给出了两点解释：</p>
-<ol type="1">
-<li>将 3D 网络拆分为 R(2+1)D
-，网络经过了更多的非线性激活函数，整体模型的非线性增强，从而表达能力更强；</li>
-<li>R(2+1)D 网络将一整个 3D
-网络拆分开，整个模型更容易训练。如上图，明显看到 R(2+1)D
-网络收敛得更快更好。</li>
-</ol>
-<h2 id="slowfast">SlowFast</h2>
-<p>ICCV-2019</p>
-<p>这篇论文是把精度和效率结合的比较好的，研究动机来源于人眼中分别处理静态图像的场景信息和动态图像的运动信息的两种不同细胞，于是借鉴双流网络的结构，提出有
-Slow Pathway 和 Fast Pathway
-两支网络分别处理静态信息和动态信息的SlowFast网络。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115141919372.png"
-alt="image-20221115141919372" />
-<figcaption aria-hidden="true">image-20221115141919372</figcaption>
-</figure>
-<blockquote>
-<p>蓝色部分是 Slow
-Pathway，它用来处理静态的场景信息，它的特点是输入小，模型大。假设我们有一共
-64 帧视频，这里按照每隔 16 帧取一帧，可以得到 4
-帧作为输入（见图），但是它的模型每一层的通道数是比较大的（见表），从而这一分支中模型整体参数量比较大，这也对应着人眼中处理静态场景信息的
-p 细胞占比较大。</p>
-<p>绿色部分是 Fast
-Pathway，它用来处理动态的运动信息，它的特点是输入大，模型小。同样 64
-帧的视频，每隔 4 帧取一帧，共有 16
-帧输入（见图），但是它每层的通道数比较小（见表），整体参数量较小，对应着
-m 细胞占比较小。</p>
-</blockquote>
-<p>最后这个两分支的网络，在这两分支之间还使用了late
-connection的方式结合起来，所以也就是双流之间的信息是可交互的，从而能够更好地学习到这个时空特征，最后达到一个速度和精度的结合。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20221115142838755.png"
-alt="image-20221115142838755" />
-<figcaption aria-hidden="true">image-20221115142838755</figcaption>
-</figure>
-<p>从网络看，快慢分支都是I3D，除了通道数不同，都是残差网络。从output
-size看，在时序部分都不做下采样，始终保持输入的时间长度。</p>
-
+          <p>这篇博文参考李沐读论文系列中视频理解的相关内容</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/12/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -2117,7 +762,7 @@ size看，在时序部分都不做下采样，始终保持输入的时间长度�
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/05/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -2135,7 +780,7 @@ size看，在时序部分都不做下采样，始终保持输入的时间长度�
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/09/05/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">视频行为识别博客笔记</a>
+          <a href="/2022/09/05/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">视频行为识别博客笔记</a>
         </h2>
 
         <div class="post-meta-container">
@@ -2153,7 +798,7 @@ size看，在时序部分都不做下采样，始终保持输入的时间长度�
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-03-13 12:26:02" itemprop="dateModified" datetime="2023-03-13T12:26:02+08:00">2023-03-13</time>
+      <time title="Modified: 2023-11-17 14:49:55" itemprop="dateModified" datetime="2023-11-17T14:49:55+08:00">2023-11-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2161,7 +806,7 @@ size看，在时序部分都不做下采样，始终保持输入的时间长度�
       </span>
       <span class="post-meta-item-text">In</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">视频理解</span></a>
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
         </span>
     </span>
 
@@ -2179,282 +824,14 @@ size看，在时序部分都不做下采样，始终保持输入的时间长度�
 target="_blank" rel="noopener" href="https://blog.qure.ai/notes/deep-learning-for-videos-action-recognition-review#sec-2">Deep
 Learning for Videos: A 2018 Guide to Action Recognition
 (qure.ai)</a></p>
-<h1 id="动作识别以及难点">动作识别以及难点</h1>
-<p>1.巨量的计算资源</p>
-<p>一个简单的用于分类101类的卷积二维网络只有5M个参数，而同样的结构膨胀到3D结构时，会产生33M个参数。</p>
-<p>2.需考虑上下时刻场景</p>
-<p>动作识别需包含跨帧获取时空信息</p>
-<p>3.设计分类网络结构</p>
-<p>需设计能够捕获时空信息的架构</p>
-<p>4.没有标准的<strong>benchmark</strong></p>
-<h1 id="方法概述">方法概述</h1>
-<h2 id="传统cv方法">传统CV方法</h2>
-<p>基本可汇总为以下三步：</p>
-<p>1.针对视频明显特征区域做提取，提取为密集向量或稀疏的兴趣点集合。（这一步之前一直是人工提取，后来提出的iDT算法改善了该流程）</p>
-<p>2.提取的特征转化为固定尺寸的向量，来描述该视频的内容。这一步最流行的做法是Bag
-of visual words</p>
-<p>3.定义分类器，根据提取的视频特征向量，选定分类器，做分类训练和预测</p>
-<h2 id="深度学习方法">深度学习方法</h2>
-<p>3D卷积于2013年被用于动作识别，且无需其他的输入作为帮助。而2014年有两篇突破性的研究论文被发表。</p>
-<h3 id="单流网络">单流网络</h3>
-<p>https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/42455.pdf</p>
-<p>这篇论文使用2D预训练卷积以探索多种方法来融合连续帧的时间信息</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/Karpathy_fusion.jpg"
-alt="Karpathy_fusion" />
-<figcaption aria-hidden="true">Karpathy_fusion</figcaption>
-</figure>
-<p>如上图,视频的所有连续帧都作为不同设置的输入。 <em>Single frame</em>
-使用单一的网络架构在最后阶段融合所有帧的信息;<em>Late
-fusion</em>融合使用两个共享参数的网络，间隔15帧，并在最后结合预测。<em>Early
-fusion</em>在第一层通过卷积将超过10帧进行融合。 <em>Slow
-fusion</em>涉及多个阶段的融合，兼顾早期和晚期融合之间的平衡。</p>
-<p>不过与基于人工标定特征的方法相比,效果不好,作者推断有以下问题:一是学习到的时空特征没有捕捉到运动特征;二是由于数据集的多样性较低，学习如此详细的特征非常困难</p>
-<h3 id="双流网络">双流网络</h3>
-<figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/2stream_high.png"
-alt="2 stream architecture" />
-<figcaption aria-hidden="true">2 stream architecture</figcaption>
-</figure>
-<p>https://arxiv.org/pdf/1406.2199.pdf</p>
-<p>这篇论文在上文单流网络的基础上,设计一个获取动作特征的光流模型。这样就形成了双流模型，一个负责获取空间信息，一个负责获取时间信息。</p>
-<p>尽管该方法取得了不错的效果，但还是有以下几个缺点： 一
-视频的预测还是依据从视频中抽取的部分样本。对于长视频来说，在特征学习中还是会损失时序信息。
-二
-在训练时，从视频中抽取片段样本时由于是均匀抽取，这样会有错误标签的现象（即指定动作并不存在该样本片段中）。
-三 在光流使用前，需要对视频预先做光流的抽取操作。</p>
-<h1 id="论文总结">论文总结</h1>
-<p>以下论文在某种程度上是两篇论文(单流和两流)的演变。而围绕这些论文反复出现的方法可以总结如下，所有的论文都是基于这些基本观点的即兴创作。</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/recurrent_theme_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h2 id="lrcnlong-term-recurrent-convolutional-network">LRCN（Long-term
-Recurrent Convolutional Network）</h2>
-<p>https://arxiv.org/abs/1411.4389</p>
-<h3 id="关键贡献">关键贡献</h3>
-<ol type="1">
-<li>基于之前的工作使用RNN来代替基于流的设计</li>
-<li>用于视频表示的编码器架构的扩展</li>
-<li>动作识别的端到端可训练架构</li>
-</ol>
-<h3 id="解释">解释</h3>
-<p>在这之前有利用CNN对视频片段做特征提取，然后再用LSTM对时序的特征做最终分类，但效果不好。而LRCN是在卷积块(编码器)之后使用LSTM块(解码器)即端到端训练，同时也使用RGB和光流都作为输入，并将预测结果加权相加得到好的效果。</p>
-<figure>
-<img
-src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220905164221964.png"
-alt="image-20220905164221964" />
-<figcaption aria-hidden="true">image-20220905164221964</figcaption>
-</figure>
-<h3 id="缺陷">缺陷</h3>
-<ol type="1">
-<li>将视频分为片段后，会导致某些片段没有标签对应的动作，从而干扰模型的效果</li>
-<li>无法捕捉长期的时间信息</li>
-<li>使用光流作为特征意味着需要分别计算流特征</li>
-</ol>
-<p>基于上述缺陷，新的工作通过使用更低分辨率的视频和更长的视频片段（60帧）以实现更好的性能。</p>
-<h2 id="c3d">C3D</h2>
-<p>https://arxiv.org/pdf/1412.0767</p>
-<h3 id="关键贡献-1">关键贡献</h3>
-<ol type="1">
-<li>利用三维卷积网络做特征提取器</li>
-<li>广泛搜索最佳3D卷积内核和架构</li>
-<li>使用反卷积层解释模型决策</li>
-</ol>
-<h3 id="解释-1">解释</h3>
-<figure>
-<img src="https://blog.qure.ai/assets/images//actionrec/c3d_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<p>另外,作者使用了反卷积层来解释这样的设计，他们的发现是，在最初的几帧中，网络关注的是空间外观，并在随后的几帧中跟踪运动。</p>
-<figure>
-<img src="https://blog.qure.ai/assets/images//actionrec/trial.gif"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h3 id="缺陷-1">缺陷</h3>
-<ol type="1">
-<li>长时间模型的建模依旧是个未解决的问题</li>
-<li>过于庞大的网络在训练上计算过慢</li>
-</ol>
-<h3 id="note">Note：</h3>
-<figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/fstcn_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<p>FSTCN，分解3D卷积网络，主要思路是将三维卷积分解为空间二维卷积，然后是时间一维卷积。将一维卷积放在二维卷积层之后，实现二维时域和信道维的卷积。</p>
-<h2 id="三维卷积注意力机制">三维卷积+注意力机制</h2>
-<p>https://arxiv.org/abs/1502.08029</p>
-<h3 id="关键贡献-2">关键贡献</h3>
-<ol type="1">
-<li>新颖的3D CNN-RNN编码器-解码器结构，可以捕捉局部时空信息</li>
-<li>使用注意力机制来获取全局上下文</li>
-</ol>
-<h3 id="解释-2">解释</h3>
-<p>虽然这项工作与动作识别没有直接的关系，但在视频表征方面是具有里程碑意义的工作。本文采用三维CNN
-+ LSTM作为视频描述任务的基础架构。在基础上，作者使用一个预先训练的3D
-CNN来提高效果。</p>
-<h3 id="算法">算法</h3>
-<p>其设置与LRCN中描述的编码器-解码器架构几乎相同，但有两个不同之处：</p>
-<ol type="1">
-<li>并非单纯的使用了3D卷积做LSTM的特征向量输入。对于每一帧，先通过3D卷积获取feature
-maps，再通过2D卷积对其帧集获取feature maps集合。2D和3D
-CNN使用的是预先训练的，而不是像LRCN这样的端到端训练。</li>
-<li>并非平均所有帧的时间向量。加权平均值的方法用于结合时间特征。在每个时间步上，根据LSTM输出来确定注意力权重。</li>
-</ol>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/Larochelle_paper_high.png"
-alt="Attention Mechanism" />
-<figcaption aria-hidden="true">Attention Mechanism</figcaption>
-</figure>
-<h2 id="twostreamfusion">TwoStreamFusion</h2>
-<p>https://arxiv.org/abs/1604.06573</p>
-<h3 id="关键贡献-3">关键贡献</h3>
-<ol type="1">
-<li>通过更好的远距离损失的远距离时间建模</li>
-<li>新颖的多层次融合架构</li>
-</ol>
-<h3 id="解释-3">解释</h3>
-<p>在这个工作中，作者使用了基本的双流架构，并采用了两种新颖的方法，在提高性能的同时并不会带来任何参数的显著增加。</p>
-<ol type="1">
-<li>空间流和时间流的融合：以洗头和刷牙为例，空间网络可以捕捉视频中的空间相关性（判断头发还是牙齿），时间网络则可以捕捉到视频中每个空间位置的周期性运动。因此，将人脸特定区域的空间特征映射到相应区域的时间特征映射是非常重要的。为了达到同样的效果，网络需要在较早的水平上进行融合，使相同像素位置的响应处于对应状态，而不是在最后进行融合。</li>
-<li>跨时间框架组合时间净输出，以便对长期依赖也进行建模。</li>
-</ol>
-<h3 id="算法-1">算法</h3>
-<p>与双流架构基本一样，除了</p>
-<ol type="1">
-<li><p>如下图所示，Conv_5层的输出均通过卷积层+池化层的方式融合，而此算法则在最后一层加了另一种融合，最后融合输出作为spatiotemporal
-loss。</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/fusion_strategies_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure></li>
-<li><p>时间融合采用跨时间叠加的时间网络输出，采用conv+pooling融合的方法计算时间损失</p></li>
-</ol>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/2streamfusion.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h2 id="tsn">TSN</h2>
-<p>https://arxiv.org/abs/1608.00859</p>
-<h3 id="关键贡献-4">关键贡献</h3>
-<ol type="1">
-<li>针对长期时间建模的有效解决方案</li>
-<li>确定BN、dropout和预训练是一种有效的尝试</li>
-</ol>
-<h3 id="解释-4">解释</h3>
-<p>与基本的双流架构有两个主要的不同：</p>
-<ol type="1">
-<li>他们建议在整个视频中稀疏地采样片段，以更好地建模长期时间信号，而不是在整个视频中随机采样。</li>
-<li>为了最终的预测，作者在视频层面探索了多种策略。最好的策略是
-<ol type="1">
-<li>通过对片段平均，分别组合数十个时间和空间流(以及其他流，如果涉及其他输入模式)</li>
-<li>对所有类融合最终的空间和时间得分使用加权平均和应用softmax。</li>
-</ol></li>
-</ol>
-<p>该工作的另一个重要部分是解决过拟合问题(由于数据集规模较小)，并演示使用现在流行的技术，如批处理规范化、Dropout和预训练来应对。作者还评估了两种新的光流输入模式，即弯曲光流和RGB差。</p>
-<h3 id="算法-2">算法</h3>
-<p>在训练和预测过程中，将一段视频分成K段，每段时长相等。然后，从K个片段中随机抽取片段。其余的步骤仍然类似于上面提到的双流架构的更改。</p>
-<figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/tsn_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h2 id="actionvlad">ActionVLAD</h2>
-<p>https://arxiv.org/pdf/1704.02895.pdf</p>
-<h3 id="关键贡献-5">关键贡献</h3>
-<ol type="1">
-<li>可学习的视频级聚合功能</li>
-<li>具有视频级聚合特征的端到端可训练模型，以捕获长期依赖</li>
-</ol>
-<h3 id="解释-5">解释</h3>
-<p>作者最显著的贡献是使用了可学习的特性聚合(VLAD)，而不是使用maxpool或avgpool的普通聚合。聚合技术类似于视觉词汇。有多个基于锚点(比如<span
-class="math inline">\(c_1\)</span>, <span
-class="math inline">\(c_k\)</span>)的学习词汇，代表k个典型的动作(或子动作)相关的时空特征。两个流结构中的每个流的输出都按照k空间的动作词特征进行编码——每个特征都是输出与任何给定的空间或时间位置对应的锚点的差值。</p>
-<p>（没看懂）</p>
-<figure>
-<img src="https://blog.qure.ai/assets/images/actionrec/actionvlad.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<p>平均或最大池只作为一个描述符来表示整个点的分布，这对于表示由多个子动作组成的整个视频来说是次优的。相比之下，提出的视频聚合通过将描述符空间分割为<strong>k个单元</strong>并在每个单元内池化来表示具有多个子动作的描述符的整个分布。</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/pooling_difference_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h2 id="hiddentwostream">HiddenTwoStream</h2>
-<p>https://arxiv.org/abs/1704.00389</p>
-<h3 id="关键贡献-6">关键贡献</h3>
-<p>提出一种新颖的使用单独的网络实时生成光流输入的架构</p>
-<h3 id="解释-6">解释</h3>
-<p>光流在双流架构的使用使得必须预先计算每个采样帧的光流，从而对存储和速度产生不利影响。这篇论文提出了一种使用无监督架构来生成光流的方法。</p>
-<p>光流法可以被当成是一种图像重建问题。给定一对相邻的帧<span
-class="math inline">\(l_1、l_2\)</span>作为输入，CNN生成一个流场<span
-class="math inline">\(V\)</span>，然后利用预测的流场<span
-class="math inline">\(V\)</span>和<span
-class="math inline">\(l_2\)</span>，利用反翘曲将<span
-class="math inline">\(l_1\)</span>重构为<span
-class="math inline">\(l_1^{&#39;}\)</span>，使<span
-class="math inline">\(l_1\)</span>与重构的差值最小。</p>
-<h3 id="算法-3">算法</h3>
-<p>作者探索了多种策略和架构，在不太影响精度的前提下，以最大的帧数和最小的参数产生光流。最后的体系结构与前面提到的双流体系结构相同</p>
-<ol type="1">
-<li>时间流现在有堆叠在一般时间流架构的顶部的光流生成网络(MotionNet)。时间流的输入现在是后续帧而不是预处理的光流。</li>
-<li>对于MotionNet的无监督训练，还有额外的多层次损失</li>
-</ol>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/hidden2stream_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<h2 id="i3d">I3D</h2>
-<p>https://arxiv.org/abs/1705.07750</p>
-<h3 id="关键贡献-7">关键贡献</h3>
-<ol type="1">
-<li>利用预训练将基于3D的模型结合到两个流架构中</li>
-<li>Kinetics数据集用于未来的基准测试和改进的行动数据集的多样性</li>
-</ol>
-<h3 id="解释-7">解释</h3>
-<p>作者不是使用单一的3D网络，而是在双流架构中为两个流使用两个不同的3D网络。此外，为了利用预训练的2D模型，作者在第三维中重复了2D预训练的权重。现在的空间流输入由时间维度上叠加的帧组成，而不是像基本的两种流结构那样由单个帧组成。</p>
-<h2 id="t3d">T3D</h2>
-<p>https://arxiv.org/abs/1711.08200</p>
-<h3 id="关键贡献-8">关键贡献</h3>
-<ol type="1">
-<li>跨可变深度组合时间信息的架构</li>
-<li>新颖的训练架构和技术，以监督2D预训练的网络转移到3D网络</li>
-</ol>
-<h3 id="解释-8">解释</h3>
-<p>作者扩展了在I3D上完成的工作，但建议使用基于单一流3D
-DenseNet的架构，在密集块之后叠加多深度时间池化层(时间过渡层)，以捕获不同的时间深度。多深度池化是通过池化不同时间大小的核来实现的。</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/ttl_layer_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-<p>除上述内容外，作者还设计了一种新的技术，以在预先培训的2D Conv
-Nets和T3D中监督转移学习。2D预三角网和T3D都是从视频中呈现的框架和剪辑，其中剪辑和视频可能来自同一视频。该体系结构是基于相同的三角形来预测0/1的，并且预测的误差通过T3D
-NET进行了反向传播，以便有效地传输知识。</p>
-<figure>
-<img
-src="https://blog.qure.ai/assets/images/actionrec/transfer_learning_high.png"
-alt="SegNet Architecture" />
-<figcaption aria-hidden="true">SegNet Architecture</figcaption>
-</figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/05/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/%E8%A7%86%E9%A2%91%E8%A1%8C%E4%B8%BA%E8%AF%86%E5%88%AB%E5%8D%9A%E5%AE%A2%E7%AC%94%E8%AE%B0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

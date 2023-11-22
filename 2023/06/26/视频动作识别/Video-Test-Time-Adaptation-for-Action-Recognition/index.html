@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Video Test-Time Adaptation for Action Recognition paper：http:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2211.15393 code： https:&#x2F;&#x2F;github.com&#x2F;wlin-at&#x2F;ViTTA 摘要 尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Video Test-Time Adaptation for Action Recognition">
+<meta property="og:url" content="http://example.com/2023/06/26/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Video-Test-Time-Adaptation-for-Action-Recognition/index.html">
+<meta property="og:site_name" content="Yic">
+<meta property="og:description" content="Video Test-Time Adaptation for Action Recognition paper：http:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2211.15393 code： https:&#x2F;&#x2F;github.com&#x2F;wlin-at&#x2F;ViTTA 摘要 尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-26T02:56:29.000Z">
+<meta property="article:modified_time" content="2023-11-17T06:39:44.152Z">
+<meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="论文笔记">
+<meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="CVPR2023">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/06/26/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Video-Test-Time-Adaptation-for-Action-Recognition/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/06/26/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Video-Test-Time-Adaptation-for-Action-Recognition/","path":"2023/06/26/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition/","title":"Video Test-Time Adaptation for Action Recognition"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Video Test-Time Adaptation for Action Recognition | Yic</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yic</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">背景信息:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%88%86%E5%B8%83%E5%AF%B9%E9%BD%90"><span class="nav-number">3.1.</span> <span class="nav-text">特征分布对齐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E8%87%AA%E9%80%82%E5%BA%94"><span class="nav-number">3.2.</span> <span class="nav-text">在线自适应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E5%A2%9E%E5%BC%BA"><span class="nav-number">3.3.</span> <span class="nav-text">时序增强</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic-gdut</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/26/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Video-Test-Time-Adaptation-for-Action-Recognition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Video Test-Time Adaptation for Action Recognition | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Video Test-Time Adaptation for Action Recognition
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-06-26 10:56:29" itemprop="dateCreated datePublished" datetime="2023-06-26T10:56:29+08:00">2023-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-17 14:39:44" itemprop="dateModified" datetime="2023-11-17T14:39:44+08:00">2023-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">视频动作识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Video Test-Time Adaptation for Action Recognition</p>
+<p>paper：http://arxiv.org/abs/2211.15393</p>
+<p>code： https://github.com/wlin-at/ViTTA</p>
+<h1 id="摘要">摘要</h1>
+<p>尽管在同一分布的测试数据上评估时，动作识别系统可以达到最佳性能，但它们对于测试数据中的意外分布变化很容易受到攻击。然而，迄今为止尚未展示视频动作识别模型的测试时间自适应能力。我们提出了一种针对时空模型的方法，可以在单个视频样本的每一步上进行自适应。该方法通过一种特征分布对齐技术，将在线估计的测试集统计数据与训练统计数据进行对齐。我们进一步通过对同一测试视频样本进行时间增强视图的预测一致性来强化。在三个基准动作识别数据集上的评估结果表明，我们提出的技术不依赖于具体的架构，能够显著提高最先进的卷积架构TANet和Video
+Swin
+Transformer的性能。我们的方法在单个分布变化的评估和随机分布变化的挑战性情况下都表现出了显著的性能提升。</p>
+<span id="more"></span>
+<h1 id="背景信息">背景信息:</h1>
+<p>论文背景:
+行为识别系统在对分布内的测试数据进行评估时可以达到最佳性能，但对于测试数据中的未预期分布变化却很脆弱。例如，用于识别机动或行人交通事件的摄像头可能会记录罕见的天气状况，如冰雹;体育运动识别系统可能会受到体育场馆观众产生的干扰的影响，如照明弹的烟雾。然而，迄今为止，尚未展示出针对常见分布变化的视频行为识别模型的测试时间自适应方法。</p>
+<p>过去方案:
+图像分类中的分布变化可以通过测试时间自适应（TTA）来缓解，使用未标记的测试数据来调整模型以适应数据分布的变化。但这些方法不适用于行为识别。大多数行为识别应用需要在线运行内存和计算资源消耗大的时间模型，并且需要在硬件限制下实现最小延迟。此外，视频比图像更容易受到分布变化的影响。现有的TTA算法在处理视频数据时效果不佳。</p>
+<p>论文的Motivation:
+鉴于现有方法的局限性，本文旨在提出一种在线测试时间自适应的行为识别方法，能够适应测试数据中的分布变化，并且适用于不同的行为识别模型。通过特征对齐技术和预测一致性约束，本文的方法能够在单个视频样本上进行自适应，显著提高行为识别性能。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230626114107.png"
+alt="ViTTA" />
+<figcaption aria-hidden="true">ViTTA</figcaption>
+</figure>
+<h1 id="方法">方法</h1>
+<p>优化目的：</p>
+<p>给定一个在视频序列训练集<span
+class="math inline">\(S\)</span>训练好的多层神经网络<span
+class="math inline">\(\phi\)</span>以及网络的最优参数<span
+class="math inline">\(\hat{\theta}\)</span>。在测试的时候，该网络被用于未标签的测试集<span
+class="math inline">\(T\)</span>，而<span
+class="math inline">\(T\)</span>可能与<span
+class="math inline">\(S\)</span>中的数据分布不同。该方法的目的是为了能使得网络<span
+class="math inline">\(\phi\)</span>能够适应这种分布变化，以最大限度地提高在测试视频数据集上的性能。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com//img/20230626211328.png"
+alt="Pipeline of ViTTA" />
+<figcaption aria-hidden="true">Pipeline of ViTTA</figcaption>
+</figure>
+<h2 id="特征分布对齐">特征分布对齐</h2>
+<p>论文通过对齐为训练和测试视频计算的特征映射的分布来执行自适应。根据最近对TTA的研究，采用均衡特征映射的均值和方差的方法做到对齐分布。用<span
+class="math inline">\(\phi_{l}(\mathbf{x}; \theta)\)</span>表示网络<span
+class="math inline">\(\phi\)</span>的第<span
+class="math inline">\(l\)</span>层对视频<span
+class="math inline">\(\mathbf{x}\)</span>计算得到的特征图，其中<span
+class="math inline">\(\mathbf{\theta}\)</span>是用于计算的参数向量。该特征图是一个尺寸为<span
+class="math inline">\(({c_l},t_l,h_l,w_l)\)</span>的张量，其中<span
+class="math inline">\(c_l\)</span>表示第<span
+class="math inline">\(l\)</span>层的通道数，<span
+class="math inline">\(t_l\)</span>、<span
+class="math inline">\(h_l\)</span>和<span
+class="math inline">\(w_l\)</span>分别表示其时间和空间维度。用<span
+class="math inline">\(V={[1,t_l]\times[1,h_l]\times[1,w_l]}\)</span>表示特征图的时空范围，并用<span
+class="math inline">\(\phi_{l}(\mathbf{x};\mathbf{\theta})[v]\)</span>表示特征图中体素<span
+class="math inline">\(v \in V\)</span>上的一个<span
+class="math inline">\(c_l\)</span>元素特征向量。 数据集<span
+class="math inline">\(D\)</span>中第<span
+class="math inline">\(l\)</span>层特征的均值向量可以计算为样本期望值：
+<span class="math display">\[
+\begin{equation}
+    \mu_{l} (D;\mathbf{\theta}) =
+        \mathbb{E}_{\substack{\mathbf{x} \in D\\ v \in V}}
+            \big[ \phi_{l} (\mathbf{x};\mathbf{\theta})[v] \big] ,
+\end{equation}
+\]</span> 第<span
+class="math inline">\(l\)</span>层特征的方差向量可以计算为： <span
+class="math display">\[
+\begin{equation}
+    {\sigma^2}_{l} (D;\mathbf{\theta}) =
+        \mathbb{E}_{\substack{\mathbf{x} \in D\\ v \in V}}
+            \left[ \big( \phi_{l} (\mathbf{x};\mathbf{\theta})[v] -
+\mu_{l} (D;\mathbf{\theta}) \big)^2 \right]
+\end{equation}
+\]</span> 为了简化方程的表达，将训练统计量的符号表示缩短为<span
+class="math inline">\({\hat{\mu}}_l=\mu_{l}(\mathit{S};\hat{\mathbf{\theta}})\)</span>和<span
+class="math inline">\(\hat{\sigma}^2_l={\sigma^2}_l(\mathit{S};\hat{\mathbf{\theta}})\)</span>。在论文的实验中，在训练数据上预先计算样本期望和方差。当这些数据不再可用时，它们可以被另一个未标记数据集的统计数据所取代，该数据集已知是由类似分布生成的。对于具有批归一化层的网络，可以使用这些层中累积的运行均值和方差来代替计算训练集的统计量，虽然会有轻微的性能损失。</p>
+<p>总体方法是通过迭代更新参数向量<span
+class="math inline">\(\mathbf{\theta}\)</span>，以使选定层的测试统计与计算的训练数据统计相一致。这可以形式化为最小化对齐目标
+<span class="math display">\[
+\begin{equation}
+\mathcal{L}_{\text {align }}(\theta)=\sum_{l \in L}\left|\mu_{l}(T ;
+\theta)-\hat{\mu}_{l}\right|+\left|\sigma_{l}^{2}(T ;
+\theta)-\hat{\sigma}_{l}^{2}\right|
+\end{equation}
+\]</span> 关于参数向量<span
+class="math inline">\(\mathbf{\theta}\)</span>的最小化问题，其中<span
+class="math inline">\(L\)</span>是要对齐的层的集合，<span
+class="math inline">\(|\cdot|\)</span>表示向量的<span
+class="math inline">\(l_1\)</span>范数，<span
+class="math inline">\(\mathit{T}\)</span>表示测试集。论文的方法是通过训练网络来对齐分布，与基于特征对齐的TTA技术在思路上有所不同，后者仅调整归一化层中训练期间累积的运行统计量，因此在测试时并没有真正学习。更新整个参数向量的事实使该方法与仅更新仿射变换层参数的现有算法有所区别，并且在自适应过程中更具灵活性。即使方法调整了完整的参数向量，在持续自适应实验中发现，论文的方法可以快速适应周期性的分布变化。当测试数据流中的分布变化被移除时，网络可以迅速恢复到原始性能。论文还发现，对于TANet和Video
+Swin
+Transformer这两种架构，通过对齐四个块中的最后两个块的特征分布可以实现最佳性能。因此，论文将<span
+class="math inline">\(L\)</span>设置为包含这两个块中的层。</p>
+<h2 id="在线自适应">在线自适应</h2>
+<p>在公式(3)中优化目标需要迭代估计测试集的统计量。在在线视频识别系统中，通常需要以最小的延迟处理数据流，因此这是不可行的。因此，需要将特征对齐方法适应到在线场景中。假设测试数据以视频序列的形式逐步展示给自适应算法，表示为<span
+class="math inline">\(\mathbf{x}\)</span>，其中<span
+class="math inline">\(i\)</span>是测试视频的索引。对序列中的每个元素执行一步自适应。单个测试样本上计算的特征统计量不能代表整个测试集上的特征分布，因此不能仅仅依靠它们来对齐分布。因此，通过对连续测试视频上计算的统计量进行指数移动平均来近似测试集的统计量，并将其用于对齐。定义第<span
+class="math inline">\(i\)</span>次迭代中的均值估计为： <span
+class="math display">\[
+\begin{equation}
+    {\mu_{l}}^{(i)}(\mathbf{\theta})=\alpha\cdot
+\mu_{l}(\mathbf{x}_i;\mathbf{\theta}) + (1-\alpha)\cdot
+{\mu_{l}}^{(i-1)}(\mathbf{\theta})
+\end{equation}
+\]</span> 其中，<span
+class="math inline">\(1-\alpha\)</span>是动量项，通常设置为常见的选择<span
+class="math inline">\(0.9\)</span>（<span
+class="math inline">\(\alpha=0.1\)</span>）。 类似地，定义第<span
+class="math inline">\(i\)</span>次迭代中的方差估计为： <span
+class="math display">\[
+\begin{equation}
+    {\sigma^2_{l}}^{(i)}(\mathbf{\theta})=\alpha\cdot
+\sigma^2_{l}(\mathbf{x}_i;\mathbf{\theta}) + (1-\alpha)\cdot
+{\sigma^2_{l}}^{(i-1)}(\mathbf{\theta}).
+\end{equation}
+\]</span> 为了适应在线自适应，第<span
+class="math inline">\(i\)</span>次对齐迭代中的目标函数被近似为： <span
+class="math display">\[
+\begin{equation}
+\mathcal{L}^{(i)}_\mathrm{align}(\mathbf{\theta})=\sum_{l \in ls} \lvert
+{\mu_{l}}^{(i)}(\mathbf{\theta}) - \hat{\mu}_l \rvert
+                                                                 +
+\lvert  {\sigma^2_{l}}^{(i)}(\mathbf{\theta}) -  \hat{\sigma}^2_l \rvert
+\end{equation}
+\]</span>
+这种方法同时减小了估计量的方差，并让网络持续适应测试数据分布的变化。</p>
+<h2 id="时序增强">时序增强</h2>
+<p>为了进一步提高该方法的有效性，利用数据的时间性质创建了相同视频的<span
+class="math inline">\(M\)</span>个重新采样视图。论文用<span
+class="math inline">\(\mathbf{x}^{(m)}_i\)</span>表示输入视频的时间增强视图，其中<span
+class="math inline">\(1\le m \le M\)</span>。 论文计算视频<span
+class="math inline">\(\mathbf{x}_i\)</span>在这<span
+class="math inline">\(M\)</span>个视图上的均值和方差向量，以提高单个视频上的统计量的准确性：
+<span class="math display">\[
+\begin{equation}
+    \mu_{l} (\mathbf{x}_i;\mathbf{\theta}) =
+        \mathbb{E}_{\substack{m \in M\\ v \in V}}
+            \big[ \phi_{l} (\mathbf{x}^{(m)}_i;\mathbf{\theta})[v] \big]
+,
+\end{equation}
+\]</span> <span class="math display">\[
+\begin{equation}
+    \sigma^2_{l} (\mathbf{x}_i;\mathbf{\theta}) =
+        \mathbb{E}_{\substack{m \in M\\ v \in V}}
+            \left[ \big( \phi_{l}
+(\mathbf{x}^{(m)}_i;\mathbf{\theta})[v] - \mu_{l}
+(\mathbf{x}_i;\mathbf{\theta}) \big)^2 \right] .
+\end{equation}
+\]</span> 在第<span class="math inline">\(i\)</span>次迭代中，<span
+class="math inline">\(\mu_{l}
+(\mathbf{x}_i;\mathbf{\theta})\)</span>和<span
+class="math inline">\(\sigma^2_{l}
+(\mathbf{x}_i;\mathbf{\theta})\)</span>用于计算迭代<span
+class="math inline">\(i\)</span>中的均值和方差估计值。</p>
+<p>此外，论文要求<span
+class="math inline">\(M\)</span>个视图之间的相应预测具有一致性。
+论文通过对网络对输入视图进行预测的类别概率进行平均来建立伪标签，即<span
+class="math inline">\(y(\mathbf{x})=\frac{1}{M} \sum_{m=1}^{M}
+\phi(\mathbf{x}^{(m)}_i;\mathbf{\theta})\)</span>，并定义第<span
+class="math inline">\(i\)</span>次迭代中的一致性目标为 <span
+class="math display">\[
+\begin{equation}
+\mathcal{L}^{(i)}_\mathrm{cons} (\mathbf{\theta})=  \sum_{m=1}^{M}
+\lvert \phi (\mathbf{x}^{(m)}_i;\mathbf{\theta}) - y(\mathbf{x}) \rvert.
+\end{equation}
+\]</span> 在第<span
+class="math inline">\(i\)</span>次对齐迭代中，论文通过以下梯度更新网络参数：
+<span class="math display">\[
+\begin{equation}
+\min_{\mathbf{\theta}} \mathcal{L}^{(i)}_\mathrm{align}(\mathbf{\theta})
++ \lambda\cdot \mathcal{L}^{(i)}_\mathrm{cons} (\mathbf{\theta}),
+\end{equation}
+\]</span> 其中<span
+class="math inline">\(\lambda\)</span>是系数，论文将其设置为0.1。在消融研究中，论文展示了将<span
+class="math inline">\(M=2\)</span>设定为足以显著提升性能的方法，以及均匀等距重新采样输入视频可以获得最佳结果。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/04/01/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Efficient-Video-Understanding/" rel="prev" title="Efficient Video Understanding">
+                  <i class="fa fa-chevron-left"></i> Efficient Video Understanding
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/28/%E8%A7%86%E9%A2%91%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition/" rel="next" title="SVFormer: Semi-supervised Video Transformer for Action Recognition">
+                  SVFormer: Semi-supervised Video Transformer for Action Recognition <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic-gdut</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
