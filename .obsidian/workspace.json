@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "882509c09211e7f4",
+        "id": "5dda3b43c090af2c",
         "type": "tabs",
         "children": [
           {
-            "id": "e2bbe69f2c362d4d",
+            "id": "32e7687c238d27b5",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "source/_posts/骨架动作识别/3Mformer.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -60,6 +64,14 @@
               "type": "bookmarks",
               "state": {}
             }
+          },
+          {
+            "id": "5d5e20f1d3c0416c",
+            "type": "leaf",
+            "state": {
+              "type": "file-tree-view",
+              "state": {}
+            }
           }
         ]
       }
@@ -81,6 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "source/_posts/骨架动作识别/3Mformer.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "source/_posts/骨架动作识别/3Mformer.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +132,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "source/_posts/骨架动作识别/3Mformer.md"
+              }
             }
           },
           {
@@ -143,12 +159,22 @@
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
-      "command-palette:打开命令面板": false
+      "command-palette:打开命令面板": false,
+      "file-tree-alternative:File Tree Alternative Plugin": false
     }
   },
-  "active": "e2bbe69f2c362d4d",
+  "active": "32e7687c238d27b5",
   "lastOpenFiles": [
+    "Home.md",
+    "source/_posts/themes/next/_config.yml.md",
+    "source/_posts/themes/next",
+    "source/_posts/themes",
+    "Blog/themes/butterfly4.3.1/_config.yml.md",
+    "Blog/themes/butterfly4.3.1",
+    "Blog/themes",
     "source/_posts/骨架动作识别/3Mformer.md",
+    "Blog/_config.yml.md",
+    "Blog",
     "source/_posts/测试.md",
     "source/_obsidian/Post Template.md",
     "source/_obsidian"
