@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_posts/骨架动作识别/3Mformer.md",
+                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
                 "mode": "source",
                 "source": false
               }
@@ -73,7 +73,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -93,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/_posts/骨架动作识别/3Mformer.md",
+                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/_posts/骨架动作识别/3Mformer.md",
+                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +134,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/_posts/骨架动作识别/3Mformer.md"
+                "file": "source/_posts/骨架动作识别/SkeletonMAE.md"
               }
             }
           },
@@ -165,6 +166,7 @@
   },
   "active": "32e7687c238d27b5",
   "lastOpenFiles": [
+    "source/_posts/骨架动作识别/3Mformer.md",
     "Home.md",
     "source/_posts/themes/next/_config.yml.md",
     "source/_posts/themes/next",
@@ -172,7 +174,6 @@
     "Blog/themes/butterfly4.3.1/_config.yml.md",
     "Blog/themes/butterfly4.3.1",
     "Blog/themes",
-    "source/_posts/骨架动作识别/3Mformer.md",
     "Blog/_config.yml.md",
     "Blog",
     "source/_posts/测试.md",

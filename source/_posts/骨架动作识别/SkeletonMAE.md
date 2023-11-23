@@ -9,9 +9,7 @@ categories:
 date: 2023-10-07 15:09:08
 ---
 
-paper: https://arxiv.org/abs/2307.08476
-
-code: https://github.com/HongYan1123/SkeletonMAE
+[paper](https://arxiv.org/abs/2307.08476)  [code](https://github.com/HongYan1123/SkeletonMAE)
 
 # 摘要 
 
