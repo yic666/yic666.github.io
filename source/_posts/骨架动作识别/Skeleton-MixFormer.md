@@ -8,11 +8,7 @@ categories:
 date: 2023-11-04 19:35:47
 ---
 
-paper: https://dl.acm.org/doi/pdf/10.1145/3581783.3611900
-
-code: https://github.com/ElricXin/Skeleton-MixFormer
-
-Skeleton-MixFormer: Multivariate Topology Representation for Skeleton-based Action Recognition
+[paper](https://dl.acm.org/doi/pdf/10.1145/3581783.3611900)  [code](https://github.com/ElricXin/Skeleton-MixFormer)
 
 # 摘要
 

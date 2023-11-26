@@ -12,9 +12,7 @@ date: 2023-04-01 14:25:58
 # Prompting Visual-Language Models for Efficient Video Understanding
 ECCV2022
 
-paper: https://arxiv.org/abs/2112.04478
-
-code: https://github.com/ju-chen/Efficient-Prompt
+[paper](https://arxiv.org/abs/2112.04478) [code](https://github.com/ju-chen/Efficient-Prompt)
 
 ## 基于图像的视觉语言模型
 

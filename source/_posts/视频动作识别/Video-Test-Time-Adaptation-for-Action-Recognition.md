@@ -9,11 +9,7 @@ categories:
 date: 2023-06-26 10:56:29
 ---
 
-Video Test-Time Adaptation for Action Recognition
-
-paper：http://arxiv.org/abs/2211.15393
-
-code： https://github.com/wlin-at/ViTTA
+[paper](http://arxiv.org/abs/2211.15393)   [code](https://github.com/wlin-at/ViTTA)
 
 # 摘要
 

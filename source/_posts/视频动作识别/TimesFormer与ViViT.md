@@ -11,9 +11,7 @@ date: 2023-03-13 12:24:22
 
 # TimeSFormer
 
-paper: https://arxiv.org/abs/2102.05095
-
-code: https://github.com/facebookresearch/TimeSformer
+[paper](https://arxiv.org/abs/2102.05095)  [code](https://github.com/facebookresearch/TimeSformer)
 
 ## 摘要
 
@@ -214,10 +212,7 @@ elif self.attention_type == 'divided_space_time':
 
 # ViViT
 
-paper: https://arxiv.org/abs/2103.15691
-
-code: https://github.com/google-research/scenic/tree/main/scenic/projects/vivit
-
+[paper](https://arxiv.org/abs/2103.15691)   [code](https://arxiv.org/abs/2103.15691)
 ## 摘要
 
 这篇文章介绍了一种基于纯变换器的视频分类模型，该模型受到图像分类中此类模型的最近成功的启发。为了有效处理视频中可能遇到的大量时空token，我们提出了几种沿着空间和时间维度分解我们模型的方法，以提高效率和可扩展性。此外，为了在较小的数据集上有效地训练我们的模型，我们展示了如何在训练过程中对模型进行正则化并利用预训练的图像模型。我们进行了彻底的消融研究，并在多个视频分类基准测试中取得了最先进的结果，包括 Kinetics 400 和 600、Epic Kitchens、Something-Something v2 和 Moments in Time，优于基于深度 3D 卷积网络的先前方法。

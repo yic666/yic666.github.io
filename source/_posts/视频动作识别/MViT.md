@@ -8,9 +8,7 @@ date: 2023-03-23 21:11:34
 ---
 
 
-paper: https://arxiv.org/abs/2104.11227
-
-code: https://github.com/facebookresearch/SlowFast
+[paper](https://arxiv.org/abs/2104.11227)     [code](https://github.com/facebookresearch/SlowFast)
 
 # 摘要
 

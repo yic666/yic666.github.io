@@ -10,9 +10,7 @@ date: 2023-03-17 10:44:02
 
 
 
-paper: https://arxiv.org/abs/2106.05968
-
-code: https://github.com/1adrianb/video-transformers
+[paper](https://arxiv.org/abs/2106.05968) [code](https://github.com/1adrianb/video-transformers)
 
 # 摘要
 

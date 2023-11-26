@@ -7,9 +7,7 @@ categories:
 date: 2023-03-28 19:49:09
 ---
 
-paper: https://arxiv.org/abs/2106.13230
-
-code: https://github.com/SwinTransformer/Video-Swin-Transformer
+[paper](https://arxiv.org/abs/2106.13230)  [code](https://github.com/SwinTransformer/Video-Swin-Transformer)
 
 # 摘要
 

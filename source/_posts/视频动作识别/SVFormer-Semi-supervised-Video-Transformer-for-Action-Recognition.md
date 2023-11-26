@@ -9,11 +9,9 @@ categories:
   - 视频动作识别
 date: 2023-06-28 09:24:39
 ---
-SVFormer: Semi-supervised Video Transformer for Action Recognition
 
-paper：http://arxiv.org/abs/2211.13222
 
-code：https://github.com/ChenHsing/SVFormer
+[paper](http://arxiv.org/abs/2211.13222)  [code](https://github.com/ChenHsing/SVFormer)
 
 # 摘要
 

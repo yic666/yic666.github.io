@@ -9,11 +9,7 @@ categories:
 date: 2022-09-22 16:48:46
 ---
 
-Revisiting Skeleton-based Action Recognition
-
-论文：https://arxiv.org/abs/2104.13586
-
-代码：https://github.com/kennymckormick/pyskl
+[paper](https://arxiv.org/abs/2104.13586)[code](https://github.com/kennymckormick/pyskl)
 
 # 摘要与结论
 

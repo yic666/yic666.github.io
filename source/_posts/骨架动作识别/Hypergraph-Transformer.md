@@ -10,9 +10,7 @@ categories:
 date: 2023-08-22 14:05:24
 ---
 
-paper: https://arxiv.org/abs/2211.09590
-
-code: https://github.com/ZhouYuxuanYX/Hyperformer
+[paper](https://arxiv.org/abs/2211.09590)  [code](https://github.com/ZhouYuxuanYX/Hyperformer)
 
 # 摘要
 

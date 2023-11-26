@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
+                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
                 "mode": "source",
                 "source": false
               }
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
+                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/_posts/骨架动作识别/SkeletonMAE.md",
+                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +134,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/_posts/骨架动作识别/SkeletonMAE.md"
+                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md"
               }
             }
           },
@@ -166,8 +166,26 @@
   },
   "active": "32e7687c238d27b5",
   "lastOpenFiles": [
+    "source/_posts/视频动作识别/XVit.md",
+    "source/_posts/视频动作识别/视频行为识别博客笔记.md",
+    "source/_posts/视频动作识别/视频理解相关论文.md",
+    "source/_posts/视频动作识别/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper.md",
+    "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
+    "source/_posts/视频动作识别/Video-Swin-Transformers.md",
+    "source/_posts/视频动作识别/TimesFormer与ViViT.md",
+    "source/_posts/视频动作识别/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition.md",
+    "source/_posts/视频动作识别/MViT.md",
+    "source/_posts/视频动作识别/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos.md",
+    "source/_posts/视频动作识别/Efficient-Video-Understanding.md",
+    "source/_posts/视频动作识别/《Dynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition》阅读笔记.md",
+    "source/_posts/骨架动作识别/PoseConv3d笔记.md",
+    "source/_posts/骨架动作识别/Hypergraph-Transformer.md",
+    "source/_posts/骨架动作识别/SkeletonMAE.md",
+    "source/_posts/骨架动作识别/Skeleton-MixFormer.md",
     "source/_posts/骨架动作识别/3Mformer.md",
-    "Home.md",
+    "Home or for test.md",
+    "Pasted image 20231123110051.png",
+    "source/_posts/test.md",
     "source/_posts/themes/next/_config.yml.md",
     "source/_posts/themes/next",
     "source/_posts/themes",
