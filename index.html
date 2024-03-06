@@ -300,7 +300,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-03-06 13:51:45" itemprop="dateModified" datetime="2024-03-06T13:51:45+08:00">2024-03-06</time>
+      <time title="Modified: 2024-03-06 14:58:26" itemprop="dateModified" datetime="2024-03-06T14:58:26+08:00">2024-03-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -322,84 +322,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="初赛成绩">初赛成绩</h1>
-<p>单折成绩： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141102.png"
-alt="image.png" /> 五折成绩： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141123.png"
-alt="image.png" /> 所有数据成绩 7月1日： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141141.png"
-alt="image.png" /> 所有数据成绩 7月4日： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141154.png"
-alt="image.png" /> 7月5日： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141207.png"
-alt="image.png" /> 7月7日： <img
-src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141218.png"
-alt="image.png" /> # 网络结构</p>
-<p>UNet++的结构</p>
-<ul>
-<li>编码器部分
-<ul>
-<li>使用残差结构，经过Conv和BN后与原来的输入相加再进行LeakyReLU</li>
-<li>使用ResNet的Block作为特征提取模块，其中归一化修改为IN，激活函数修改为GELU</li>
-<li>将中间的3x3卷积核替换为更大的卷积核7x7能有更好的效果，猜测原因是原图输入原图输出，包括的信息比较多</li>
-</ul></li>
-<li>注意力机制
-<ul>
-<li>只在浅层将特征图SKFusion</li>
-<li>在UNet++的最浅层特征以及最深层特征都使用了SKFusion</li>
-</ul></li>
-<li>下采样方式
-<ul>
-<li>通过使用ConvNext的下采样方式，先通过LayerNorm再经过(4, 2,
-1)的卷积</li>
-</ul></li>
-<li>通道数量
-<ul>
-<li>通道数为[64, 128, 256, 512, 1024]</li>
-</ul></li>
-<li>分类头
-<ul>
-<li>最后的输出卷积只有一个1x1的卷积，利用最后的通道输出</li>
-<li>通过两个分类头合并输出，第一个分类头的卷积核大小依次为1，3，5，第二个分类头的卷积核大小为5，3，1，最后的结果相乘</li>
-<li>中间添加Dropout2d(0.2)效果比之前好，并且在之前的通道数会不断减少，后续认为分类头很重要，所以将分类头的通道数一直保持</li>
-<li>设置卷积大小为1，3，5，7和7，5，3，1，并且都包括IN和GELU以及Dropout2d(0.2)，通过这个设置得到95.09的分数</li>
-</ul></li>
-</ul>
-<h2 id="图像增强">图像增强</h2>
-<p>因为人的脸型和牙齿的位置差异不会很大，但会存在一些细节差异，所以使用下列空间变换</p>
-<ul>
-<li><strong>ElasticTransform</strong></li>
-<li><strong>PiecewiseAffine</strong></li>
-<li><strong>GridDistortion</strong></li>
-<li><strong>Flip</strong></li>
-</ul>
-<p>观察到X光得到的数据可能会有明暗不同的情况，所以采用以下图像色彩变换（X光成像为灰度图，所以下面的数据增强可能会导致三个维度的数据不一样，待考究）</p>
-<ul>
-<li><strong>RandomBrightnessContrast</strong></li>
-<li><strong>RandomGamma</strong></li>
-</ul>
-<p>对训练数据进行均值和方差统计，通过该数值进行标准化</p>
-<h2 id="训练策略">训练策略</h2>
-<ul>
-<li>使用<strong>CyclicLR</strong>作为学习率修改策略，最小学习率为1e-5，最大学习率为1e-4（可能可以选择更大，但是经常出现训练出现Nan的情况，当然也有可能是因为fp16导致），step_size_up为10各epoch</li>
-<li>目前只使用了CrossEntropyLoss作为损失监督</li>
-<li>优化器选择Lion</li>
-</ul>
-<h1 id="复赛方案">复赛方案</h1>
-<p>Dual Branch</p>
-<p>Reconstruction</p>
-<p>Classification</p>
-<h2 id="miccai-2023-sts-chanllenge">MICCAI 2023 STS Chanllenge</h2>
-<ol type="1">
-<li>发现不同模型方案对特定类型的图像效果相差较大，所以采用多种数据增强和不同模型方案进行集成</li>
-<li>利用 TTA 和 光学以及小形变数据增强，主要是 TTA</li>
-<li>发现采用小分类头时存在误检测区域，大分类头分割范围不准确，采用多尺度分类头，并且利用后处理筛选掉面积较小的分割区域</li>
-<li>在 UNet 的残差中采用利用不同维度的图像生成 SE 注意力权重</li>
-<li>因为图像分辨率大，所以归一化层改成了 InstanceNorm 和 EfficientNet
-的架构</li>
-</ol>
-
+          Here's something encrypted, password is required to continue reading.
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/12/01/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/8th%20%E5%A4%A9%E6%B1%A0%20MICCAI%20TeethSegmentation%20%E6%AF%94%E8%B5%9B%E5%9B%9E%E9%A1%BE/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
