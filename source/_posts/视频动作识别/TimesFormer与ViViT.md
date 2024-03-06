@@ -21,7 +21,7 @@ date: 2023-03-13 12:24:22
 
 ## 整体架构
 
-**输入视频**：TimeSformer的输入为$X \in \mathbb{R}^{H \times W \times 3 \times F}$，表示$F$个size为$H\times W  $的RGB帧。
+**输入视频**：TimeSformer的输入为$X \in \mathbb{R}^{H \times W \times 3 \times F}$，表示$F$个size为$H\times W$的RGB帧。
 
 **转换为Patch**：与ViT一样，将每一帧分解为N个不重叠的Patch，每一个patch的大小都为$P \times P$，因此$N = HW/P^2$。把patch展开为向量$\mathbf{x}_{(p, t)} \in \mathbb{R}^{3 P^{2}}$，其中$p = 1, \dots , N$表示空间位置，$t = 1, \dots ,F$为时间帧的索引。
 

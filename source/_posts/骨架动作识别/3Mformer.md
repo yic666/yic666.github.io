@@ -139,10 +139,7 @@ $$
 
 **Weighted pooling**:(8)中的注意力层产生特征表示 ${\bf O}_\text{MP}\!\in\! \mathbb{R}^{d''\times N}$，以增强例如特征通道与身体关节之间的关系。随后，我们通过对多个阶数 $m\in\mathcal{I}_{r}$ 的超边进行加权池化来处理多个阶数的超边的影响：
 $$
-\begin{align}
-    & {\bf O}_\text{MP}^{*(m)}\!=\!{\bf O}_\text{MP}^{(m)}{\bf H}^{(m)}\!\in\!  \mathbb{R}^{d''\times J}, %~(\text{or}~{\bf O}_\text{MP}^{*'(k)}\!=\!{\bf O}_\text{MP}^{'(k)}{\bf H}^{(k)}\!\in\! \mathbb{R}^{d'\times J})
-
-\end{align}
+\mathbf{O}_{\mathrm{MP}}^{*(m)}=\mathbf{O}_{\mathrm{MP}}^{(m)} \mathbf{H}^{(m)} \in \mathbb{R}^{d^{\prime \prime} \times J},
 $$
 
 其中，${\bf O}_\text{MP}^{(m)}\!\in\! \mathbb{R}^{d''\times N_{E_m}}$ 是从 ${\bf O}_\text{MP}$ 中简单地提取出阶数为 $m$ 的超边的特征表示，矩阵 ${\bf H}^{(m)}\!\in\! \mathbb{R}^{N_{E_m}\times J}$ 是可学习的权重，用于对阶数为 $m$ 的超边进行加权池化。最后，通过简单地连接 ${\bf O}_\text{MP}^{*(1)},\cdots,{\bf O}_\text{MP}^{*(r)}$，我们得到 ${\bf O}_\text{MP}^{*}\!\in\! \mathbb{R}^{r{d''\times J}}$。如果我们使用了从 TP 到 MP 的输入，则将 MP 的输出表示为 ${\mathbf{O}'}_\text{MP}^{*}$。

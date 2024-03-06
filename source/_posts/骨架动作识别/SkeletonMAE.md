@@ -92,8 +92,6 @@ $$
 $$
 \begin{equation}
 \mathcal{L}_{\textrm{RCE}}=\sum_{\mathbf{v}_{i} \in \overline{\mathcal{V}}}^{}(\frac{1}{ |\overline{\mathcal{V}}|}-\frac{\mathbf{x}_{i}^\mathrm{T}\cdot\mathbf{z}_{i}}{\left  |\overline{\mathcal{V}}|\times \| \mathbf{x}_{i}\right \| \times  \left \| \mathbf{z}_{i}\right \|})^{\beta },
-
-  % \vspace{-5pt}
 \end{equation}
 $$
 这个公式表示在所有被遮罩的关节上，重建特征与输入特征之间的相似性差距的平均值。$\beta$被设置为2，即采用了平方的幂来缩放余弦误差的贡献，以便更强调容易样本的影响。

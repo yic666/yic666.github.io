@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "5dda3b43c090af2c",
+        "id": "34c0c85063a2c1a9",
         "type": "tabs",
         "children": [
           {
-            "id": "32e7687c238d27b5",
+            "id": "7246656e6c04a628",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
+                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
                 "mode": "source",
                 "source": false
               }
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "921a0551708ba8b7",
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
+                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
+                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +134,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md"
+                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md"
               }
             }
           },
@@ -164,38 +164,50 @@
       "file-tree-alternative:File Tree Alternative Plugin": false
     }
   },
-  "active": "32e7687c238d27b5",
+  "active": "7246656e6c04a628",
   "lastOpenFiles": [
-    "source/_posts/视频动作识别/XVit.md",
-    "source/_posts/视频动作识别/视频行为识别博客笔记.md",
-    "source/_posts/视频动作识别/视频理解相关论文.md",
-    "source/_posts/视频动作识别/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper.md",
-    "source/_posts/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition.md",
-    "source/_posts/视频动作识别/Video-Swin-Transformers.md",
-    "source/_posts/视频动作识别/TimesFormer与ViViT.md",
-    "source/_posts/视频动作识别/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition.md",
     "source/_posts/视频动作识别/MViT.md",
-    "source/_posts/视频动作识别/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos.md",
     "source/_posts/视频动作识别/Efficient-Video-Understanding.md",
-    "source/_posts/视频动作识别/《Dynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition》阅读笔记.md",
+    "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
+    "source/_posts/比赛笔记/NTIRE 2024 Dense and NonHomogeneous Dehazing Challenge 比赛方案.md",
+    "public/css/hbe.style.css",
+    "public/lib/hbe.js",
+    "public/lib",
     "source/_posts/骨架动作识别/PoseConv3d笔记.md",
-    "source/_posts/骨架动作识别/Hypergraph-Transformer.md",
-    "source/_posts/骨架动作识别/SkeletonMAE.md",
-    "source/_posts/骨架动作识别/Skeleton-MixFormer.md",
-    "source/_posts/骨架动作识别/3Mformer.md",
-    "Home or for test.md",
-    "Pasted image 20231123110051.png",
-    "source/_posts/test.md",
-    "source/_posts/themes/next/_config.yml.md",
-    "source/_posts/themes/next",
-    "source/_posts/themes",
-    "Blog/themes/butterfly4.3.1/_config.yml.md",
-    "Blog/themes/butterfly4.3.1",
-    "Blog/themes",
-    "Blog/_config.yml.md",
-    "Blog",
-    "source/_posts/测试.md",
-    "source/_obsidian/Post Template.md",
-    "source/_obsidian"
+    "node_modules/iconv-lite/lib/streams.js",
+    "node_modules/iconv-lite/lib/index.js",
+    "node_modules/iconv-lite/lib/index.d.ts",
+    "node_modules/iconv-lite/lib/extend-node.js",
+    "node_modules/iconv-lite/lib/bom-handling.js",
+    "node_modules/iconv-lite/lib",
+    "node_modules/object-inspect/package.json",
+    "node_modules/body-parser/README.md",
+    "node_modules/es-define-property/README.md",
+    "node_modules/get-intrinsic/README.md",
+    "node_modules/define-data-property/CHANGELOG.md",
+    "node_modules/hasown/CHANGELOG.md",
+    "node_modules/express/node_modules/finalhandler/SECURITY.md",
+    "node_modules/raw-body/SECURITY.md",
+    "node_modules/gopd/CHANGELOG.md",
+    "node_modules/express/node_modules/finalhandler/README.md",
+    "node_modules/raw-body/node_modules/bytes/Readme.md",
+    "node_modules/merge-descriptors/HISTORY.md",
+    "node_modules/type-is/README.md",
+    "node_modules/forwarded/README.md",
+    "node_modules/methods/HISTORY.md",
+    "node_modules/media-typer/HISTORY.md",
+    "node_modules/content-type/README.md",
+    "node_modules/proxy-addr/README.md",
+    "node_modules/express/node_modules/finalhandler/HISTORY.md",
+    "node_modules/iconv-lite/README.md",
+    "node_modules/proxy-addr/HISTORY.md",
+    "node_modules/cookie-signature/History.md",
+    "public/images/logo-algolia-nebula-blue-full.svg",
+    "public/images/logo.svg",
+    "public/images/favicon-32x32-next.png",
+    "public/images/avatar.gif",
+    "public/images/favicon-16x16-next.png",
+    "public/images/apple-touch-icon-next.png",
+    "Pasted image 20231123110051.png"
   ]
 }

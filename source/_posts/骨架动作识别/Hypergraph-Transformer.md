@@ -156,10 +156,9 @@ $$
 为了使划分矩阵可学习，通过沿其列轴应用softmax将二元划分矩阵参数化并松弛为连续版本:
 
 $$
-\begin{equation}
-    \tilde{H} = \{ \tilde{h}_{ve} = \frac{{\rm exp} (h_{ve})} {\sum^{\vert \mathcal{E}\vert}_{e=1} {\rm exp} (h_{ve})}; i=1...\vert \mathcal{V} \vert， j=1...\vert \mathcal{E} \vert \}.
-\end{equation}
+\tilde{H}=\left\{\tilde{h}_{v e}=\frac{\exp \left(h_{v e}\right)}{\sum_{e=1}^{|\mathcal{E}|} \exp \left(h_{v e}\right)} ; i=1 \ldots|\mathcal{V}|, j=1 \ldots|\mathcal{E}|\right\}
 $$
+
 这样寻找最优离散分割矩阵H的问题就转化为学习一个最优的连续分割矩阵$\tilde{H}$了，它可以与Transformer的参数联合优化。
 
 在优化结束时，可以通过对$\tilde{H}$的每行应用argmax操作来获得一个离散的分割矩阵:

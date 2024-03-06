@@ -10,6 +10,7 @@ date: 2023-11-04 19:35:47
 
 [paper](https://dl.acm.org/doi/pdf/10.1145/3581783.3611900)  [code](https://github.com/ElricXin/Skeleton-MixFormer)
 
+Skeleton MixFormer: Multivariate Topology Representation for Skeleton-based Action Recognition
 # 摘要
 
 Vision Transformer在各种视觉任务中表现出色，但在基于骨架的动作识别中遇到了瓶颈，并且不及先进的基于图卷积网络（GCN）的方法。其根本原因在于当前的骨架变换器依赖于完整通道的全局关节的自注意机制，忽略了通道内高度区分性的差异相关性，因此难以动态学习多变拓扑的表达。为解决这一问题，我们提出了Skeleton MixFormer，这是一种创新的时空架构，能够有效表示紧凑的骨架数据的物理相关性和时间交互性。该提议框架由两个基本组成部分组成：1）空间MixFormer。利用通道分组和混合注意力计算动态的多变拓扑关系。与全通道自注意方法相比，空间MixFormer更好地突出了通道组之间的区别以及关节邻接的可解释学习。2）时间MixFormer，包括多尺度卷积、时间变换器和顺序保持模块。多变时间模型确保了全局差异表达的丰富性，并实现了序列中关键间隔的区分，从而更有效地学习动作中的长期和短期依赖关系。我们的Skeleton MixFormer在四个标准数据集（NTU-60、NTU-120、NW-UCLA和UAV-Human）的七种不同设置上展现出最先进（SOTA）的性能。
@@ -128,7 +129,7 @@ A_{T}^{m 2}=\operatorname{sigmoid}\left(\operatorname{atten}\left(Q_{t}, K_{t}\r
 $$
 其中$x_{t}^{1}, x_{t}^{2} \in \mathbb{R}^{T \times C^{in}_t/10 \times V}$，$Q_t,K_t\in\mathbb{R}^{T\times1\times1}$，$pool_m(\cdot)$为自适应最大池化。通过统一计算得到$V_T$，最终的空间输出可以表示如下：
 $$
-\begin{array}{c}V_T=Conv_{1\times1}(Trans_t(\text{Соп}v_{c\to c/5}(\mathcal{X}_T^{in}))),\\
+\begin{array}{c}V_T=Conv_{1\times1}(Trans_t(\operatorname{Conv}_{c\to c/5}(\mathcal{X}_T^{in}))),\\
 X_T^{\boldsymbol{M}2}=V_TA_T^{\boldsymbol{m}2},\end{array}
 $$
 
