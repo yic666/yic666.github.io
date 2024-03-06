@@ -20,18 +20,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2307.08476 code: https:&#x2F;&#x2F;github.com&#x2F;HongYan1123&#x2F;SkeletonMAE 摘要 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预">
+    <meta name="description" content="paper code 摘要 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预训练一个可以泛化到不同数据集的高效骨架序列学习模型。在本文中,我们提出了一个高效的骨架序列学习框架,命名为骨架序列学习(SSL)。为了全面捕获人体姿态并获得有">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SkeletonMAE">
 <meta property="og:url" content="http://example.com/2023/10/07/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/SkeletonMAE/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2307.08476 code: https:&#x2F;&#x2F;github.com&#x2F;HongYan1123&#x2F;SkeletonMAE 摘要 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预">
+<meta property="og:description" content="paper code 摘要 骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预训练一个可以泛化到不同数据集的高效骨架序列学习模型。在本文中,我们提出了一个高效的骨架序列学习框架,命名为骨架序列学习(SSL)。为了全面捕获人体姿态并获得有">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-07T07:09:08.000Z">
-<meta property="article:modified_time" content="2023-11-17T07:00:24.909Z">
+<meta property="article:modified_time" content="2024-03-06T05:47:42.599Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="ICCV2023">
 <meta name="twitter:card" content="summary">
 
@@ -132,18 +132,18 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +218,7 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 15:00:24" itemprop="dateModified" datetime="2023-11-17T15:00:24+08:00">2023-11-17</time>
+      <time title="Modified: 2024-03-06 13:47:42" itemprop="dateModified" datetime="2024-03-06T13:47:42+08:00">2024-03-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -240,8 +240,8 @@ Representation Learning</span></a></li></ol></li></ol></li></ol></div>
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>paper: https://arxiv.org/abs/2307.08476</p>
-<p>code: https://github.com/HongYan1123/SkeletonMAE</p>
+        <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2307.08476">paper</a> <a
+target="_blank" rel="noopener" href="https://github.com/HongYan1123/SkeletonMAE">code</a></p>
 <h1 id="摘要">摘要</h1>
 <p>骨架序列表示学习通过其对人体关节和拓扑结构的建模能力,在动作识别中显示了巨大的优势。然而,当前的方法通常需要大量的标注数据来训练计算昂贵的模型。此外,这些方法忽略了如何利用骨架不同关节之间的细粒度依赖关系,来预训练一个可以泛化到不同数据集的高效骨架序列学习模型。在本文中,我们提出了一个高效的骨架序列学习框架,命名为骨架序列学习(SSL)。为了全面捕获人体姿态并获得有区分性的骨架序列表示,我们构建了一个基于非对称图的编码器-解码器预训练架构,命名为SkeletonMAE,它将骨架关节序列嵌入图卷积网络,并根据先验人体拓扑知识重构被屏蔽的骨架关节和边。然后,预训练的SkeletonMAE编码器与空间-时域表示学习(STRL)模块相结合,构建SSL框架。大量的实验结果显示,我们的SSL可以很好地泛化到不同的数据集,并在FineGym、Diving48、NTU
 60和NTU
@@ -376,16 +376,16 @@ class="math inline">\(\beta\geq1\)</span>的幂来降低简单样本在训练中
 class="math inline">\(\beta&gt;1\)</span>时更快地衰减为零。给定原始特征<span
 class="math inline">\({\mathbf{X}}\in \mathbb{R}^{N\times
 D}\)</span>和重建输出<span class="math inline">\(\mathbf{Y}\in
-\mathbb{R}^{N\times D}\)</span>，RCE的定义如下： $$ <span
-class="math display">\[\begin{equation}
+\mathbb{R}^{N\times D}\)</span>，RCE的定义如下： <span
+class="math display">\[
+\begin{equation}
 \mathcal{L}_{\textrm{RCE}}=\sum_{\mathbf{v}_{i} \in
 \overline{\mathcal{V}}}^{}(\frac{1}{
 |\overline{\mathcal{V}}|}-\frac{\mathbf{x}_{i}^\mathrm{T}\cdot\mathbf{z}_{i}}{\left  |\overline{\mathcal{V}}|\times
 \| \mathbf{x}_{i}\right \| \times  \left \| \mathbf{z}_{i}\right
 \|})^{\beta },
-
-  % \vspace{-5pt}
-\end{equation}\]</span> $$
+\end{equation}
+\]</span>
 这个公式表示在所有被遮罩的关节上，重建特征与输入特征之间的相似性差距的平均值。<span
 class="math inline">\(\beta\)</span>被设置为2，即采用了平方的幂来缩放余弦误差的贡献，以便更强调容易样本的影响。</p>
 <h2 id="fine-tuning">Fine-tuning</h2>
@@ -461,8 +461,8 @@ pooling）来获得最终的输出。最后，由MLP和softmax组成的分类器
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/ICCV2023/" rel="tag"># ICCV2023</a>
           </div>
 
@@ -498,7 +498,7 @@ pooling）来获得最终的输出。最后，由MLP和softmax组成的分类器
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

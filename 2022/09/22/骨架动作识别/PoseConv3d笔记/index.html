@@ -20,18 +20,18 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Revisiting Skeleton-based Action Recognition 论文：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2104.13586 代码：https:&#x2F;&#x2F;github.com&#x2F;kennymckormick&#x2F;pyskl 摘要与结论  尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。 提出了PoseConv3">
+    <meta name="description" content="papercode 摘要与结论  尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。 提出了PoseConv3D：一种以3D热图体积作为输入的基于3D-CNN的骨骼动作识别方法，与GCN的方法相比  在学习时空特征方面更加有效 对姿态估计的噪声更具有鲁棒性 在交叉数据集中更具有泛化性 在处理多人场景方面无需额外计算成本  另外">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PoseConv3d笔记">
 <meta property="og:url" content="http://example.com/2022/09/22/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/PoseConv3d%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="Revisiting Skeleton-based Action Recognition 论文：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2104.13586 代码：https:&#x2F;&#x2F;github.com&#x2F;kennymckormick&#x2F;pyskl 摘要与结论  尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。 提出了PoseConv3">
+<meta property="og:description" content="papercode 摘要与结论  尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。 提出了PoseConv3D：一种以3D热图体积作为输入的基于3D-CNN的骨骼动作识别方法，与GCN的方法相比  在学习时空特征方面更加有效 对姿态估计的噪声更具有鲁棒性 在交叉数据集中更具有泛化性 在处理多人场景方面无需额外计算成本  另外">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-22T08:48:46.000Z">
-<meta property="article:modified_time" content="2023-11-17T06:59:22.895Z">
+<meta property="article:modified_time" content="2024-03-06T06:12:45.600Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="骨架">
 <meta name="twitter:card" content="summary">
 
@@ -119,7 +119,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E4%B8%8E%E7%BB%93%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">摘要与结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A7%BF%E6%80%81%E6%8F%90%E5%8F%96%E7%9A%84%E8%89%AF%E5%A5%BD%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.1.</span> <span class="nav-text">姿态提取的良好实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.1.1.</span> <span class="nav-text">消融实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#d-v.s.-3d-%E9%AA%A8%E6%9E%B6"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">2D v.s. 3D 骨架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bottom-up-v.s.-top-down."><span class="nav-number">3.1.1.2.</span> <span class="nav-text">Bottom-Up v.s. Top-Down.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#interested-person-v.s.-all-persons."><span class="nav-number">3.1.1.3.</span> <span class="nav-text">Interested Person v.s. All
-Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#coordinates-v.s.-heatmaps"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">Coordinates v.s. Heatmaps</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E2d%E5%A7%BF%E5%8A%BF%E7%94%9F%E6%88%903d%E7%83%AD%E5%9B%BE"><span class="nav-number">3.2.</span> <span class="nav-text">从2D姿势生成3D热图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E5%9F%BA%E4%BA%8E%E9%AA%A8%E6%9E%B6%E7%9A%84%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB%E7%9A%843d-cnn"><span class="nav-number">3.3.</span> <span class="nav-text">用于基于骨架的动作识别的3D-CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#poseconv3d"><span class="nav-number">3.3.1.</span> <span class="nav-text">PoseConv3D</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgbpose-conv3d"><span class="nav-number">3.3.2.</span> <span class="nav-text">RGBPose-Conv3D</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a></li></ol></div>
+Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#coordinates-v.s.-heatmaps"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">Coordinates v.s. Heatmaps</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E2d%E5%A7%BF%E5%8A%BF%E7%94%9F%E6%88%903d%E7%83%AD%E5%9B%BE"><span class="nav-number">3.2.</span> <span class="nav-text">从2D姿势生成3D热图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E5%9F%BA%E4%BA%8E%E9%AA%A8%E6%9E%B6%E7%9A%84%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB%E7%9A%843d-cnn"><span class="nav-number">3.3.</span> <span class="nav-text">用于基于骨架的动作识别的3D-CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#poseconv3d"><span class="nav-number">3.3.1.</span> <span class="nav-text">PoseConv3D</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgbpose-conv3d"><span class="nav-number">3.3.2.</span> <span class="nav-text">RGBPose-Conv3D</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -132,18 +132,18 @@ Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" hre
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +218,7 @@ Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" hre
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 14:59:22" itemprop="dateModified" datetime="2023-11-17T14:59:22+08:00">2023-11-17</time>
+      <time title="Modified: 2024-03-06 14:12:45" itemprop="dateModified" datetime="2024-03-06T14:12:45+08:00">2024-03-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -240,9 +240,8 @@ Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" hre
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Revisiting Skeleton-based Action Recognition</p>
-<p>论文：https://arxiv.org/abs/2104.13586</p>
-<p>代码：https://github.com/kennymckormick/pyskl</p>
+        <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2104.13586">paper</a><a
+target="_blank" rel="noopener" href="https://github.com/kennymckormick/pyskl">code</a></p>
 <h1 id="摘要与结论">摘要与结论</h1>
 <ul>
 <li>尽管许多基于GCN的骨架动作识别算法取得不错的结果，但依旧在鲁棒性、互操作性和可扩展性方面存在限制。</li>
@@ -275,7 +274,8 @@ Persons.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" hre
 <p>人体骨骼或姿态提取是基于骨骼的动作识别的重要预处理步骤，对最终的识别精度有很大影响。</p>
 <p>一般来说2D姿势比3D姿势效果更好，如下图。与自底向上的方法相比，自顶向下的方法在标准基准(如coco
 -关键点)上获得了优越的性能。</p>
-<p>![(https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png)</p>
+<p><img
+src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220923200807607.png" /></p>
 <h3 id="消融实验">消融实验</h3>
 <p>作者设计了一系列采用的不同的替代方法的姿态提取的消融实验。以下的3D-CNN实验的输入均为<span
 class="math inline">\(T*H*W=48*56*56\)</span></p>
@@ -309,17 +309,19 @@ src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-2022092321112
 class="math inline">\(K*H*W\)</span>的热图来表示二维姿势,其中K是关节点的数量，H和W是框架的高度和宽度。如果只有coordinate-triplets<span
 class="math inline">\((x_k; y_k;
 c_k)\)</span>,可以通过组合以每个关节为中心的K个高斯映射来得到一个关节热图J:</p>
-<p><span class="math inline">\(\boldsymbol{J}_{k i
+<p><span class="math display">\[
+\boldsymbol{J}_{k i
 j}=e^{-\frac{\left(i-x_{k}\right)^{2}+\left(j-y_{k}\right)^{2}}{2 *
-\sigma^{2}}} * c_{k}\)</span></p>
+\sigma^{2}}} * c_{k}
+\]</span></p>
 <p>其中<span
 class="math inline">\(\sigma\)</span>控制高斯映射的方差，<span
 class="math inline">\((x_k, y_k)\)</span>和<span
 class="math inline">\(c_k\)</span>分别是第k个关节的位置和置信度分数，还可以创建limb热图：</p>
-<p><span class="math inline">\(\boldsymbol{L}_{k i
-j}=e^{-\frac{\mathcal{D}\left((i, j), s e g\left[a_{k},
-b_{k}\right]\right)^{2}}{2 * \sigma^{2}}} * \min \left(c_{a_{k}},
-c_{b_{k}}\right)\)</span></p>
+<p><span class="math display">\[
+\boldsymbol{L}_{k i j}=e^{-\frac{\mathcal{D}\left((i, j), s e
+g\left[a_{k}, b_{k}\right]\right)^{2}}{2 * \sigma^{2}}} * \min
+\left(c_{a_{k}}, c_{b_{k}}\right)\]</span></p>
 <p>第k个limb是在两个关节<span class="math inline">\(a_k\)</span>和<span
 class="math inline">\(b_k\)</span>之间。函数D计算从点<span
 class="math inline">\((i,J)\)</span>到段<span
@@ -359,7 +361,6 @@ Fusion，增加了两个通路之间的双向横向连接，促进两种模式�
 Conv3D分别使用每个通路的两个单独损失进行训练，因为联合从两种模态学习的单个损失会导致严重的过拟合。</p>
 <p><img
 src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-20220924195658960.png" /></p>
-<h1 id="实验">实验</h1>
 
     </div>
 
@@ -369,8 +370,8 @@ src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-2022092419565
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
           </div>
 
@@ -406,7 +407,7 @@ src="https://raw.githubusercontent.com/yic666/Blogimg/master/image-2022092419565
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

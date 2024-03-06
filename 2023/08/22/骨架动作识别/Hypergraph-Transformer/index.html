@@ -20,19 +20,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2211.09590 code: https:&#x2F;&#x2F;github.com&#x2F;ZhouYuxuanYX&#x2F;Hyperformer 摘要 骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN">
+    <meta name="description" content="paper code 摘要 骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN的一个限制，即拓扑结构在训练后是固定的。为了放松这种限制，采用了自注意力(SA)机制使GCN的拓扑结构对输入变得自适应，产生了目前最好的混合模型。同时，也尝试了">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hypergraph Transformer">
 <meta property="og:url" content="http://example.com/2023/08/22/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Hypergraph-Transformer/index.html">
 <meta property="og:site_name" content="Yic">
-<meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2211.09590 code: https:&#x2F;&#x2F;github.com&#x2F;ZhouYuxuanYX&#x2F;Hyperformer 摘要 骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN">
+<meta property="og:description" content="paper code 摘要 骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN的一个限制，即拓扑结构在训练后是固定的。为了放松这种限制，采用了自注意力(SA)机制使GCN的拓扑结构对输入变得自适应，产生了目前最好的混合模型。同时，也尝试了">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-22T06:05:24.000Z">
-<meta property="article:modified_time" content="2023-11-17T06:39:43.852Z">
+<meta property="article:modified_time" content="2024-03-06T05:56:57.740Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
-<meta property="article:tag" content="动作识别">
 <meta property="article:tag" content="Transformer-based">
+<meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
 <meta property="article:tag" content="骨架">
 <meta name="twitter:card" content="summary">
 
@@ -119,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#preliminaries"><span class="nav-number">3.</span> <span class="nav-text">Preliminaries</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">3.1.</span> <span class="nav-text">自注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%9B%BE%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.2.</span> <span class="nav-text">超图表示</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B4%BE%E7%94%9F%E8%B6%85%E8%BE%B9%E7%89%B9%E5%BE%81"><span class="nav-number">4.1.</span> <span class="nav-text">派生超边特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E4%BD%93%E9%AA%A8%E9%AA%BC%E7%BB%93%E6%9E%84%E7%BC%96%E7%A0%81"><span class="nav-number">4.2.</span> <span class="nav-text">人体骨骼结构编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%9B%BE%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">4.3.</span> <span class="nav-text">超图自注意力机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%92%E5%88%86%E7%AD%96%E7%95%A5"><span class="nav-number">4.4.</span> <span class="nav-text">划分策略</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#preliminaries"><span class="nav-number">3.</span> <span class="nav-text">Preliminaries</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">3.1.</span> <span class="nav-text">自注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%9B%BE%E8%A1%A8%E7%A4%BA"><span class="nav-number">3.2.</span> <span class="nav-text">超图表示</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B4%BE%E7%94%9F%E8%B6%85%E8%BE%B9%E7%89%B9%E5%BE%81"><span class="nav-number">4.1.</span> <span class="nav-text">派生超边特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E4%BD%93%E9%AA%A8%E9%AA%BC%E7%BB%93%E6%9E%84%E7%BC%96%E7%A0%81"><span class="nav-number">4.2.</span> <span class="nav-text">人体骨骼结构编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%9B%BE%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">4.3.</span> <span class="nav-text">超图自注意力机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%92%E5%88%86%E7%AD%96%E7%95%A5"><span class="nav-number">4.4.</span> <span class="nav-text">划分策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">4.5.</span> <span class="nav-text">模型架构</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -132,18 +132,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -218,7 +218,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 14:39:43" itemprop="dateModified" datetime="2023-11-17T14:39:43+08:00">2023-11-17</time>
+      <time title="Modified: 2024-03-06 13:56:57" itemprop="dateModified" datetime="2024-03-06T13:56:57+08:00">2024-03-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -240,8 +240,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>paper: https://arxiv.org/abs/2211.09590</p>
-<p>code: https://github.com/ZhouYuxuanYX/Hyperformer</p>
+        <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.09590">paper</a> <a
+target="_blank" rel="noopener" href="https://github.com/ZhouYuxuanYX/Hyperformer">code</a></p>
 <h1 id="摘要">摘要</h1>
 <p>骨架基础的动作识别旨在给定人体关节坐标及其骨架互连来识别人类动作。通过将关节定义为顶点，其自然连接定义为边，先前的工作成功地采用了图卷积网络(GCN)来建模关节的共现，并获得了出色的性能。更近期，发现了GCN的一个限制，即拓扑结构在训练后是固定的。为了放松这种限制，采用了自注意力(SA)机制使GCN的拓扑结构对输入变得自适应，产生了目前最好的混合模型。同时，也尝试了简单的Transformer，但由于缺乏结构先验，它们仍落后于目前最好的基于GCN的方法。与混合模型不同，我们提出了一种更优雅的方法，通过图距离嵌入将骨连接性结构融入Transformer。我们的嵌入在训练期间保留了骨架结构的信息，而GCN仅将其用于初始化。更重要的是，我们揭示了图模型通常存在的一个潜在问题，即成对聚合从本质上忽略了身体关节之间的高阶运动依赖性。为弥补这一空白，我们在超图上提出了一种新的自注意力(SA)机制，称为超图自注意力(HyperSA)，以融入内在的高阶关系。我们将结果模型称为Hyperformer，它在NTU
 RGB+D、NTU RGB+D
@@ -393,7 +393,37 @@ class="math inline">\(B_{ij}\)</span>，称为关系偏差(RB)。在聚合全局
 src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20230823183029.png" /></p>
 <p>作者在实验中发现，使用经验划分的Hyperformer可以达到优异的性能。但是，找到最佳的经验划分策略需要大量体力工作，并且最佳划分策略会受限于拥有固定数目关节的特定骨架。因此作者提供了一种方法来自动化搜索有效划分策略的过程。</p>
 <p>为了使划分矩阵可学习，通过沿其列轴应用softmax将二元划分矩阵参数化并松弛为连续版本:</p>
-<p>$$ \begin{equation} = { _{ve} = </p>
+<p><span class="math display">\[
+\tilde{H}=\left\{\tilde{h}_{v e}=\frac{\exp \left(h_{v
+e}\right)}{\sum_{e=1}^{|\mathcal{E}|} \exp \left(h_{v e}\right)} ; i=1
+\ldots|\mathcal{V}|, j=1 \ldots|\mathcal{E}|\right\}
+\]</span></p>
+<p>这样寻找最优离散分割矩阵H的问题就转化为学习一个最优的连续分割矩阵<span
+class="math inline">\(\tilde{H}\)</span>了，它可以与Transformer的参数联合优化。</p>
+<p>在优化结束时，可以通过对<span
+class="math inline">\(\tilde{H}\)</span>的每行应用argmax操作来获得一个离散的分割矩阵:
+<span class="math display">\[
+\begin{equation}
+H = \mathrm{argmax}(\tilde{H})
+\end{equation}
+\]</span> 注意，通过变化<span
+class="math inline">\(\tilde{H}\)</span>的初始化，可以轻松获得许多不同的划分提议。实验表明，所有这些提议都证明是合理的。有趣的是，所有学习到的提议都是对称的，如图所示，这表明对称性是固有关节关系的一个重
+要方面。</p>
+<h2 id="模型架构">模型架构</h2>
+<p><strong>空间建模</strong></p>
+<p>在多头HyperSA之前应用层规范化(LN)，并在输出添加残差连接，遵循标准的Transformer架构。</p>
+<p>在前馈层中，Transformers针对每个token都进行了一个独立的多层感知机(MLP)操作，这个MLP试图捕获每个token内部的复杂特征表示，对于一些复杂的token如图像patch或词嵌入，增强其内部表示确实很重要。但是对于骨架动作识别任务中的简单三维关节坐标来说，这个额外的MLP是不必要的。因为动作识别更依赖于token之间的关系，即关节间的共现模式。所以文章建议可以移除MLP层，以减少计算和内存需求，这可以使基于Transformer的模型更轻量和高效。</p>
+<p>为了引入非线性，在每个空间和时序建模模块块之后添加了一个ReLU层。</p>
+<p><strong>时序建模</strong></p>
+<p>为了建模人体姿态的时序相关性，最终模型中采用了多尺度时序卷积(MS-TC)模块。该模块包含三个卷积分支，先进行1×1卷积减少通道维度，然后是不同组合的核大小和扩张率。最后把卷积分支的输出拼接在一起。</p>
+<p>Hyperformer通过交替堆叠HyperSA和时序卷积层构建,如下:</p>
+<p><span class="math display">\[
+\begin{align}
+    &amp; z^{(l)} = \text{HyperSA}(LN(z^{(l-1)})) + z^{(l-1)} \\
+    &amp; z^{(l)} = \text{TemporalConv}(LN(z^{(l)})) + z^{(l-1)} \\
+    &amp; z^{(l)} = \text{ReLU}(z^{(l)})
+\end{align}
+\]</span></p>
 
     </div>
 
@@ -403,9 +433,9 @@ src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20230823183029.png" /></p
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
-              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
               <a href="/tags/Transformer-based/" rel="tag"># Transformer-based</a>
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
               <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
           </div>
 
@@ -441,7 +471,7 @@ src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20230823183029.png" /></p
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
