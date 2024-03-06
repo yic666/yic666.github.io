@@ -28,12 +28,12 @@
 <meta property="og:description" content="paper: https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2303.14474 摘要 许多骨骼动作识别模型使用图卷积网络（GCNs）通过连接身体部位的三维关节来表示人体。GCNs聚合一或少数跳的图邻域，并忽略未连接的身体关节之间的依赖关系。我们提出使用超图来建模图节点之间的超边（例如，三阶和四阶超边捕捉三个和四个节点），从而帮助捕捉身体关节组的高阶运动模式。我们将动作序列分割为时间块，High">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-18T04:53:38.000Z">
-<meta property="article:modified_time" content="2023-11-17T06:39:43.852Z">
+<meta property="article:modified_time" content="2024-03-06T06:00:29.396Z">
 <meta property="article:author" content="Yic-gdut">
-<meta property="article:tag" content="论文笔记">
-<meta property="article:tag" content="动作识别">
-<meta property="article:tag" content="CVPR2023">
 <meta property="article:tag" content="Transformer-based">
+<meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="论文笔记">
+<meta property="article:tag" content="CVPR2023">
 <meta property="article:tag" content="骨架">
 <meta name="twitter:card" content="summary">
 
@@ -137,18 +137,18 @@ Module</span></a></li></ol></li></ol></li></ol></div>
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -223,7 +223,7 @@ Module</span></a></li></ol></li></ol></li></ol></div>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-11-17 14:39:43" itemprop="dateModified" datetime="2023-11-17T14:39:43+08:00">2023-11-17</time>
+      <time title="Modified: 2024-03-06 14:00:29" itemprop="dateModified" datetime="2024-03-06T14:00:29+08:00">2024-03-06</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -525,14 +525,11 @@ class="math inline">\({\bf O}_\text{MP}\!\in\!
 \mathbb{R}^{d&#39;&#39;\times
 N}\)</span>，以增强例如特征通道与身体关节之间的关系。随后，我们通过对多个阶数
 <span class="math inline">\(m\in\mathcal{I}_{r}\)</span>
-的超边进行加权池化来处理多个阶数的超边的影响： $$ <span
-class="math display">\[\begin{align}
-    &amp; {\bf O}_\text{MP}^{*(m)}\!=\!{\bf O}_\text{MP}^{(m)}{\bf
-H}^{(m)}\!\in\!  \mathbb{R}^{d&#39;&#39;\times J}, %~(\text{or}~{\bf
-O}_\text{MP}^{*&#39;(k)}\!=\!{\bf O}_\text{MP}^{&#39;(k)}{\bf
-H}^{(k)}\!\in\! \mathbb{R}^{d&#39;\times J})
-
-\end{align}\]</span> $$</p>
+的超边进行加权池化来处理多个阶数的超边的影响： <span
+class="math display">\[
+\mathbf{O}_{\mathrm{MP}}^{*(m)}=\mathbf{O}_{\mathrm{MP}}^{(m)}
+\mathbf{H}^{(m)} \in \mathbb{R}^{d^{\prime \prime} \times J},
+\]</span></p>
 <p>其中，<span class="math inline">\({\bf O}_\text{MP}^{(m)}\!\in\!
 \mathbb{R}^{d&#39;&#39;\times N_{E_m}}\)</span> 是从 <span
 class="math inline">\({\bf O}_\text{MP}\)</span> 中简单地提取出阶数为
@@ -620,10 +617,10 @@ O}^*_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;}\)</span>（或者 $</p>
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
-              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
-              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
               <a href="/tags/Transformer-based/" rel="tag"># Transformer-based</a>
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
+              <a href="/tags/CVPR2023/" rel="tag"># CVPR2023</a>
               <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
           </div>
 
@@ -659,7 +656,7 @@ O}^*_\text{TP}\!\in\!\mathbb{R}^{d&#39;&#39;&#39;}\)</span>（或者 $</p>
 
 <div class="copyright">
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

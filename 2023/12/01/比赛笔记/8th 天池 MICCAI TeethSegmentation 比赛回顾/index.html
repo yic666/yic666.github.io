@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="初赛成绩 单折成绩：  五折成绩：  所有数据成绩 7月1日：  所有数据成绩 7月4日：  7月5日：  7月7日：  # 网络结构 UNet++的结构  编码器部分  使用残差结构，经过Conv和BN后与原来的输入相加再进行LeakyReLU 使用ResNet的Block作为特征提取模块，其中归一化修改为IN，激活函数修改为GELU 将中间的3x3卷积核替换为更大的卷积核7x7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8th 天池 MICCAI TeethSegmentation 比赛回顾">
+<meta property="og:url" content="http://example.com/2023/12/01/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/8th%20%E5%A4%A9%E6%B1%A0%20MICCAI%20TeethSegmentation%20%E6%AF%94%E8%B5%9B%E5%9B%9E%E9%A1%BE/index.html">
+<meta property="og:site_name" content="Yic">
+<meta property="og:description" content="初赛成绩 单折成绩：  五折成绩：  所有数据成绩 7月1日：  所有数据成绩 7月4日：  7月5日：  7月7日：  # 网络结构 UNet++的结构  编码器部分  使用残差结构，经过Conv和BN后与原来的输入相加再进行LeakyReLU 使用ResNet的Block作为特征提取模块，其中归一化修改为IN，激活函数修改为GELU 将中间的3x3卷积核替换为更大的卷积核7x7">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-06T05:51:45.662Z">
+<meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2023/12/01/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/8th%20%E5%A4%A9%E6%B1%A0%20MICCAI%20TeethSegmentation%20%E6%AF%94%E8%B5%9B%E5%9B%9E%E9%A1%BE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2023/12/01/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/8th%20%E5%A4%A9%E6%B1%A0%20MICCAI%20TeethSegmentation%20%E6%AF%94%E8%B5%9B%E5%9B%9E%E9%A1%BE/","path":"2023/12/01/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾/","title":"8th 天池 MICCAI TeethSegmentation 比赛回顾"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>8th 天池 MICCAI TeethSegmentation 比赛回顾 | Yic</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yic</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E8%B5%9B%E6%88%90%E7%BB%A9"><span class="nav-number">1.</span> <span class="nav-text">初赛成绩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA"><span class="nav-number">1.1.</span> <span class="nav-text">图像增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="nav-number">1.2.</span> <span class="nav-text">训练策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E8%B5%9B%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">复赛方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#miccai-2023-sts-chanllenge"><span class="nav-number">2.1.</span> <span class="nav-text">MICCAI 2023 STS Chanllenge</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic-gdut</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/12/01/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/8th%20%E5%A4%A9%E6%B1%A0%20MICCAI%20TeethSegmentation%20%E6%AF%94%E8%B5%9B%E5%9B%9E%E9%A1%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="8th 天池 MICCAI TeethSegmentation 比赛回顾 | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          8th 天池 MICCAI TeethSegmentation 比赛回顾
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-12-01 00:00:00" itemprop="dateCreated datePublished" datetime="2023-12-01T00:00:00+08:00">2023-12-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-06 13:51:45" itemprop="dateModified" datetime="2024-03-06T13:51:45+08:00">2024-03-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">比赛笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="初赛成绩">初赛成绩</h1>
+<p>单折成绩： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141102.png"
+alt="image.png" /> 五折成绩： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141123.png"
+alt="image.png" /> 所有数据成绩 7月1日： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141141.png"
+alt="image.png" /> 所有数据成绩 7月4日： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141154.png"
+alt="image.png" /> 7月5日： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141207.png"
+alt="image.png" /> 7月7日： <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240303141218.png"
+alt="image.png" /> # 网络结构</p>
+<p>UNet++的结构</p>
+<ul>
+<li>编码器部分
+<ul>
+<li>使用残差结构，经过Conv和BN后与原来的输入相加再进行LeakyReLU</li>
+<li>使用ResNet的Block作为特征提取模块，其中归一化修改为IN，激活函数修改为GELU</li>
+<li>将中间的3x3卷积核替换为更大的卷积核7x7能有更好的效果，猜测原因是原图输入原图输出，包括的信息比较多</li>
+</ul></li>
+<li>注意力机制
+<ul>
+<li>只在浅层将特征图SKFusion</li>
+<li>在UNet++的最浅层特征以及最深层特征都使用了SKFusion</li>
+</ul></li>
+<li>下采样方式
+<ul>
+<li>通过使用ConvNext的下采样方式，先通过LayerNorm再经过(4, 2,
+1)的卷积</li>
+</ul></li>
+<li>通道数量
+<ul>
+<li>通道数为[64, 128, 256, 512, 1024]</li>
+</ul></li>
+<li>分类头
+<ul>
+<li>最后的输出卷积只有一个1x1的卷积，利用最后的通道输出</li>
+<li>通过两个分类头合并输出，第一个分类头的卷积核大小依次为1，3，5，第二个分类头的卷积核大小为5，3，1，最后的结果相乘</li>
+<li>中间添加Dropout2d(0.2)效果比之前好，并且在之前的通道数会不断减少，后续认为分类头很重要，所以将分类头的通道数一直保持</li>
+<li>设置卷积大小为1，3，5，7和7，5，3，1，并且都包括IN和GELU以及Dropout2d(0.2)，通过这个设置得到95.09的分数</li>
+</ul></li>
+</ul>
+<h2 id="图像增强">图像增强</h2>
+<p>因为人的脸型和牙齿的位置差异不会很大，但会存在一些细节差异，所以使用下列空间变换</p>
+<ul>
+<li><strong>ElasticTransform</strong></li>
+<li><strong>PiecewiseAffine</strong></li>
+<li><strong>GridDistortion</strong></li>
+<li><strong>Flip</strong></li>
+</ul>
+<p>观察到X光得到的数据可能会有明暗不同的情况，所以采用以下图像色彩变换（X光成像为灰度图，所以下面的数据增强可能会导致三个维度的数据不一样，待考究）</p>
+<ul>
+<li><strong>RandomBrightnessContrast</strong></li>
+<li><strong>RandomGamma</strong></li>
+</ul>
+<p>对训练数据进行均值和方差统计，通过该数值进行标准化</p>
+<h2 id="训练策略">训练策略</h2>
+<ul>
+<li>使用<strong>CyclicLR</strong>作为学习率修改策略，最小学习率为1e-5，最大学习率为1e-4（可能可以选择更大，但是经常出现训练出现Nan的情况，当然也有可能是因为fp16导致），step_size_up为10各epoch</li>
+<li>目前只使用了CrossEntropyLoss作为损失监督</li>
+<li>优化器选择Lion</li>
+</ul>
+<h1 id="复赛方案">复赛方案</h1>
+<p>Dual Branch</p>
+<p>Reconstruction</p>
+<p>Classification</p>
+<h2 id="miccai-2023-sts-chanllenge">MICCAI 2023 STS Chanllenge</h2>
+<ol type="1">
+<li>发现不同模型方案对特定类型的图像效果相差较大，所以采用多种数据增强和不同模型方案进行集成</li>
+<li>利用 TTA 和 光学以及小形变数据增强，主要是 TTA</li>
+<li>发现采用小分类头时存在误检测区域，大分类头分割范围不准确，采用多尺度分类头，并且利用后处理筛选掉面积较小的分割区域</li>
+<li>在 UNet 的残差中采用利用不同维度的图像生成 SE 注意力权重</li>
+<li>因为图像分辨率大，所以归一化层改成了 InstanceNorm 和 EfficientNet
+的架构</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%AF%94%E8%B5%9B/" rel="tag"># 比赛</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/04/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Skeleton-MixFormer/" rel="prev" title="Skeleton MixFormer">
+                  <i class="fa fa-chevron-left"></i> Skeleton MixFormer
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/03/%E6%AF%94%E8%B5%9B%E7%AC%94%E8%AE%B0/NTIRE%202024%20Dense%20and%20NonHomogeneous%20Dehazing%20Challenge%20%E6%AF%94%E8%B5%9B%E6%96%B9%E6%A1%88/" rel="next" title="NTIRE 2024 Dense and NonHomogeneous Dehazing Challenge 比赛方案">
+                  NTIRE 2024 Dense and NonHomogeneous Dehazing Challenge 比赛方案 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic-gdut</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
