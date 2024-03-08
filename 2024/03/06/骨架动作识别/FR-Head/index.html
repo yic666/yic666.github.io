@@ -28,7 +28,7 @@
 <meta property="og:description" content="paper code 摘要 人类动作识别旨在从视频片段中分类人类动作的类别。最近，人们开始设计基于GCN的模型来从骨架中提取特征，以执行此任务，因为骨架表示比其他模态（如RGB帧）更有效且更稳健。然而，在使用骨架数据时，一些重要的线索如相关项也被丢弃了。这导致一些模糊的动作很难被区分并且容易被错误分类。为了缓解这个问题，我们提出了一个辅助特征细化头（FR Head），它包括空间-时间解耦和对">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-06T07:09:51.000Z">
-<meta property="article:modified_time" content="2024-03-06T12:48:08.104Z">
+<meta property="article:modified_time" content="2024-03-07T07:51:34.718Z">
 <meta property="article:author" content="Yic-gdut">
 <meta property="article:tag" content="动作识别">
 <meta property="article:tag" content="CVPR2023">
@@ -120,7 +120,7 @@
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E6%9C%89%E6%96%B9%E6%B3%95%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">现有方法的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A1%E7%8C%AE"><span class="nav-number">2.2.</span> <span class="nav-text">贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-level-feature-selection"><span class="nav-number">3.1.</span> <span class="nav-text">Multi-Level Feature
 Selection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spatial-temporal-decoupling"><span class="nav-number">3.2.</span> <span class="nav-text">Spatial-Temporal Decoupling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#contrastive-feature-refinement"><span class="nav-number">3.3.</span> <span class="nav-text">Contrastive Feature
-Refinement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#confident-sample-clustering"><span class="nav-number">3.3.1.</span> <span class="nav-text">Confident Sample Clustering</span></a></li></ol></li></ol></li></ol></div>
+Refinement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#confident-sample-clustering"><span class="nav-number">3.3.1.</span> <span class="nav-text">Confident Sample Clustering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ambiguous-sample-calibration"><span class="nav-number">3.3.2.</span> <span class="nav-text">Ambiguous Sample Calibration</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-objective"><span class="nav-number">3.4.</span> <span class="nav-text">Training Objective</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.1.</span> <span class="nav-text">消融实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.2.</span> <span class="nav-text">对比实验</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -211,9 +211,24 @@ Refinement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a c
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2024-03-06 15:09:51 / Modified: 20:48:08" itemprop="dateCreated datePublished" datetime="2024-03-06T15:09:51+08:00">2024-03-06</time>
+      <time title="Created: 2024-03-06 15:09:51" itemprop="dateCreated datePublished" datetime="2024-03-06T15:09:51+08:00">2024-03-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-07 15:51:34" itemprop="dateModified" datetime="2024-03-07T15:51:34+08:00">2024-03-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
+        </span>
     </span>
 
   
@@ -304,7 +319,110 @@ class="math inline">\(\alpha\)</span> 是动量项，通过经验将其设置为
 class="math inline">\(0.9\)</span>。随着训练样本的增加，<span
 class="math inline">\(P_k\)</span>会成为动作<span
 class="math inline">\(k\)</span>的聚类中心，能对新到达的样本的特征进行区分，即每个样本应该接近相关的Prototype，同时远离其他Prototype，通过余弦距离来定义两个特征样本的距离：
-$$ ({u}, {v}) = </p>
+<span class="math display">\[
+\operatorname{dis}(u, v)=\frac{u v^{T}}{\|u\|_{2}\|v\|_{2}}
+\]</span> ### Ambiguous Sample Discovering</p>
+<p>给定一个动作标签 <span
+class="math inline">\(k\)</span>，有两种类型的模糊样本。如果一个动作
+<span class="math inline">\(k\)</span>
+的样本被错误地分类为其他类别，则称为假阴性（FN）。如果其他类别的样本被错误地分类为动作
+<span class="math inline">\(k\)</span>，则称为假阳性（FP）。假设 <span
+class="math inline">\(s_{FN}^k, s_{FP}^k\)</span> 是动作 <span
+class="math inline">\(k\)</span> 的FN和FP样本的集合，它们的大小分别为
+<span class="math inline">\(n_{FN}^k,
+n_{FP}^k\)</span>。在一个批次中收集这些样本，并计算均值作为中心表示：</p>
+<p><span class="math display">\[
+{\mu}^k_{FN} = \frac{1}{n^k_{FN}} \sum_{j \in s_{FN}^k}
+F_j,~~{\mu}^k_{FP} = \frac{1}{n^k_{FP}} \sum_{j \in s_{FP}^k} F_j
+\]</span> 其中，<span class="math inline">\({\mu}^k_{FN},
+{\mu}^k_{FP}\)</span> 表示类别 <span class="math inline">\(k\)</span>
+的FN和FP样本的中心表示。但与确信样本不同，这些样本的预测在训练阶段不稳定，并且数量远少于TP样本，因此没有维护Prototype。</p>
+<h3 id="ambiguous-sample-calibration">Ambiguous Sample Calibration</h3>
+<p>为了校准模糊样本的预测，将动作 <span class="math inline">\(k\)</span>
+的确信样本 <span class="math inline">\(i\)</span>
+作为锚点，并在特征空间中计算一个辅助项。对于那些应该被分类为动作 <span
+class="math inline">\(k\)</span> 的FN样本，引入一个补偿项 <span
+class="math inline">\(\phi_i\)</span>： <span class="math display">\[
+  \phi_i = \left\{
+  \begin{aligned}
+    1 - \text{dis}(F_i, {\mu}^k_{FN}) &amp;, \mbox{if } i \in s^k_{TP}
+\mbox{ and } n^k_{FN} &gt; 0;\\
+     0 &amp;, \mbox{otherwise}.\\
+  \end{aligned}
+  \right.
+  \]</span>通过最小化补偿项 <span
+class="math inline">\(\phi_i\)</span>，FN样本应该在特征空间中更接近确信样本。当没有FN样本或余弦距离收敛到1时，<span
+class="math inline">\(\phi_i\)</span> 达到最小值 <span
+class="math inline">\(0\)</span>。这可能会激励模型将这些模糊样本更正为动作
+<span class="math inline">\(k\)</span>。
+另一方面，对于那些属于其他类别的FP样本，引入一个惩罚项 <span
+class="math inline">\(\psi_i\)</span>： <span class="math display">\[
+    \psi_i = \left\{
+    \begin{aligned}
+        1 + \text{dis}(F_i, {\mu}^k_{FP}) &amp;, \mbox{if } i \in
+s^k_{TP} \mbox{ and } n^k_{FP} &gt; 0;\\
+         0 &amp;, \mbox{otherwise}.\\
+    \end{aligned}
+    \right.
+\]</span> 类似地，惩罚项 <span class="math inline">\(\psi_i\)</span>
+对FP样本与确信样本在特征空间中的距离进行惩罚。当没有FP样本或余弦距离收敛到-1时，<span
+class="math inline">\(\psi_i\)</span> 达到最小值 <span
+class="math inline">\(0\)</span>。这可能会阻止模型将这些模糊样本识别为动作
+<span class="math inline">\(k\)</span>。 最后，以样本 <span
+class="math inline">\(i\)</span>
+为锚点，所提出的对比学习（CL）损失函数可以定义为： <span
+class="math display">\[
+\begin{split}
+  \text{CL}(F_i) = - \text{log} \frac{ e^{ \text{dis}(F_i, P_k) / \tau -
+(1 - p_{ik}) \psi_i }  }{ e^{ \text{dis}(F_i, P_k) / \tau - (1 - p_{ik})
+\psi_i } + \sum_{l \neq k} e^{ \text{dis}(F_i, P_l) / \tau}  }  \\
+  - \text{log} \frac{ e^{ \text{dis}(F_i, P_k) / \tau - (1 - p_{ik})
+\phi_i }  }{ e^{ \text{dis}(F_i, P_k) / \tau - (1 - p_{ik}) \psi_i } +
+\sum_{l \neq k} e^{ \text{dis}(F_i, P_l) / \tau}  }  
+\end{split}
+\]</span> 其中，<span class="math inline">\(p_{ik}\)</span> 是样本 <span
+class="math inline">\(i\)</span> 对于类别 <span
+class="math inline">\(k\)</span>
+的预测概率得分。这意味着对于置信度较弱的TP样本，它们从这些模糊样本中获得了更强的监督。</p>
+<h2 id="training-objective">Training Objective</h2>
+<p>Loss采用CELoss，再加上多级的CL loss，如下：</p>
+<p><span class="math display">\[
+\mathcal{L}_{CE} = - \frac{1}{N} \sum_i     \sum_c y_{ic}
+\mbox{log}(p_{ic})
+\]</span> <span class="math display">\[
+\mathcal{L} = \mathcal{L}_{CE} + w_{cl} \cdot \mathcal{L}_{CL}
+\]</span></p>
+<h1 id="实验">实验</h1>
+<h2 id="消融实验">消融实验</h2>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307153536.png"
+alt="image.png" /> - CL
+Loss：直接使用CL损失来细化最后一层的特征，没有任何额外的操作 - ST
+Decouple：在细化之前将特征分解成空间和时间分量 - ML
+Refine：在训练管道中的多级阶段上施加细化</p>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307154613.png"
+alt="image.png" /> 作者尝试了 不同的 <span
+class="math inline">\(w_{cl}\)</span>
+值，以找到CL损失和CE损失之间的平衡；尝试了更多的 <span
+class="math inline">\(\lambda_i\)</span>
+组合来平衡不同阶段的重要性。从结果中，可以观察到给予先前层更高的权重可能会获得负面影响，而逐渐从早期阶段增加重要性到最后阶段，从而导致最佳结果。可以得出结论，来自最终阶段的高级特征的细化起主要作用，而低级特征提供辅助效果。</p>
+<h2 id="对比实验">对比实验</h2>
+<p><img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307155018.png"
+alt="image.png" /> <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307155026.png"
+alt="image.png" /> <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307155052.png"
+alt="image.png" /> <img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307155100.png"
+alt="image.png" /> ## 与SOTA对比</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/20240307155132.png"
+alt="image.png" />
+<figcaption aria-hidden="true">image.png</figcaption>
+</figure>
 
     </div>
 
