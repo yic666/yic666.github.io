@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="过拟合与欠拟合  ## 过拟合 模型在训练集上的表现非常好，但是在测试集、验证集以及新数据上的表现很差，损失曲线呈现一种高方差状态。(高方差指的是训练集误差较低，而测试集误差比训练集大较多) 原因 从两个角度去分析：  模型的复杂度：模型过于复杂，把噪声数据的特征也学习到模型中，导致模型泛化性能下降 数据集规模大小：数据集规模相对模型复杂度来说太小，使得模型过度挖掘数据集中的特征，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="过拟合与欠拟合">
+<meta property="og:url" content="http://example.com/2024/03/14/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88/index.html">
+<meta property="og:site_name" content="Yic">
+<meta property="og:description" content="过拟合与欠拟合  ## 过拟合 模型在训练集上的表现非常好，但是在测试集、验证集以及新数据上的表现很差，损失曲线呈现一种高方差状态。(高方差指的是训练集误差较低，而测试集误差比训练集大较多) 原因 从两个角度去分析：  模型的复杂度：模型过于复杂，把噪声数据的特征也学习到模型中，导致模型泛化性能下降 数据集规模大小：数据集规模相对模型复杂度来说太小，使得模型过度挖掘数据集中的特征，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/05/16/m1MXWUG6RZEfB2H.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/05/16/N2v1dDnKqfk7iQs.png">
+<meta property="article:published_time" content="2024-03-14T05:57:34.000Z">
+<meta property="article:modified_time" content="2024-03-18T13:34:47.362Z">
+<meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/16/m1MXWUG6RZEfB2H.jpg">
+
+
+<link rel="canonical" href="http://example.com/2024/03/14/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/03/14/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88/","path":"2024/03/14/深度学习基础/过拟合与欠拟合/","title":"过拟合与欠拟合"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>过拟合与欠拟合 | Yic</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yic</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88"><span class="nav-number">1.</span> <span class="nav-text">过拟合与欠拟合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.0.1.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A0%E6%8B%9F%E5%90%88%E7%9A%84%E8%A1%A8%E7%8E%B0"><span class="nav-number">1.0.2.</span> <span class="nav-text">欠拟合的表现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A0%E6%8B%9F%E5%90%88%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.0.3.</span> <span class="nav-text">欠拟合的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AC%A0%E6%8B%9F%E5%90%88%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.4.</span> <span class="nav-text">欠拟合的解决方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">1.1.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic-gdut</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/14/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="过拟合与欠拟合 | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          过拟合与欠拟合
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-03-14 13:57:34" itemprop="dateCreated datePublished" datetime="2024-03-14T13:57:34+08:00">2024-03-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-03-18 21:34:47" itemprop="dateModified" datetime="2024-03-18T21:34:47+08:00">2024-03-18</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="过拟合与欠拟合">过拟合与欠拟合</h1>
+<p><img src="https://i.loli.net/2020/05/16/m1MXWUG6RZEfB2H.jpg" /> ##
+过拟合</p>
+<p>模型在训练集上的表现非常好，但是在测试集、验证集以及新数据上的表现很差，损失曲线呈现一种<strong>高方差</strong>状态。(高方差指的是训练集误差较低，而测试集误差比训练集大较多)</p>
+<h3 id="原因">原因</h3>
+<p>从两个角度去分析：</p>
+<ol type="1">
+<li><p><strong>模型的复杂度</strong>：模型过于复杂，把噪声数据的特征也学习到模型中，导致模型泛化性能下降</p></li>
+<li><p><strong>数据集规模大小</strong>：数据集规模相对模型复杂度来说太小，使得模型过度挖掘数据集中的特征，把一些不具有代表性的特征也学习到了模型中。例如训练集中有一个叶子图片，该叶子的边缘是锯齿状，模型学习了该图片后认为叶子都应该有锯齿状边缘，因此当新数据中的叶子边缘不是锯齿状时，都判断为不是叶子。
+### 过拟合的解决方法</p></li>
+<li><p><strong>获得更多的训练数据</strong>：使用更多的训练数据是解决过拟合问题最有效的手段，因为更多的样本能够让模型学习到更多更有效的特征，减少噪声的影响。</p>
+<p>当然直接增加实验数据在很多场景下都是没那么容易的，因此可以通过<strong>数据扩充技术</strong>，例如对图像进行平移、旋转和缩放等等。</p>
+<p>除了根据原有数据进行扩充外，还有一种思路是使用非常火热的生成式对抗网络
+GAN 来合成大量的新训练数据。</p>
+<p>还有一种方法是使用<strong>迁移学习技术</strong>，使用已经在更大规模的源域数据集上训练好的模型参数来初始化我们的模型，模型往往可以更快地收敛。但是也有一个问题是，源域数据集中的场景跟我们目标域数据集的场景差异过大时，可能效果会不太好，需要多做实验来判断。</p></li>
+<li><p><strong>降低模型复杂度</strong>：在深度学习中我们可以减少网络的层数，改用参数量更少的模型；在机器学习的决策树模型中可以降低树的高度、进行剪枝等。</p></li>
+<li><p><strong>正则化方法</strong> 常用的有 L1、L2
+正则化，L1正则化和L2正则化可以看做是<strong>损失函数的惩罚项</strong>。所谓<strong>惩罚</strong>是指对损失函数中的<strong>某些参数做一些限制</strong>。</p>
+<p><strong>添加BN层</strong></p>
+<p>使用<strong>dropout技术</strong>（dropout在训练时会随机隐藏一些神经元，导致训练过程中不会每次都更新(<strong>预测时不会发生dropout</strong>)，最终的结果是每个神经元的权重w都不会更新的太大，起到了类似L2正则化的作用来降低过拟合风险。）</p></li>
+<li><p><strong>Early Stopping</strong>：Early
+stopping便是一种迭代次数截断的方法来防止过拟合的方法，即在模型对训练数据集迭代收敛之前停止迭代来防止过拟合。</p>
+<p>Early
+stopping方法的具体做法是：在每一个Epoch结束时（一个Epoch集为对所有的训练数据的一轮遍历）计算validation
+data的accuracy，当accuracy不再提高时，就停止训练。这种做法很符合直观感受，因为accurary都不再提高了，在继续训练也是无益的，只会提高训练的时间。那么该做法的一个重点便是怎样才认为validation
+accurary不再提高了呢？并不是说validation
+accuracy一降下来便认为不再提高了，因为可能经过这个Epoch后，accuracy降低了，但是随后的Epoch又让accuracy又上去了，所以不能根据一两次的连续降低就判断不再提高。一般的做法是，在训练的过程中，记录到目前为止最好的validation
+accuracy，当连续10次Epoch（或者更多次）没达到最佳accuracy时，则可以认为accuracy不再提高了。</p></li>
+<li><p><strong>集成学习方法</strong>：集成学习是把多个模型集成在一起，来降低单一模型的过拟合风险，例如Bagging方法。</p>
+<p>如DNN可以用Bagging的思路来正则化。首先我们要对原始的m个训练样本进行有放回随机采样，构建N组m个样本的数据集，然后分别用这N组数据集去训练我们的DNN。即采用我们的前向传播算法和反向传播算法得到N个DNN模型的W,b参数组合，最后对N个DNN模型的输出用加权平均法或者投票法决定最终输出。不过用集成学习Bagging的方法有一个问题，就是我们的DNN模型本来就比较复杂，参数很多。现在又变成了N个DNN模型，这样参数又增加了N倍，从而导致训练这样的网络要花更加多的时间和空间。因此一般N的个数不能太多，比如5-10个就可以了。</p></li>
+<li><p><strong>交叉检验</strong>，如S折交叉验证，通过交叉检验得到较优的模型参数，其实这个跟上面的Bagging方法比较类似，只不过S折交叉验证是随机将已给数据切分成S个互不相交的大小相同的自己，然后利用S-1个子集的数据训练模型，利用余下的子集测试模型；将这一过程对可能的S种选择重复进行；最后选出S次评测中平均测试误差最小的模型。
+## 欠拟合</p></li>
+</ol>
+<h3 id="欠拟合的表现">欠拟合的表现</h3>
+<p>模型无论是在训练集还是在测试集上的表现都很差，损失曲线呈现一种<strong>高偏差</strong>状态。（高偏差指的是训练集和验证集的误差都较高，但相差很少）</p>
+<p><img src="https://i.loli.net/2020/05/16/N2v1dDnKqfk7iQs.png" alt="img" style="zoom:150%;" /></p>
+<h3 id="欠拟合的原因">欠拟合的原因</h3>
+<p>同样可以从两个角度去分析：</p>
+<ol type="1">
+<li><strong>模型过于简单</strong>：简单模型的学习能力比较差</li>
+<li><strong>提取的特征不好</strong>：当特征不足或者现有特征与样本标签的相关性不强时，模型容易出现欠拟合</li>
+</ol>
+<h3 id="欠拟合的解决方法">欠拟合的解决方法</h3>
+<ol type="1">
+<li><strong>增加模型复杂度</strong>：如线性模型增加高次项改为非线性模型、在神经网络模型中增加网络层数或者神经元个数、深度学习中改为使用参数量更多更先进的模型等等。</li>
+<li><strong>增加新特征</strong>：可以考虑特征组合等特征工程工作（这主要是针对机器学习而言，特征工程还真不太了解……）</li>
+<li>如果损失函数中加了正则项，可以考虑<strong>减小正则项的系数</strong>
+<span class="math inline">\(\lambda\)</span></li>
+</ol>
+<h2 id="参考链接">参考链接</h2>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://github.com/GYee/CV_interviews_Q-A">CV_interviews_Q-A</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.jianshu.com/p/f2489ccc14b4">过拟合与欠拟合及方差偏差</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag"># 面试</a>
+              <a href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag"># 基础</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/06/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/FR-Head/" rel="prev" title="FR-Head">
+                  <i class="fa fa-chevron-left"></i> FR-Head
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/14/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/%E5%BD%92%E4%B8%80%E5%8C%96/" rel="next" title="归一化">
+                  归一化 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic-gdut</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
