@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "34c0c85063a2c1a9",
+        "id": "2e9090f71a7ecea3",
         "type": "tabs",
         "children": [
           {
-            "id": "7246656e6c04a628",
+            "id": "4e066328e48a2262",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
+                "file": "source/_posts/骨架动作识别/FR-Head.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a0f46a2c8cca2db7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "source/_posts/骨架动作识别/SkateFormer.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -94,7 +107,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
+                "file": "source/_posts/骨架动作识别/SkateFormer.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +124,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
+                "file": "source/_posts/骨架动作识别/SkateFormer.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +147,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md"
+                "file": "source/_posts/骨架动作识别/SkateFormer.md"
               }
             }
           },
@@ -147,11 +160,11 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 227.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -164,50 +177,51 @@
       "file-tree-alternative:File Tree Alternative Plugin": false
     }
   },
-  "active": "7246656e6c04a628",
+  "active": "a0f46a2c8cca2db7",
   "lastOpenFiles": [
-    "source/_posts/视频动作识别/MViT.md",
-    "source/_posts/视频动作识别/Efficient-Video-Understanding.md",
-    "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
     "source/_posts/比赛笔记/NTIRE 2024 Dense and NonHomogeneous Dehazing Challenge 比赛方案.md",
-    "public/css/hbe.style.css",
-    "public/lib/hbe.js",
-    "public/lib",
+    "source/_posts/骨架动作识别/SkateFormer.md",
+    "source/_posts/骨架动作识别/FR-Head.md",
+    "source/_posts/骨架动作识别/Hypergraph-Transformer.md",
     "source/_posts/骨架动作识别/PoseConv3d笔记.md",
-    "node_modules/iconv-lite/lib/streams.js",
-    "node_modules/iconv-lite/lib/index.js",
-    "node_modules/iconv-lite/lib/index.d.ts",
-    "node_modules/iconv-lite/lib/extend-node.js",
-    "node_modules/iconv-lite/lib/bom-handling.js",
-    "node_modules/iconv-lite/lib",
-    "node_modules/object-inspect/package.json",
+    "source/_posts/未命名.md",
+    "source/_posts/视频动作识别/Zhang_Temporal_Query_Networks_for_Fine-Grained_Video_Understanding_CVPR_2021_paper.md",
+    "source/_posts/视频动作识别/《Dynamic-Spatio-Temporal-Specialization-Learning-for-Fine-Grained-Action-Recognition》阅读笔记.md",
+    "source/_posts/视频动作识别/MMNet_A_Model-based_Multimodal_Network_for_Human_Action_Recognition_in_RGB-D_Videos.md",
+    "source/_posts/深度学习基础/F1-score.md",
+    "source/_posts/深度学习基础/过拟合与欠拟合.md",
+    "source/_posts/深度学习基础/归一化.md",
+    "source/_posts/视频动作识别/MViT.md",
+    "未命名",
+    "source/_posts/深度学习基础",
+    "public/2023/08/22/骨架动作识别/Hypergraph-Transformer/index.html",
+    "public/2023/10/07/骨架动作识别/SkeletonMAE/index.html",
+    "public/2023/11/04/骨架动作识别/Skeleton-MixFormer/index.html",
+    "public/2023/12/01/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾/index.html",
+    "public/2023/03/28/视频动作识别/Video-Swin-Transformers/index.html",
+    "public/2023/06/28/视频动作识别/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition/index.html",
+    "public/2023/07/18/骨架动作识别/3Mformer/index.html",
+    "public/2023/06/26/视频动作识别/Video-Test-Time-Adaptation-for-Action-Recognition/index.html",
+    "public/images/logo.svg",
+    "public/images/logo-algolia-nebula-blue-full.svg",
+    "public/images/favicon-32x32-next.png",
+    "public/images/avatar.gif",
+    "public/images/favicon-16x16-next.png",
+    "public/images/apple-touch-icon-next.png",
+    "source/_posts/比赛笔记/8th 天池 MICCAI TeethSegmentation 比赛回顾.md",
+    "未命名.canvas",
+    "source/_posts/ss.md",
+    "source/_posts/骨架动作识别/Skeleton-MixFormer.md",
+    "source/_posts/视频动作识别/TimesFormer与ViViT.md",
+    "source/_posts/视频动作识别/SVFormer-Semi-supervised-Video-Transformer-for-Action-Recognition.md",
+    "source/_posts/骨架动作识别/3Mformer.md",
+    "source/_posts/视频动作识别/Efficient-Video-Understanding.md",
     "node_modules/body-parser/README.md",
     "node_modules/es-define-property/README.md",
     "node_modules/get-intrinsic/README.md",
     "node_modules/define-data-property/CHANGELOG.md",
     "node_modules/hasown/CHANGELOG.md",
     "node_modules/express/node_modules/finalhandler/SECURITY.md",
-    "node_modules/raw-body/SECURITY.md",
-    "node_modules/gopd/CHANGELOG.md",
-    "node_modules/express/node_modules/finalhandler/README.md",
-    "node_modules/raw-body/node_modules/bytes/Readme.md",
-    "node_modules/merge-descriptors/HISTORY.md",
-    "node_modules/type-is/README.md",
-    "node_modules/forwarded/README.md",
-    "node_modules/methods/HISTORY.md",
-    "node_modules/media-typer/HISTORY.md",
-    "node_modules/content-type/README.md",
-    "node_modules/proxy-addr/README.md",
-    "node_modules/express/node_modules/finalhandler/HISTORY.md",
-    "node_modules/iconv-lite/README.md",
-    "node_modules/proxy-addr/HISTORY.md",
-    "node_modules/cookie-signature/History.md",
-    "public/images/logo-algolia-nebula-blue-full.svg",
-    "public/images/logo.svg",
-    "public/images/favicon-32x32-next.png",
-    "public/images/avatar.gif",
-    "public/images/favicon-16x16-next.png",
-    "public/images/apple-touch-icon-next.png",
     "Pasted image 20231123110051.png"
   ]
 }

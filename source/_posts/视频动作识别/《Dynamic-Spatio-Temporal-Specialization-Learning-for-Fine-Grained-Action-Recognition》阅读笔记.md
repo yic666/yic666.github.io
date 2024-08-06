@@ -1,11 +1,9 @@
 ---
-title: >-
-  《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action
-  Recognition》阅读笔记
+title: 《Dynamic Spatio-Temporal Specialization Learning for Fine-Grained Action Recognition》阅读笔记
 tags:
   - 动作识别
   - 论文笔记
-  - Fine-Grained Action Recognition
+  - Fine-Grained
 categories:
   - 视频动作识别
 date: 2022-10-18 10:48:59

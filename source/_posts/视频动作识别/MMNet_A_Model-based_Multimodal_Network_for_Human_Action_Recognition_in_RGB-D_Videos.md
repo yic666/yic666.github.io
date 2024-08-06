@@ -1,11 +1,9 @@
 ---
-title: >-
-  《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D
-  Videos》阅读笔记
+title: "《MMNet: A Model-based Multimodal Network for Human Action Recognition in RGB-D Videos》阅读笔记"
 tags:
   - 动作识别
   - 论文笔记
-  - RGB-D Action Recognition
+  - RGB-D
 categories:
   - 视频动作识别
 date: 2023-01-08 10:00:59

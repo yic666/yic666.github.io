@@ -3,7 +3,7 @@ title: Temporal Query Networks for Fine-grained Video Understanding
 tags:
   - 动作识别
   - 论文笔记
-  - Fine-Grained Action Recognition
+  - Fine-Grained
 categories:
   - 视频动作识别
 date: 2023-02-19 00:00:00
