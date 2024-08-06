@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="image-20240704214425279  摘要 图卷积网络(GCNs)和transformer已被广泛应用于基于骨架的人体动作识别，每种网络在捕捉空间关系和长程依赖关系方面都具有独特的优势。然而，对于大多数GCN方法而言，拓扑结构的构建仅依赖于人体关节点的空间信息，限制了其直接捕获更丰富的时空依赖关系的能力。此外，许多Transformer方法的自注意力模块缺乏拓扑结构信息，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frequency Guidance Matters Skeletal Action Recognition by Frequency-Aware Mixed Transformer">
+<meta property="og:url" content="http://example.com/2024/07/04/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Spatio-Temporal%20Fusion%20for%20Human%20Action%20Recognition%20via%20Joint%20Trajectory/index.html">
+<meta property="og:site_name" content="Yic">
+<meta property="og:description" content="image-20240704214425279  摘要 图卷积网络(GCNs)和transformer已被广泛应用于基于骨架的人体动作识别，每种网络在捕捉空间关系和长程依赖关系方面都具有独特的优势。然而，对于大多数GCN方法而言，拓扑结构的构建仅依赖于人体关节点的空间信息，限制了其直接捕获更丰富的时空依赖关系的能力。此外，许多Transformer方法的自注意力模块缺乏拓扑结构信息，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509220501474.png">
+<meta property="og:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509220523849.png">
+<meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-06T08:44:23.902Z">
+<meta property="article:author" content="Yic-gdut">
+<meta property="article:tag" content="动作识别">
+<meta property="article:tag" content="骨架">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509220501474.png">
+
+
+<link rel="canonical" href="http://example.com/2024/07/04/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Spatio-Temporal%20Fusion%20for%20Human%20Action%20Recognition%20via%20Joint%20Trajectory/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/07/04/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Spatio-Temporal%20Fusion%20for%20Human%20Action%20Recognition%20via%20Joint%20Trajectory/","path":"2024/07/04/骨架动作识别/Spatio-Temporal Fusion for Human Action Recognition via Joint Trajectory/","title":"Frequency Guidance Matters Skeletal Action Recognition by Frequency-Aware Mixed Transformer"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Frequency Guidance Matters Skeletal Action Recognition by Frequency-Aware Mixed Transformer | Yic</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Yic</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E8%AE%A4%E4%B8%BA%E7%9A%84%E7%8E%B0%E6%9C%89%E6%96%B9%E6%B3%95%E4%B8%8D%E8%B6%B3"><span class="nav-number">2.1.</span> <span class="nav-text">论文认为的现有方法不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">2.2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A1%E7%8C%AE"><span class="nav-number">2.3.</span> <span class="nav-text">贡献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#joint-trajectory-graph"><span class="nav-number">3.1.</span> <span class="nav-text">Joint Trajectory Graph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jt-graphformer"><span class="nav-number">3.2.</span> <span class="nav-text">JT-GraphFormer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#positional-encoding"><span class="nav-number">3.2.1.</span> <span class="nav-text">Positional Encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stda-module"><span class="nav-number">3.2.2.</span> <span class="nav-text">STDA Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#koopman-operator"><span class="nav-number">3.2.3.</span> <span class="nav-text">Koopman Operator</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">实验</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yic-gdut</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/07/04/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/Spatio-Temporal%20Fusion%20for%20Human%20Action%20Recognition%20via%20Joint%20Trajectory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yic-gdut">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yic">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Frequency Guidance Matters Skeletal Action Recognition by Frequency-Aware Mixed Transformer | Yic">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Frequency Guidance Matters Skeletal Action Recognition by Frequency-Aware Mixed Transformer
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-07-04 00:00:00" itemprop="dateCreated datePublished" datetime="2024-07-04T00:00:00+08:00">2024-07-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-08-06 16:44:23" itemprop="dateModified" datetime="2024-08-06T16:44:23+08:00">2024-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" itemprop="url" rel="index"><span itemprop="name">骨架动作识别</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240704214425279.png"
+alt="image-20240704214425279" />
+<figcaption aria-hidden="true">image-20240704214425279</figcaption>
+</figure>
+<h1 id="摘要">摘要</h1>
+<p>图卷积网络(GCNs)和transformer已被广泛应用于基于骨架的人体动作识别，每种网络在捕捉空间关系和长程依赖关系方面都具有独特的优势。然而，对于大多数GCN方法而言，拓扑结构的构建仅依赖于人体关节点的空间信息，限制了其直接捕获更丰富的时空依赖关系的能力。此外，许多Transformer方法的自注意力模块缺乏拓扑结构信息，限制了模型的鲁棒性和泛化性。为了解决这些问题，本文提出了一种联合轨迹图(Joint
+Trajectory Graph,
+JTG)，将时空信息集成到一个统一的图结构中。本文还提出了一种联合轨迹图former
+(JT-GraphFormer)，直接捕获所有关节轨迹之间的时空关系，用于人体行为识别。为了更好地将拓扑信息融入时空关系中。引入一种时空Dijkstra注意力(STDA)机制来计算JTG中所有关节的关系得分。此外，在分类阶段引入Koopman算子，以增强模型的表示能力和分类性能。实验表明，JT-GraphFormer在人体行为识别任务中取得了出色的性能，在NTU
+RGB+D、NTU RGB+D 120和N-UCLA数据集上的性能优于当前最先进的方法。</p>
+<h1 id="引言">引言</h1>
+<h2 id="论文认为的现有方法不足">论文认为的现有方法不足</h2>
+<p>首先，传统的GCN方法不能直接利用时空拓扑结构来捕获更全面的时空依赖关系。聚合图中邻近节点的信息以更新节点表示对于捕获空间依赖关系是有效的，而简单地扩展空间图并不足以有效地捕获时序动态关联。</p>
+<p>其次，在关节坐标序列中，信息的密度可能在空间和时间维度之间变化，在时间维度上存在较大的冗余。</p>
+<p>最后，自注意力机制虽然可以自适应地计算序列元素的相关性分数，但可能无法捕获每个序列元素的隐藏拓扑信息，导致模型的鲁棒性和泛化性受到负面影响。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>提出一种具有联合轨迹图(JTG)的Joint Trajectory
+GraphFormer(JT-GraphFormer)模型。JTG在原始空间图结构之上引入了时间维度，使其能够更好地封装与关节轨迹相关的复杂判别细节。与ST-GCN不同，JTG专注于构建一段时空周期内节点之间的拓扑结构。具体而言，构建某一帧序列内所有关节的动态轨迹拓扑，如图1
+(a)所示。为了更有效地捕获复杂的时空依赖关系，JTG将连接扩展到相邻帧中的节点。该策略减少了冗余的时间信息，并利用统一的图结构捕获时空维度内的内在依赖，促进了跨时空域特征的聚集。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240508222019765.png"
+alt="image-20240508222019765" />
+<figcaption aria-hidden="true">image-20240508222019765</figcaption>
+</figure>
+<p>当使用JTG作为Transformer的输入时，单帧内的节点会同时计算相邻帧内所有节点的注意力，这对模型处理复杂的时空关联提出了较高的要求。作者受Graphormer中空间编码的启发，提出了一种时空Dijkstra注意力(STDA)机制，将JTG中关节之间的距离作为时空拓扑信息添加到注意力分数的计算中，这使每个节点能够学习更多地关注与动作更相关的邻居节点。STDA将全局注意力得分和最短路径权重相结合，通过加入关节轨迹中存在的先验信息，表现出更强的表达能力。节点与其邻居的相关权重如图1
+(b)所示，Dijkstra矩阵的热图如图1 (c)所示。</p>
+<p>此外，作者将Koopman算子引入到分类阶段。</p>
+<blockquote>
+<p>The Koopman operator is a linear operator that describes a nonlinear
+dynamical system by map ping it into an infinite-dimensional Hilbert
+space.</p>
+<p>Koopman算子是一种线性算子，通过将非线性动力系统映射到无限维希尔伯特空间来描述非线性动力系统。</p>
+</blockquote>
+<h2 id="贡献">贡献</h2>
+<p>• Introduction of JTG as an input data representation, leveraging
+trajectory information to enrich feature aggregation capabilities for
+nodes and their interactions across frames.</p>
+<p>• Proposal of STDA, augmenting feature aggregation among neighboring
+nodes via the integration of shortest path concepts between joints.</p>
+<p>• Incorporation of the Koopman operator for classifica tion,
+facilitating an encompassing perspective and supe rior classification
+performance.</p>
+<p>• Rigorous evaluation of our proposed model across three diverse
+datasets (NTU RGB+D, NTU RGB+D 120, and N-UCLA), revealing its
+superiority over existing state of-the-art (SOTA) methods and
+underscoring its potential as a promising solution for action
+recognition tasks.</p>
+<h1 id="方法">方法</h1>
+<h2 id="joint-trajectory-graph">Joint Trajectory Graph</h2>
+<p>将动作序列分成几个组。每个组有N个框架，并用图结构描述关节轨迹，称为Joint
+Trajectory Graph，<span class="math inline">\(G_{JT} =
+(G_t,G_{t+1},\ldots,G_{t+N-1},E_T) = (V_{JT},E_{JT})\)</span>
+，其中<span class="math inline">\(G_t\)</span>是1帧中节点的空间图，<span
+class="math inline">\(E_T\)</span>是对应的边集合，表示N帧中节点的关节轨迹，<span
+class="math inline">\((V_{JT},E_{JT})\)</span>分别表示JTG中的节点和边集合。
+<span class="math display">\[
+A_{JT}=\begin{bmatrix}A&amp;A+I&amp;A&amp;\cdots&amp;A\\A+I&amp;A&amp;A+I&amp;\ddots&amp;\vdots\\A&amp;A+I&amp;\ddots&amp;\ddots&amp;A\\\vdots&amp;\ddots&amp;\ddots&amp;A&amp;A+I\\A&amp;\cdots&amp;A&amp;A+I&amp;A\end{bmatrix}
+\]</span></p>
+<p>A为框架中所有关节的物理连通性，I为单位对角矩阵，表示相邻框架中相同关节的连通性。</p>
+<h2 id="jt-graphformer">JT-GraphFormer</h2>
+<h3 id="positional-encoding">Positional Encoding</h3>
+<p><span class="math inline">\(X\in\mathbb{R}^{C\times T\times
+V}\)</span> ========&gt; <span
+class="math inline">\(X\in\mathbb{R}^{C\times T/N\times
+V*N}\)</span></p>
+<p>在JTG中，关节的运动轨迹涉及特定的时间信息，因此需要为每个帧进行位置编码(PE)，以正确地表达顺序关系。
+<span class="math display">\[
+\begin{aligned}&amp;PE(p,2i)=\sin(p/10000^{2i/C_{in}}),\\&amp;PE(p,2i+1)=\cos(p/10000^{2i/C_{in}}),\end{aligned}
+\]</span></p>
+<h3 id="stda-module">STDA Module</h3>
+<p>作用：将时空拓扑信息引入多头注意力机制，增加了邻居节点之间关联的权重，从而使节点更偏向于聚合局部邻居的特征。</p>
+<p>作者说受到Graphormer空间编码的启发，但实际上还是不一样的。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Graphormer</th>
+<th>STDA Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509220501474.png" alt="image-20240509220501474" style="zoom:50%;" /></td>
+<td><img src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509220523849.png" alt="image-20240509220523849" style="zoom:50%;" /></td>
+</tr>
+</tbody>
+</table>
+<p>公式： <span class="math display">\[
+\begin{array}{l}
+W=\exp(-D)+b,\\a_{map}=Tanh(QK^T/\sqrt{d_K}\times\alpha),\\a_{score}=a_{map}\cdot
+W,\end{array}
+\]</span></p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509222102870.png"
+alt="image-20240509222102870" />
+<figcaption aria-hidden="true">image-20240509222102870</figcaption>
+</figure>
+<h3 id="koopman-operator">Koopman Operator</h3>
+<p>Koopman算子是一个将非线性动力系统映射到无限维希尔伯特空间的线性算子。这种映射允许在线性空间中描述系统的演化，比原始的非线性空间更容易分析</p>
+<p>在深度学习中，利用Koopman算子提取非线性动力系统的演化特征以提高分类性能。本文建立了时间演化函数<span
+class="math inline">\(f(\cdot)\)</span>，用于JT-GraphFormer跨不同帧的输出特征<span
+class="math inline">\(H\)</span>，将第<span
+class="math inline">\(t\)</span>帧的特征<span
+class="math inline">\(h_t\)</span>与下一帧的特征<span
+class="math inline">\(h_{t+1}\)</span>联系起来，即<span
+class="math inline">\(h_{t+1} = f(h_t)\)</span>。</p>
+<p>将Koopman算子<span
+class="math inline">\(K_{op}\)</span>定义为一个<span
+class="math inline">\(N_{cls} × C_{out} ×
+C_{out}\)</span>线性算子，其中<span
+class="math inline">\(N_{cls}\)</span>表示动作类别的数量，<span
+class="math inline">\(C_{out}\)</span>表示最后一个JT-GraphFormer块的输出通道数量。<span
+class="math inline">\(K_{op}\)</span>应用线性方法来近似时间维度上各类动作特征之间的相互关系，满足等式:
+<span class="math display">\[
+h_{t+1}\approx K_{op}h_t
+\]</span>
+由于我们在不同的帧步建立了线性相关性，因此可以近似表示任意连续帧段的特征<span
+class="math inline">\(H_x^y\)</span>，即从第<span
+class="math inline">\(x\)</span>帧到第<span
+class="math inline">\(y\)</span>帧的特征段。因此特征<span
+class="math inline">\(H_1^{T-1}\)</span>可以表示为: <span
+class="math display">\[
+H_1^{T-1}\approx[h_1,K_{op}h_1,K_{op}^2h_1,\cdots,K_{op}^{T-2}h_1]\\
+H_{t+1}^T\approx K_{op}H_t^{T-1}
+\]</span> 采用DMD算法，通过最小化<span class="math inline">\(\| H_2^T-
+K_{op}H_1^{T- 1}\| _2\)</span>的Frobenius范数来更新<span
+class="math inline">\(K_{op}\)</span>。由于<span
+class="math inline">\(K_{op}\)</span>表示各个动作类别的特征演化，我们可以对<span
+class="math inline">\(K_{op}\)</span>在时间维度上进行平均，从而得到每个类别的概率分布，最终完成分类。</p>
+<h1 id="实验">实验</h1>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509223854689.png"
+alt="image-20240509223854689" />
+<figcaption aria-hidden="true">image-20240509223854689</figcaption>
+</figure>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509230840926.png"
+alt="image-20240509230840926" />
+<figcaption aria-hidden="true">image-20240509230840926</figcaption>
+</figure>
+<p>研究了JTG结构的静态和动态配置之间的性能差异，以及是否采用层间共享权重。此外，对JTG是否需要归一化进行了探讨。</p>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509231053683.png"
+alt="image-20240509231053683" />
+<figcaption aria-hidden="true">image-20240509231053683</figcaption>
+</figure>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509231132890.png"
+alt="image-20240509231132890" />
+<figcaption aria-hidden="true">image-20240509231132890</figcaption>
+</figure>
+<figure>
+<img
+src="https://yic-123.oss-cn-guangzhou.aliyuncs.com/img/image-20240509231219842.png"
+alt="image-20240509231219842" />
+<figcaption aria-hidden="true">image-20240509231219842</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/" rel="tag"># 动作识别</a>
+              <a href="/tags/%E9%AA%A8%E6%9E%B6/" rel="tag"># 骨架</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/21/%E9%AA%A8%E6%9E%B6%E5%8A%A8%E4%BD%9C%E8%AF%86%E5%88%AB/SkateFormer/" rel="prev" title="SkateFormer">
+                  <i class="fa fa-chevron-left"></i> SkateFormer
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yic-gdut</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
